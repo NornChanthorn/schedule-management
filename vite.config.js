@@ -25,4 +25,8 @@ export default defineConfig({
             vue: 'vue/dist/vue.esm-bundler.js',
         },
     },
+    // server: {
+    //     host: '147.182.197.18',
+    //     port: 8000
+    // }
 });
