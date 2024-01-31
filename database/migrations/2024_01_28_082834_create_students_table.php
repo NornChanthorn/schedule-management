@@ -18,11 +18,10 @@ return new class extends Migration
             $table->string('student_id');
             $table->string('gender');
             $table->date('dob');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
             $table->foreignId('generation_id')->constrained('generations');
             $table->foreignId('group_id')->constrained('groups');
             $table->foreignId('major_id')->constrained('majors');
-            $table->unique('user_id'); // Unique constraint on user_id
             $table->timestamps();
         });
 
