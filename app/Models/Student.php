@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Group;
+use App\Models\User;
+use App\Models\Generation;
+use App\Models\Major;
 
 class Student extends Model
 {
@@ -39,7 +43,6 @@ class Student extends Model
 
     // Add any other relationships if needed
 
-    // Define the inverse of the user relationship
     public function user()
     {
         return $this->belongsTo(User::class);
