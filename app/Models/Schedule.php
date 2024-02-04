@@ -9,6 +9,8 @@ use App\Models\Term;
 use App\Models\Course;
 use App\Models\Room;
 use App\Models\Group;
+use App\Models\Generation;
+use App\Models\Major;
 
 class Schedule extends Model
 {
@@ -22,7 +24,9 @@ class Schedule extends Model
         'course_id',
         'room_id',
         'group_id',
-        'type_class'
+        'major_id',
+        'gen_id'
+
     ];
 
     // Define relationships
@@ -34,12 +38,18 @@ class Schedule extends Model
         return $this->belongsTo(Term::class, 'term_id');
     }
     public function course(){
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_id');
     }
     public function room(){
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Room::class, 'room_id');
     }
     public function group(){
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Group::class, 'group_id');
+    }
+    public function generation(){
+        return $this->belongsTo(Generation::class, 'gen_id');
+    }
+    public function major(){
+        return $this->belongsTo(Major::class, 'major_id');
     }
 }

@@ -31,7 +31,6 @@ class MajorController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'active' => 'required|boolean',
         ]);
 
         $major = Major::create($validatedData);
@@ -61,7 +60,6 @@ class MajorController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'string',
-            'active' => 'boolean',
         ]);
 
         $major->update($validatedData);
