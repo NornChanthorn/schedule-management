@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Schedule;
 
 class Course extends Model
 {
@@ -21,6 +22,10 @@ class Course extends Model
     }
     public function teacher(){
         return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
+    public function schedule()
+    {
+        return $this->hasMany(Schedule::class, 'course_id');
     }
 
     // Define relationships
