@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassType extends Model
 {
     use HasFactory;
+    protected $table = 'classtypes';
 
     protected $fillable = [
         'type',
