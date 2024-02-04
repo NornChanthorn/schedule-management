@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DayOfWeek extends Model
 {
     use HasFactory;
+    protected $table = 'dayofweeks';
 
     protected $fillable = [
         'day',

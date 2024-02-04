@@ -35,9 +35,16 @@ use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\TermController;
 use App\Http\Controllers\Api\MajorController;
 use App\Http\Controllers\Api\GenerationController;
+use App\Http\Controllers\Api\DayOfWeekController;
+use App\Http\Controllers\Api\ClassTypeController;
+use App\Http\Controllers\Api\TeacherController;
+use App\Http\Controllers\Api\GroupController;
 
 Route::apiResource('rooms', RoomController::class);
 Route::apiResource('terms', TermController::class);
 Route::apiResource('majors', MajorController::class);
 Route::apiResource('generations', GenerationController::class);
-
+Route::apiResource('class-types', ClassTypeController::class);
+Route::apiResource('days-of-week', DayOfWeekController::class);
+Route::apiResource('groups', GroupController::class);
+Route::apiResource('teachers', TeacherController::class);
