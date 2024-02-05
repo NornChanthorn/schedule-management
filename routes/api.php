@@ -40,4 +40,4 @@ Route::apiResource('rooms', RoomController::class);
 Route::apiResource('terms', TermController::class);
 Route::apiResource('majors', MajorController::class);
 Route::apiResource('generations', GenerationController::class);
-
+Route::apiResource('courses', CourseController::class);
