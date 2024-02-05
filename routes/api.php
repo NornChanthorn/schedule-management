@@ -35,9 +35,11 @@ use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\TermController;
 use App\Http\Controllers\Api\MajorController;
 use App\Http\Controllers\Api\GenerationController;
+use App\Http\Controllers\Api\StudentController;
 
 Route::apiResource('rooms', RoomController::class);
 Route::apiResource('terms', TermController::class);
 Route::apiResource('majors', MajorController::class);
 Route::apiResource('generations', GenerationController::class);
 Route::apiResource('courses', CourseController::class);
+Route::apiResource('students', StudentController::class);
