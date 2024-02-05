@@ -3,8 +3,20 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+// api
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\TermController;
+use App\Http\Controllers\Api\MajorController;
+use App\Http\Controllers\Api\GenerationController;
+use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\DayOfWeekController;
+use App\Http\Controllers\Api\ClassTypeController;
+use App\Http\Controllers\Api\TeacherController;
+use App\Http\Controllers\Api\GroupController;
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -13,6 +25,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     // Your authenticated routes go here
 //     Route::get('/schedule/{term_id}', [ScheduleController::class, 'getScheduleByTermId']);
 // });
+
+
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+// routes/api.php
+
+Route::apiResource('rooms', RoomController::class);
+Route::apiResource('terms', TermController::class);
+Route::apiResource('majors', MajorController::class);
+Route::apiResource('generations', GenerationController::class);
+Route::apiResource('courses', CourseController::class);
+Route::apiResource('students', StudentController::class);
+Route::apiResource('class-types', ClassTypeController::class);
+Route::apiResource('days-of-week', DayOfWeekController::class);
+Route::apiResource('groups', GroupController::class);
+Route::apiResource('teachers', TeacherController::class);
 
 // Schedule
 Route::get('/schedules', [ScheduleController::class, 'get']);
@@ -23,23 +53,3 @@ Route::post('/schedule',[ScheduleController::class, 'store'] );
 Route::put('/schedule/{id}',[ScheduleController::class, 'update'] );
 Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );
 Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedulesByCourse']);
-
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-
-
-
-// routes/api.php
-
-use App\Http\Controllers\Api\RoomController;
-use App\Http\Controllers\Api\TermController;
-use App\Http\Controllers\Api\MajorController;
-use App\Http\Controllers\Api\GenerationController;
-use App\Http\Controllers\Api\StudentController;
-
-Route::apiResource('rooms', RoomController::class);
-Route::apiResource('terms', TermController::class);
-Route::apiResource('majors', MajorController::class);
-Route::apiResource('generations', GenerationController::class);
-Route::apiResource('courses', CourseController::class);
-Route::apiResource('students', StudentController::class);
