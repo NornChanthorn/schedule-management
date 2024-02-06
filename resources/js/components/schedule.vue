@@ -1,85 +1,91 @@
 <template>
-  <div class="schedule-container">
-    <div class="schedule">
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th class="time-header">Time</th>
-              <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="h-24">8:15</td>
-              <th :colspan="groups.length * days.length * 2" class="h-24 text-4xl">National Anthem</th>
-            </tr>
-            <tr>
-                <th rowspan="1" class="backgroud_group"></th>
-                <template v-for="day in days">
-                    <template v-for="group in groups">
-                      <td class="backgroud_group">{{ group }}
-                      </td>
-                    </template>
-                  </template>
-              </tr>
-            <template v-for="(timeSlot, index) in timeSlots" :key="index">
-              <tr>
-                <td style="width: 120px">{{ timeSlot }}</td>
-                <template v-for="day in days">
-                  <template v-for="group in groups">
-                    <td class="group-cell">
-                      <div v-if="hasMatchingSchedules(timeSlot, day, group)">
-                        <template v-for="schedule in matchingSchedules(timeSlot, day, group)">
-                          <div class="schedule-info">
-                            <div class="flex justify-center">
-                              <button class="button"  @click="TogglePopup('buttonpoint')">&hellip;</button>
-                              <p class="theory">Theory</p>
-                            </div>
-                            <p class="course-name">{{ schedule.course.name }}</p>
-                            <p class="room">Room: {{ schedule.room.name }}</p>
-                          </div>
+  <Header>
+    <div class="content-container">
+      <div class="font-istok text-4xl font-bold text-custom-color-small p-4">
+        <h1>Gen 7, CS</h1>
+      </div>
+      <div class="schedule-container p-4">
+        <div class="schedule">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th class="time-header">Time</th>
+                  <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>8:15</td>
+                  <th :colspan="groups.length * days.length * 2" class="h-24 text-3xl">National Anthem</th>
+                </tr>
+                <tr>
+                    <th rowspan="1" class="backgroud_group"></th>
+                    <template v-for="day in days">
+                        <template v-for="group in groups">
+                          <td class="backgroud_group">{{ group }}
+                          </td>
                         </template>
-                      </div>
-                      <div v-else>
-                        <button class="button" @click="TogglePopup('buttonTrigger')">
-                          <i class="fa-solid fa-circle-plus mr-2"></i>Add
-                        </button>
-                      </div>
-                    </td>
+                      </template>
+                  </tr>
+                <template v-for="(timeSlot, index) in timeSlots" :key="index">
+                  <tr>
+                    <td style="width: 120px">{{ timeSlot }}</td>
+                    <template v-for="day in days">
+                      <template v-for="group in groups">
+                        <td class="group-cell">
+                          <div v-if="hasMatchingSchedules(timeSlot, day, group)">
+                            <template v-for="schedule in matchingSchedules(timeSlot, day, group)">
+                              <div class="schedule-info">
+                                <div class="flex">
+                                  <button class="button"  @click="TogglePopup('buttonpoint')">&hellip;</button>
+                                  <p class="theory">Theory</p>
+                                </div>
+                                <p class="course-name">{{ schedule.course.name }}</p>
+                                <p class="text-sm">Kimlong</p>
+                                <p class="room">Room: {{ schedule.room.name }}</p>
+                              </div>
+                            </template>
+                          </div>
+                          <div v-else>
+                            <button class="button" @click="TogglePopup('buttonTrigger')">
+                              <i class="fa-solid fa-circle-plus mr-2"></i>Add
+                            </button>
+                          </div>
+                        </td>
+                      </template>
+                    </template>
+                  </tr>
+                  
+                  <!-- Only show the "Break 15min" row for the first 3 time slots -->
+                  <template v-if="index < 3">
+                    <tr>
+                      <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
+                    </tr>
                   </template>
                 </template>
-              </tr>
-              
-              <!-- Only show the "Break 15min" row for the first 3 time slots -->
-              <template v-if="index < 3">
-                <tr>
-                  <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
-                </tr>
-              </template>
-            </template>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <transition name="slide" appear>
-    <div class="point" v-if="popupTriggers.buttonpoint">
-      <div class="point-content">
-        <div class="point-item bg-blue flex">
-          <i class="fas fa-edit text-white text-xl mr-2"></i> Edit
-        </div>
-        <div class="point-item bg-red flex">
-          <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  </transition>
-  <transition name="fade" appear>
-        <div class="modal-overlay" v-if="popupTriggers.buttonTrigger"></div>
-  </transition>
-  <div>
-    <transition name="slide" appear>
+      <transition name="slide" appear>
+        <div class="point" v-if="popupTriggers.buttonpoint">
+          <div class="point-content">
+            <div class="point-item bg-blue flex">
+              <i class="fas fa-edit text-white text-xl mr-2"></i> Edit
+            </div>
+            <div class="point-item bg-red flex">
+              <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
+            </div>
+          </div>
+        </div>
+      </transition>
+      <transition name="fade" appear>
+            <div class="modal-overlay" v-if="popupTriggers.buttonTrigger"></div>
+      </transition>
+      <div>
+      <transition name="slide" appear>
         <div class="add_schedule" v-if="popupTriggers.buttonTrigger">
           <form class="">
             <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Filling Schedule</h2>
@@ -114,10 +120,12 @@
               <button type="button" class="bg-white text-black p-2 rounded-md mr-6 hover:bg-gray-200 cancel" @click="TogglePopup('buttonTrigger')">Cancel</button>
               <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Submit</button>
             </div>
-            </form>
+          </form>
         </div>
       </transition>
       </div>
+    </div>
+  </Header>
 </template>
 
 
@@ -253,7 +261,7 @@ th.day-header, td.group-cell {
   min-width: 250px;
 }
 td.group-cell {
-  height: 150px;
+  height: 120px;
 }
 .break-row{
   background: #FFA500;

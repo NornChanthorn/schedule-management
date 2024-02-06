@@ -14,6 +14,7 @@ import Tailwind from 'primevue/passthrough/tailwind';
 import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import "primeicons/primeicons.css"; //icons
+import Header from "./components/header.vue";
 
 // test component primevue
 import Button from "primevue/button"
@@ -39,6 +40,7 @@ app.component('test', App)
 app.component('Button', Button)
 app.component('InputText', InputText)
 app.component('SpeedDial', SpeedDial)
+app.component('Header', Header)
 app.mount('#app')
 
 

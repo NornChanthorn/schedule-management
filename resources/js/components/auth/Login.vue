@@ -59,6 +59,9 @@ data() {
     showPassword: false,
     emailFocused: false,
     pwFocused: false,
+    errors: null,
+    error_pass: null,
+    error_email: null,
   };
 },
 mounted(){
@@ -74,9 +77,11 @@ methods: {
       }
   },
   login() {
-      axios.post('/api/login', {
-      email: this.email,
-      password: this.password,
+        this.error_email='';
+        this.error_pass= '';
+        axios.post('/api/login', {
+        email: this.email,
+        password: this.password,
     })
     .then(response => {
       const authToken = response.data.token;
@@ -85,7 +90,12 @@ methods: {
       this.$router.push({ path: '/'});
     })
     .catch(error => {
-      console.log(error);
+      if (error.response && error.response.status === 422) {
+        this.error_email = Object.values(error.response.data.errors.email).flat();
+        this.error_pass = Object.values(error.response.data.errors.password).flat();
+      } else {
+        this.error.push('An error occurred while logging in.');
+      }
     });
   },
   loginTest(){
