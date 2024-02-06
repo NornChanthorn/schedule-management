@@ -1,0 +1,31 @@
+/* Import the Istok Web font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Istok+Web&display=swap');
+
+/* Apply the imported font to a custom class */
+.font-istok {
+    font-family: 'Istok Web', sans-serif;
+}
+
+.text-custom-color {
+    color: #7A999C;
+}
+
+.text-custom-color-small {
+    color: #567281;
+}
+.normal-color {
+    background-color: #5F7C8D;
+}
+
+.new-bg{
+    background: #4B687A;
+}
+.backgroud_new{
+    background-color: #F9F9F9;
+}
+.white{
+    background: white;
+}
+.backgroud_group{
+    background: #9DCE9D;
+}

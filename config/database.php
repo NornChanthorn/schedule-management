@@ -70,7 +70,7 @@ return [
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'schedule'),
             'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD', 'nct77'),
+            'password' => env('DB_PASSWORD', '12345678'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
