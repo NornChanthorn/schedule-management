@@ -7,7 +7,7 @@
         <div class="menu-bar">
         <ul>
           <li><a href="/" class="main-menu">Home</a></li>
-          <li v-if="user.role==='admin'"><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
+          <li v-if="user.role==='admin'"><a href="#" class="main-menu">Teacher <i class="fas fa-caret-down"></i></a>
               <div class="dropdown-menu">
                   <ul>
                     <li> <a href="#">Team <i class="fas fa-caret-right"></i></a> 
