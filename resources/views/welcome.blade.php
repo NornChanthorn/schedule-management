@@ -11,7 +11,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-rSxl2gJCApF0GjEA1LvZCVL3IRFcFlK1MQeW1DLOLlNBXYr0FjsvboNXLrz6ZrJh" crossorigin="anonymous">
-        
+
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

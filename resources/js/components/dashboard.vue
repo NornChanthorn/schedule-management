@@ -10,7 +10,7 @@
           <li v-if="user.role==='admin'"><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
               <div class="dropdown-menu">
                   <ul>
-                    <li> <a href="#">Team <i class="fas fa-caret-right"></i></a> 
+                    <li> <a href="#">Team <i class="fas fa-caret-right"></i></a>
                     <div class="dropdown-menu-1">
                         <ul>
                           <li><a href="#">Team-1</a></li>
@@ -24,7 +24,7 @@
           <li><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
               <div class="dropdown-menu">
                   <ul>
-                    <li> <a href="#">Department <i class="fas fa-caret-right"></i></a> 
+                    <li> <a href="#">Department <i class="fas fa-caret-right"></i></a>
                     <div class="dropdown-menu-1">
                         <ul>
                           <li><a href="#">Gen</a></li>
@@ -43,7 +43,7 @@
         <input type="text" class="search-input" placeholder="Search...">
       </div>
       <div class="flex items-center">
-          <i class="fas fa-bell text-white text-xl mr-4"></i> 
+          <i class="fas fa-bell text-white text-xl mr-4"></i>
           <button class="button" @click="TogglePopup('buttonTrigger')">
             <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
           </button>
@@ -72,6 +72,11 @@
           <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
         </div>
       </div>
+      <div class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+        <router-view></router-view>
+      </div>
+
+
     </div>
   </template>
 <script>
@@ -92,15 +97,15 @@ export default{
         buttonTrigger: false,
         timedTrigger: false,
       });
-  
+
       const TogglePopup = (trigger) => {
         popupTriggers.value[trigger] = !popupTriggers.value[trigger];
       };
-  
+
       setTimeout(() => {
         popupTriggers.value.timedTrigger = true;
       }, 3000);
-  
+
       return {
         TogglePopup,
         popupTriggers,
@@ -208,7 +213,7 @@ export default{
 .search-container {
   display: flex;
   align-items: center;
-  border: 2px solid black; 
+  border: 2px solid black;
   overflow: hidden;
   /* background-color: #F6F6F6;  */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */

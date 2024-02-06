@@ -5,6 +5,8 @@ import Test from '../components/ExampleComponent.vue'
 import Schedule from '../components/schedule.vue'
 import Student from '../components/studentList.vue'
 import Profile from '../components/profile.vue'
+import Generation from '../components/admin/Generation.vue'
+
 const routes=[
     {
         path: '/login',
@@ -17,6 +19,14 @@ const routes=[
         name: 'Main',
         component: Main,
         meta: { requiresAuth: true },
+        children:[
+            {
+                path: '',
+                name: 'Generation', // Add a comma here
+                component: Generation,
+            }
+
+        ]
     },
     {
         path: '/test',
