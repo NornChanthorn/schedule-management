@@ -210,6 +210,7 @@ export default {
       popupTriggers,
     };
   },
+  
 };
 </script>
 
@@ -334,8 +335,8 @@ body.modal-open {
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 150px;
-  margin-left: 100px;
-  top: 280px;
+  margin-left: 120px;
+  top: 500px;
 }
 .point-item {
   padding: 10px;

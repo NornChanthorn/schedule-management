@@ -7,94 +7,76 @@
       </div>
     </div>
     <div class="content-container font-istok">
-      <div>
-        <div @click="toggleCSDetails" class="text-2xl font-bold mb-4">
-          <span v-if="showCSDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
-            <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> Computer Science
+      <a href="/schedule">
+        <div v-for="major in majors" :key="major.id">
+          <div @click="toggleMajorDetails(major)" class="text-xl font-bold mb-4 mt-4">
+            <span v-if="major.showDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
+            <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> {{ major.name }}
           </div>
-          <div v-if="showCSDetails">
-            <div class="details-container">
-              <div class="icon-container">
-                <div class="w-10 h-10 bg-white mr-3 flex items-center justify-center">
-                  <i class="fa-solid fa-business-time"></i>
-                </div>
+          <div v-if="major.showDetails" class="details-container">
+            <div class="icon-container">
+              <div class="w-10 h-10 bg-white mr-3 flex items-center justify-center">
+                <i class="fa-solid fa-business-time"></i>
               </div>
-              <div class="info-container">
-                <p class="text-lg mr-24">Generation</p>
-                <p class="text-lg">Term 10</p>
-              </div>
+            </div>
+            <div class="info-container">
+              <!-- <div v-for="gen in gens" :key="gen.id"> -->
+                <!-- <p class="text-lg mr-24">Generation: {{gen.gen}}</p> -->
+              <!-- </div> -->
+              <p class="text-lg mr-24">Generation: 10</p>
+              <p class="text-lg">Term 10</p>
             </div>
           </div>
         </div>
-        <div>
-          <div @click="toggleECDetails" class="text-2xl font-bold mb-4">
-            <span v-if="showECDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
-            <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> Ecommerce
-          </div>
-          <div v-if="showECDetails">
-            <div class="details-container">
-              <div class="icon-container">
-                <div class="w-10 h-10 bg-white mr-3 flex items-center justify-center">
-                  <i class="fa-solid fa-business-time"></i>
-                </div>
-              </div>
-              <div class="info-container">
-                <p class="text-lg mr-24">Generation</p>
-                <p class="text-lg">Term 10</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div @click="toggleTNDetails" class="text-2xl font-bold mb-4">
-            <span v-if="showTNDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
-            <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> Computer Science
-          </div>
-          <div v-if="showTNDetails">
-            <div class="details-container">
-              <div class="icon-container">
-                <div class="w-10 h-10 bg-white mr-3 flex items-center justify-center">
-                  <i class="fa-solid fa-business-time"></i>
-                </div>
-              </div>
-              <div class="info-container">
-                <p class="text-lg mr-24">Generation</p>
-                <p class="text-lg">Term 10</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </a>
+    </div>
   </Header>
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      showCSDetails: true,
-      showECDetails: true,
-      showTNDetails: true,
+      majors: [],
+      gens: [],
     };
   },
+  mounted() {
+    this.MajorInfo();
+    this.GenInfo();
+  },
   methods: {
-    toggleCSDetails() {
-      this.showCSDetails = !this.showCSDetails;
+    toggleMajorDetails(major) {
+      major.showDetails = !major.showDetails;
     },
-    toggleECDetails() {
-      this.showECDetails = !this.showECDetails;
+    MajorInfo() {
+      axios.get('/api/majors')
+        .then(response => {
+          this.majors = response.data.map(major => ({ ...major, showDetails: true }));
+        })
+        .catch(error => {
+          console.error('Error fetching major information:', error);
+        });
     },
-    toggleTNDetails() {
-      this.showTNDetails = !this.showTNDetails;
+    GenInfo() {
+      axios.get('/api/generations')
+        .then(response => {
+          this.gens = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching Gen information:', error);
+        });
     },
   },
 };
 </script>
 
 <style scoped>
-
 .details-container {
-  padding: 15px;
+  padding: 12px;
   border: 1px solid #ccc;
   background-color: #D9D9D9;
   margin-bottom: 10px;
@@ -103,6 +85,6 @@ export default {
 
 .info-container {
   display: flex;
-  align-items: center; /* Align items vertically */
+  align-items: center;
 }
 </style>

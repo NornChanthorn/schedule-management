@@ -1,8 +1,8 @@
 <template>
     <div class="backgroud_new" >
-      <div class="flex items-center justify-between bg-white p-4 shadow-md">
+      <div class="flex header_fixed items-center justify-between bg-white p-4 shadow-md">
         <div class="flex items-center">
-          <img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8">
+          <a href="/"><img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8"></a>
         </div>
         <div class="menu-bar">
         <ul>
@@ -21,7 +21,7 @@
                   </ul>
               </div>
           </li>
-          <li><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
+          <li><a href="/studentlist" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
               <div class="dropdown-menu">
                   <ul>
                     <li> <a href="#">Department <i class="fas fa-caret-right"></i></a> 
@@ -43,7 +43,7 @@
         <input type="text" class="search-input" placeholder="Search...">
       </div>
       <div class="flex items-center">
-          <i class="fas fa-bell text-white text-xl mr-4"></i> 
+          <!-- <i class="fas fa-bell text-white text-xl mr-4"></i>  -->
           <button class="button" @click="TogglePopup('buttonTrigger')">
             <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
           </button>
@@ -64,7 +64,7 @@
           <span class="text-black">{{user.name }}</span>
         </div>
       </div>
-      <div class="max-w-95 mx-auto p-8">
+      <div class="max-w-95 mx-auto p-8 mt-20">
         <slot></slot>
       </div>
     </div>
@@ -248,5 +248,10 @@ export default{
 
 .modal-item:hover,.dropdown-menu-1:hover {
   background-color: #0693E4;
+}
+.header_fixed{
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 </style>
