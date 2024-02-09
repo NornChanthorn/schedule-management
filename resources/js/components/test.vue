@@ -2,6 +2,11 @@
     <p>This is a Fake Home Page</p>
     <h1 v-if="user.role==='admin'">Here is my admin {{user.name }} </h1>
     <h1 v-if="user.role==='teacher'">Hello, sir {{ user.name }}</h1>
+    <!-- <div class="grid grid-cols-4 gap-4">
+        <div>01</div>
+        <div>02</div>
+        <div>09</div>
+    </div> -->
     <Button @click="logout">
         Logout
     </Button>

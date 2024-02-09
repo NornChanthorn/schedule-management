@@ -75,8 +75,6 @@
       <div class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
         <router-view></router-view>
       </div>
-
-
     </div>
   </template>
 <script>
@@ -91,6 +89,7 @@ export default{
 
     mounted(){
         this.userInfo();
+
     },
     setup() {
       const popupTriggers = ref({
@@ -113,30 +112,60 @@ export default{
     },
     methods:{
         userInfo(){
-            axios.get('/api/user')
+            axios.get('user')
                 .then(response => {
                     // Successfully fetched user information
                     this.user = response.data;
                 })
                 .catch(error => {
                     // Handle error
-                    console.error('Error fetching user information:', error);
+                    if (error.response && error.response.status === 401) {
+                        // Redirect to the login page
+                        console.log('unauthenticated')
+                    } else {
+                    // Handle other error cases
+                      console.error('Error fetching user information:', error);
+                    }
+
+
                 });
 
         },
         logout() {
-            axios.post('/api/logout')
-                .then(response => {
-                    localStorage.removeItem('authToken');
-                    console.log('Logout successful');
-                    this.$router.push({ path: '/login' });
-                })
-                .catch(error => {
-                    console.error('Logout error:', error);
-                });
+            localStorage.removeItem('authToken');
+            this.$router.push({ path: '/login' });
+            // axios.post('logout')
+            //     .then(response => {
+            //         localStorage.removeItem('authToken');
+            //         console.log('Logout successful');
+            //         this.$router.push({ path: '/login' });
+            //     })
+            //     .catch(error => {
+            //         console.error('Logout error:', error);
+            //     });
+        },
+        checkRoute(){
+        if(localStorage.getItem('authToken')==null){
+        this.$router.push({path: '/login'})
+        }else{
+            console.log('Not loggin yet')
         }
+  },
 
-    }
+
+    },
+    beforeRouteEnter(to, from, next) {
+        // Check if the user is authenticated before entering the route
+        if (!localStorage.getItem('authToken')) {
+        // User is not authenticated, redirect to the login page
+        next({ path: '/login' });
+        } else {
+        // User is authenticated, proceed to the route
+        next();
+        }
+    },
+
+
 
 }
 

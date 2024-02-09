@@ -43,7 +43,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Logged out']);
         }
 
-        // If the user is not authenticated, return an error response
+        // // If the user is not authenticated, return an error response
         return response()->json(['message' => 'User not authenticated'], 401);
 
 

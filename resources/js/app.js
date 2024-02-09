@@ -5,6 +5,7 @@ import PrimeVue from 'primevue/config'
 import Lara from '../../presets/lara';
 import Tailwind from 'primevue/passthrough/tailwind';
 
+
 import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import "primeicons/primeicons.css"; //icons
@@ -17,12 +18,16 @@ import axios from 'axios'
 
 import '../css/app.css';
 const authToken = localStorage.getItem('authToken');
+axios.defaults.baseURL = 'http://139.59.224.162/api/';
 if (authToken) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
 }
 
 
+
 const app = createApp(App);
+
+app.config.globalProperties.$axios = axios;
 app.use(router)
 app.use(PrimeVue , { unstyled: true, pt: Tailwind })
 // app.use(PrimeVue,  {
