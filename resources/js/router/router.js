@@ -5,6 +5,10 @@ import Test from '../components/ExampleComponent.vue'
 import Schedule from '../components/schedule.vue'
 import Student from '../components/studentList.vue'
 import Profile from '../components/profile.vue'
+import Generation from '../components/admin/Generation.vue'
+import Major from '../components/admin/Major.vue'
+import Term from '../components/admin/Term.vue'
+
 const routes=[
     {
         path: '/login',
@@ -17,6 +21,24 @@ const routes=[
         name: 'Main',
         component: Main,
         meta: { requiresAuth: true },
+        children:[
+            {
+                path: '',
+                name: 'Major', // Add a comma here
+                component: Major,
+            },
+            {
+                path: '/:name',
+                name: 'Generation',
+                component: Generation
+            },
+            {
+                path: '/:name/:id',
+                name: 'Term',
+                component: Term
+            }
+
+        ]
     },
     {
         path: '/test',
@@ -46,25 +68,25 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-router.beforeEach((to, from, next) => {
+// router.beforeEach((to, from, next) => {
 
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!isUserAuthenticated()) {
-        next('/login');
-      } else {
-        // If authenticated, prevent access to the login page
-        if (to.name === 'Login') {
-          next('/');
-        } else {
-          next();
-        }
-      }
-    } else {
-      next();
-    }
-});
-function isUserAuthenticated() {
-    return localStorage.getItem('authToken') !== null;
-}
+//     if (to.matched.some(record => record.meta.requiresAuth)) {
+//       if (!isUserAuthenticated()) {
+//         next('/login');
+//       } else {
+//         // If authenticated, prevent access to the login page
+//         if (to.name === 'Login') {
+//           next('/');
+//         } else {
+//           next();
+//         }
+//       }
+//     } else {
+//       next();
+//     }
+// });
+// function isUserAuthenticated() {
+//     return localStorage.getItem('authToken') !== null;
+// }
 
 export default router
