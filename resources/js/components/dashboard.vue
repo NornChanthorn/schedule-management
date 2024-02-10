@@ -72,15 +72,22 @@
           <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
         </div>
       </div>
-      <div class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+      <div v-if="user.role =='admin'" class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
         <router-view></router-view>
+      </div>
+      <div v-else class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+         <TeacherPage></TeacherPage>
       </div>
     </div>
   </template>
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import TeacherPage from '../components/teacher/MainPage.vue'
 export default{
+    components:{
+        TeacherPage
+    },
     data(){
         return{
             user: []
@@ -89,7 +96,6 @@ export default{
 
     mounted(){
         this.userInfo();
-
     },
     setup() {
       const popupTriggers = ref({

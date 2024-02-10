@@ -14,6 +14,8 @@ import "primeicons/primeicons.css"; //icons
 import Button from "primevue/button"
 import SpeedDial from 'primevue/speeddial';
 import InputText from 'primevue/inputtext';
+import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
 import axios from 'axios'
 
 import '../css/app.css';
@@ -22,7 +24,6 @@ axios.defaults.baseURL = 'http://139.59.224.162/api/';
 if (authToken) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
 }
-
 
 
 const app = createApp(App);
@@ -36,6 +37,8 @@ app.use(PrimeVue , { unstyled: true, pt: Tailwind })
 // })
 app.component('test', App)
 app.component('Button', Button)
+app.component('Dialog', Dialog)
+app.component('Toast', Toast)
 app.component('InputText', InputText)
 app.component('SpeedDial', SpeedDial)
 app.mount('#app')
