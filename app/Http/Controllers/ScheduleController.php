@@ -19,10 +19,7 @@ class ScheduleController extends Controller
     }
     public function getScheduleByTermId($term_id){
         $data = Schedule::where('term_id', $term_id)->with('term', 'day', 'course.teacher', 'group', 'room')->get()->groupBy('term');
-        return response()->json([
-            'message' => 'Successfully',
-            'data'   => $data
-        ]);
+        return response()->json($data);
     }
     public function getSchedule_Teacher($teacher_id){
         $data = Schedule::whereHas('course.teacher', function($query) use ($teacher_id){

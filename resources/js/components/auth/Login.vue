@@ -10,14 +10,14 @@
           <div class="mb-6">
             <label for="email" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': emailFocused }">Email</label>
             <div class="relative mt-1">
-              <input type="email" v-model="email" @focus="handleFocus" @blur="handleBlur" required class="p-2 w-full border rounded" :placeholder="emailFocused ? '' : 'Email'"/>
+              <input type="email" v-model="email" @focus="handleFocus" @blur="handleBlur" required class="p-2 w-full border rounded focus:outline-none" :placeholder="emailFocused ? '' : 'Email'"/>
               <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             </div>
         </div>
         <div class="mb-8 relative">
           <label for="password" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': pwFocused }">Password</label>
           <div class="relative mt-1">
-            <input :type="showPassword ? 'text' : 'password'" v-model="password" required @focus="handle_PW_Focus" @blur="handleBlur" class="p-2 w-full border rounded" placeholder="Password "/>
+            <input :type="showPassword ? 'text' : 'password'" v-model="password" required @focus="handle_PW_Focus" @blur="handleBlur" class="p-2 w-full border rounded focus:outline-none" :placeholder="pwFocused ? '' : 'Password'"/>
             <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" @click="togglePasswordVisibility">
               <!-- Placeholder text for accessibility -->
@@ -59,6 +59,9 @@ data() {
     showPassword: false,
     emailFocused: false,
     pwFocused: false,
+    errors: null,
+    error_pass: null,
+    error_email: null,
   };
 },
 mounted(){
@@ -74,9 +77,11 @@ methods: {
       }
   },
   login() {
-      axios.post('/api/login', {
-      email: this.email,
-      password: this.password,
+        this.error_email='';
+        this.error_pass= '';
+        axios.post('/api/login', {
+        email: this.email,
+        password: this.password,
     })
     .then(response => {
       const authToken = response.data.token;
@@ -85,7 +90,12 @@ methods: {
       this.$router.push({ path: '/'});
     })
     .catch(error => {
-      console.log(error);
+      if (error.response && error.response.status === 422) {
+        this.error_email = Object.values(error.response.data.errors.email).flat();
+        this.error_pass = Object.values(error.response.data.errors.password).flat();
+      } else {
+        this.error.push('An error occurred while logging in.');
+      }
     });
   },
   loginTest(){
