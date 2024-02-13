@@ -68,25 +68,24 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-// router.beforeEach((to, from, next) => {
-
-//     if (to.matched.some(record => record.meta.requiresAuth)) {
-//       if (!isUserAuthenticated()) {
-//         next('/login');
-//       } else {
-//         // If authenticated, prevent access to the login page
-//         if (to.name === 'Login') {
-//           next('/');
-//         } else {
-//           next();
-//         }
-//       }
-//     } else {
-//       next();
-//     }
-// });
-// function isUserAuthenticated() {
-//     return localStorage.getItem('authToken') !== null;
-// }
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!isUserAuthenticated()) {
+        next('/login');
+      } else {
+        // If authenticated, prevent access to the login page
+        if (to.name === 'Login') {
+          next('/');
+        } else {
+          next();
+        }
+      }
+    } else {
+      next();
+    }
+});
+function isUserAuthenticated() {
+    return localStorage.getItem('authToken') !== null;
+}
 
 export default router

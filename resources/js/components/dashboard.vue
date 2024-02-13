@@ -4,46 +4,8 @@
         <div class="flex items-center">
           <img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8">
         </div>
-        <div class="menu-bar">
-        <ul>
-          <li><a href="#" class="main-menu">Home</a></li>
-          <li v-if="user.role==='admin'"><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
-              <div class="dropdown-menu">
-                  <ul>
-                    <li> <a href="#">Team <i class="fas fa-caret-right"></i></a>
-                    <div class="dropdown-menu-1">
-                        <ul>
-                          <li><a href="#">Team-1</a></li>
-                          <li><a href="#">Team-2</a></li>
-                        </ul>
-                      </div>
-                    </li>
-                  </ul>
-              </div>
-          </li>
-          <li><a href="#" class="main-menu">Student <i class="fas fa-caret-down"></i></a>
-              <div class="dropdown-menu">
-                  <ul>
-                    <li> <a href="#">Department <i class="fas fa-caret-right"></i></a>
-                    <div class="dropdown-menu-1">
-                        <ul>
-                          <li><a href="#">Gen</a></li>
-                        </ul>
-                      </div>
-                    </li>
-                  </ul>
-              </div>
-          </li>
-        </ul>
-      </div>
-      <div class="search-container">
-        <div class="search-icon">
-          <i class="fas fa-search"></i>
-        </div>
-        <input type="text" class="search-input" placeholder="Search...">
-      </div>
       <div class="flex items-center">
-          <i class="fas fa-bell text-white text-xl mr-4"></i>
+          <i class="fas fa-bell text-xl mr-4 "></i>
           <button class="button" @click="TogglePopup('buttonTrigger')">
             <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
           </button>
@@ -76,7 +38,7 @@
       <div v-if="user.role =='admin'" class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
         <router-view></router-view>
       </div>
-      <div v-else class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+      <div v-else class=" border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
          <TeacherPage></TeacherPage>
       </div>
     </div>
