@@ -1,5 +1,6 @@
 <template>
-    <div class="h-screen">
+  <AdminHeader>
+    <div class="content-container h-screen">
       <div class="font-istok bg-white">
         <div class="flex p-4 space-x-20">
           <div class="flex text-4xl font-bold text-custom-color">
@@ -46,6 +47,7 @@
         </table>
       </div>
     </div>
+  </AdminHeader>
 </template>
 
 

@@ -24,6 +24,9 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ContextMenu from 'primevue/contextmenu';
 import OverlayPanel  from 'primevue/overlaypanel';
 
+import Header from "./components/header.vue";
+import AdminHeader from "./components/admin/admin_header.vue";
+
 
 //set token in header
 const authToken = localStorage.getItem('authToken');
@@ -52,6 +55,8 @@ app.component('SpeedDial', SpeedDial)
 app.component('ConfirmPop', ConfirmPopup)
 app.component('ContextMenu', ContextMenu)
 app.component('OverlayPanel', OverlayPanel);
+app.component('Header', Header)
+app.component('AdminHeader', AdminHeader)
 app.use(ConfirmationService)
 
 app.mount('#app')
