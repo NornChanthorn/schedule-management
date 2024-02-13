@@ -1,7 +1,6 @@
 <template>
-    <router-view/>
+    <p>Teacher role</p>
+
 </template>
 <script>
-
-
 </script>

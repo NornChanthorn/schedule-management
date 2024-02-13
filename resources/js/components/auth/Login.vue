@@ -79,7 +79,7 @@ methods: {
   login() {
         this.error_email='';
         this.error_pass= '';
-        axios.post('/api/login', {
+        axios.post('login', {
         email: this.email,
         password: this.password,
     })
@@ -98,10 +98,7 @@ methods: {
       }
     });
   },
-  loginTest(){
-      console.log('Here logged in')
-       this.$router.push({ path: '/' });
-  },
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   },
