@@ -36,7 +36,7 @@ class TeacherController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'user_id' => 'required',
+            // 'user_id' => 'required',
             'title' => 'required',
             'f_name' => 'required',
             'l_name' => 'required',

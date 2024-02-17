@@ -31,7 +31,7 @@ class RoomController extends Controller
             'name' => 'required|string',
             'size' => 'required|integer',
             'type' => 'required|string',
-            'status' => 'required|string',
+            'status' => 'required|boolean',
             // 'status' => 'boolean',
         ]);
 

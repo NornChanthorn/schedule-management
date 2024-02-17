@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
-    public function index(){
-        $student = Student::all();
-        return response()->json($student);
+    public function index()
+    {
+        $students = Student::with(['generation', 'group', 'major'])->get();
+        return response()->json($students);
     }
-    public function store(Request $req){
-        $validator = Validator::make($req->all(), [
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'f_name' => 'required',
             'l_name' => 'required',
             'student_id' => 'required',
@@ -25,20 +28,24 @@ class StudentController extends Controller
             'group_id' => 'required',
             'major_id' => 'required'
         ]);
-        if($validator->fails()){
-            return response()->json([
-                'errors'=> $validator->errors()
-            ], 422);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
+
         $student = Student::create($validator->validated());
-        return response()->json([
-            'message'=> 'Create successfully',
-            'data'=> $student
-        ]);
-
+        return response()->json(['message' => 'Created successfully', 'data' => $student]);
     }
-    public function update(Request $req, $id){
-        $validator = Validator::make($req->all(), [
+
+    public function update(Request $request, $id)
+    {
+        $student = Student::find($id);
+
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
             'f_name' => 'required',
             'l_name' => 'required',
             'student_id' => 'required',
@@ -49,23 +56,24 @@ class StudentController extends Controller
             'group_id' => 'required',
             'major_id' => 'required'
         ]);
-        if($validator->fails()){
-            return response()->json([
-                'errors'=> $validator->errors()
-            ], 422);
-        }
-        $student->update($validator->validated());
-        return response()->json([
-            'message' => 'Update successfully',
-            'data' => $student
-        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $student->update($validator->validated());
+        return response()->json(['message' => 'Updated successfully', 'data' => $student]);
     }
-    public function delete($id){
+
+    public function destroy($id)
+    {
         $student = Student::find($id);
+
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+
         $student->delete();
-        return response()->json([
-            'message'=> 'Delete successfully',
-        ]);
+        return response()->json(['message' => 'Deleted successfully']);
     }
 }
