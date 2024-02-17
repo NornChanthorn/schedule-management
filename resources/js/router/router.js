@@ -36,7 +36,17 @@ const routes=[
                 path: '/:name/:id',
                 name: 'Term',
                 component: Term
-            }
+            },
+            {
+              path: '/schedule',
+              component: Schedule,
+              name: 'schedule'
+            },
+            {
+              path: '/profile',
+              component: Profile,
+              name: 'profile'
+            },
 
         ]
     },
@@ -46,19 +56,9 @@ const routes=[
         name: 'Test'
     },
     {
-      path: '/schedule',
-      component: Schedule,
-      name: 'schedule'
-    },
-    {
       path: '/studentlist',
       component: Student,
       name: 'studentlist'
-    },
-    {
-      path: '/profile',
-      component: Profile,
-      name: 'profile'
     },
 
 

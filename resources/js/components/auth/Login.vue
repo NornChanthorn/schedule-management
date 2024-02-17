@@ -123,3 +123,14 @@ methods: {
 
 
 </script>
+<style>
+.font-istok {
+    font-family: 'Istok Web', sans-serif;
+}
+.text-custom-color {
+    color: #7A999C;
+}
+.text-custom-color-small {
+    color: #567281;
+}
+</style>
