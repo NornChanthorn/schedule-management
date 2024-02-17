@@ -1,9 +1,7 @@
 <template>
-  <Header>
-    <div class="content-container">
-      <div class="font-istok text-4xl font-bold text-custom-color-small p-4">
-        <h1>Gen 7, CS</h1>
-      </div>
+  <!-- <Header> -->
+    <!-- <div class="content-container"> -->
+      <h1 class="text-custom-color-small font-istok text-4xl font-bold">Schedule , CS</h1>
       <div class="schedule-container p-4">
         <div class="schedule">
           <div class="table-container">
@@ -17,13 +15,13 @@
               <tbody>
                 <tr>
                   <td>8:15</td>
-                  <th :colspan="groups.length * days.length * 2" class="h-24 text-3xl">National Anthem</th>
+                  <th :colspan="groups.length * days.length * 2" class="h-16 text-3xl">National Anthem</th>
                 </tr>
                 <tr>
-                    <th rowspan="1" class="backgroud_group"></th>
+                    <th rowspan="1" class="bg-green-200"></th>
                     <template v-for="day in days">
                         <template v-for="group in groups">
-                          <td class="backgroud_group">{{ group }}
+                          <td class="bg-green-200">{{ group }}
                           </td>
                         </template>
                       </template>
@@ -33,7 +31,7 @@
                     <td style="width: 120px">{{ timeSlot }}</td>
                     <template v-for="day in days">
                       <template v-for="group in groups">
-                        <td class="group-cell">
+                        <td class="group-cell" @click="TogglePopup('buttonTrigger')">
                           <div v-if="hasMatchingSchedules(timeSlot, day, group)">
                             <template v-for="schedule in matchingSchedules(timeSlot, day, group)">
                               <div class="schedule-info">
@@ -48,7 +46,7 @@
                             </template>
                           </div>
                           <div v-else>
-                            <button class="button" @click="TogglePopup('buttonTrigger')">
+                            <button class="button">
                               <i class="fa-solid fa-circle-plus mr-2"></i>Add
                             </button>
                           </div>
@@ -91,7 +89,7 @@
             <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Filling Schedule</h2>
             <div class="form_flex_name">
               <div class="mb-4 mr-4 flex-1">
-                <label for="firstName" class="block text-sm font-medium text-gray-60">First Name</label>
+                <label for="firstName" class="block text-sm font-medium text-gray-600">First Name</label>
                 <input type="text" id="firstName" name="firstName" class="mt-1 p-2 border rounded-md w-full">
               </div>
               <div class="mb-4 ml-4 flex-1">
@@ -100,7 +98,7 @@
               </div>
             </div>
             <div class="mb-4">
-              <label for="course" class="block text-sm font-medium text-gray-600">Choose a Course:</label>
+              <label for="course" class="block text-sm font-medium text-gray-600">Choose a Course</label>
               <select id="course" name="course"
                 class="mt-1 p-2 border rounded-md w-full">
                 <option value="automta">Automta</option>
@@ -109,11 +107,19 @@
               </select>
             </div>
             <div class="mb-4">
-              <label for="class" class="block text-sm font-medium text-gray-600">Choose a Class:</label>
+              <label for="class" class="block text-sm font-medium text-gray-600">Choose a Class</label>
               <select id="class" name="class"
                 class="mt-1 p-2 border rounded-md w-full">
                 <option value="classA">Theory</option>
                 <option value="classB">Lab</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label for="course" class="block text-sm font-medium text-gray-600">Room</label>
+              <select id="course" name="course"
+                class="mt-1 p-2 border rounded-md w-full">
+                <option value="room">A201</option>
+                <option value="room">A202</option>
               </select>
             </div>
             <div class="flex justify-end">
@@ -124,8 +130,8 @@
         </div>
       </transition>
       </div>
-    </div>
-  </Header>
+    <!-- </div> -->
+  <!-- </Header> -->
 </template>
 
 
@@ -141,6 +147,8 @@ export default {
       groups: ['G1'],
       timeSlots: ['08:30:00', '10:15:00', '12:15:00', '13:15:00'],
       dataFromDatabase: {},
+      
+
     };
   },
   
@@ -234,14 +242,14 @@ th, td {
   border: 1px solid black;
   padding: 10px;
   text-align: center;
-  min-width: 150px;
+  min-width: 100px;
 }
 
 th {
   font-weight: bold;
 }
 
-.time-header, .day-header, .sub-header, .time-slot, .break-row {
+.time-header, .day-header, .sub-header, .time-slot {
   background-color: #4B687A;
   color: white;
 }
@@ -262,10 +270,12 @@ th.day-header, td.group-cell {
   min-width: 250px;
 }
 td.group-cell {
-  height: 120px;
+  height: 80px;
 }
-.break-row{
+td.break-row {
+  height: 10px;
   background: #FFA500;
+  color: white;
 }
 .course-name {
   font-weight: bold;
@@ -346,5 +356,10 @@ body.modal-open {
 .point-item:hover {
   background-color: #0693E4;
 }
+.content-container, .header-container {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px 40px;
+  }
 </style>
 

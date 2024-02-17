@@ -1,10 +1,10 @@
 <template>
-  <Header>
-    <div class="content-container">
+  <!-- <Header> -->
+    <!-- <div class="content-container"> -->
       <div class="text-custom-color-small font-istok text-4xl font-bold p-4">
         <h1>Profile</h1>
       </div>
-      <div class="absolute right-60 top-40 items-end">
+      <div class="absolute right-60 top-60 items-end">
         <label for="profileImage" class="cursor-pointer">
           <img @click="changeProfileImage" src="/img/user-profile.jpg" alt="User Profile" class="rounded-full h-20 w-20 mb-4 border border-2 cursor-pointer hover:border-blue-500"/>
         </label>
@@ -44,12 +44,12 @@
 
           <div class="flex justify-start mt-6">
             <button @click="cancel" class="w-32 px-4 py-2 mr-2 text-gray-700 rounded border border-2 hover:bg-gray-200">Cancel</button>
-            <button @click="save" class="w-32 px-4 py-2 text-white rounded new-bg hover:bg-blue-500">Save</button>
+            <button @click="save" class="w-32 px-4 py-2 text-white rounded bg-blue-500 hover:bg-blue-700">Save</button>
           </div>
         </div>
       </div>
-    </div>
-  </Header>
+    <!-- </div> -->
+  <!-- </Header> -->
 </template>
 
 <script>

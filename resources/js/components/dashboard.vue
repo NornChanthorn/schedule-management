@@ -1,8 +1,8 @@
 <template>
     <div class="backgroud_new" >
-      <div class="flex items-center justify-between bg-white p-4 shadow-md">
+      <div class="flex header_fixed items-center justify-between bg-white p-6 shadow-md">
         <div class="flex items-center">
-          <img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8">
+          <a href="/"><img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8"></a>
         </div>
       <div class="flex items-center">
           <i class="fas fa-bell text-xl mr-4 "></i>
@@ -13,7 +13,7 @@
             <div class="modal" v-if="popupTriggers.buttonTrigger">
               <div class="modal-content">
                 <div class="modal-item bg-blue flex">
-                  <a href="#" class="flex_item">
+                  <a href="/profile" class="flex_item">
                     <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
                   </a>
                 </div>
@@ -26,20 +26,29 @@
           <span class="text-black">{{user.name }}</span>
         </div>
       </div>
-      <div class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white">
-        <div  v-if="user.role==='admin'" class="flex p-4">
-          <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
+      <!-- <div class="max-w-95 mx-auto mt-20 bg-black shadow-md header_fixed">
+        <nav>
+            <router-link to="/schedule" exact class="nav-link" :class="{ 'active': $route.path === '/schedule' }">Schdeule</router-link>
+            <router-link to="/studentList" class="nav-link" :class="{ 'active': $route.path === '/studentList' }">Student</router-link>
+            <router-link to="/teacherlist" class="nav-link" :class="{ 'active': $route.path === '/teacherlist' }">Teacher</router-link>
+        </nav>
+      </div> -->
+      <div class="max-w-95 mx-auto p-8 mt-20">
+        <div class="text-center border-2 mb-6 font-istok bg-white">
+          <div  v-if="user.role==='admin'" class="flex p-4">
+            <h1 class="text-4xl font-bold text-custom-color mr-5 ml-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
+          </div>
+          <div  v-if="user.role==='teacher'"  class="flex p-4">
+            <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
+          </div>
         </div>
-        <div  v-if="user.role==='teacher'"  class="flex p-4">
-          <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
+        
+        <div v-if="user.role =='admin'" class="content-container">
+          <router-view></router-view>
         </div>
-      </div>
-
-      <div v-if="user.role =='admin'" class="text-center border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
-        <router-view></router-view>
-      </div>
-      <div v-else class=" border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
-         <TeacherPage></TeacherPage>
+        <div v-else class=" border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+          <TeacherPage></TeacherPage>
+        </div>
       </div>
     </div>
   </template>
@@ -257,4 +266,35 @@ export default{
 .modal-item:hover,.dropdown-menu-1:hover {
   background-color: #0693E4;
 }
+.header_fixed{
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+.nav-link {
+    /* margin-right: 20px; */
+  text-decoration: none;
+  /* transition: background-color 0.3s; */
+  transition: border-bottom-color 0.3s, box-shadow 0.3s; 
+  color: white;
+  display: inline-block;
+  padding: 20px; /* Adjust padding as needed */
+  border: 2px solid transparent;
+}
+
+.nav-link:hover {
+  background-color: #ddd;
+  color: wbluehite;
+}
+
+/* Active link style */
+.nav-link.active {
+  background-color: #4CAF50;
+  border-bottom-color: white;
+}
+.content-container, .header-container {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px 35px;
+  }
 </style>

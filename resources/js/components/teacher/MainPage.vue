@@ -1,4 +1,7 @@
 <template >
+    <!-- <div  v-if="user.role==='teacher'"  class="flex p-4">
+      <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
+    </div> -->
     <div class="content-container font-istok " >
         <a href="/schedule">
           <div v-for="major in majors" :key="major.id">
