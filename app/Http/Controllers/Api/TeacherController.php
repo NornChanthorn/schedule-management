@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,10 +19,31 @@ class TeacherController extends Controller
         return Teacher::with('user')->findOrFail($id);
     }
 
+    // public function store(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'user_id' => 'required',
+    //         'title' => 'required',
+    //         'f_name' => 'required',
+    //         'l_name' => 'required',
+    //         'gender' => 'required',
+    //         'dob' => 'required',
+    //         'phone_num' => 'required',
+    //     ]);
+
+    //     return Teacher::create($data);
+    // }
+
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'user_id' => 'required',
+        $userData = $request->validate([
+            // 'name' => 'string',
+            'email' => 'required',
+            // 'password' => 'required',
+            // 'role' => 'string',
+        ]);
+
+        $teacherData = $request->validate([
             'title' => 'required',
             'f_name' => 'required',
             'l_name' => 'required',
@@ -30,8 +52,25 @@ class TeacherController extends Controller
             'phone_num' => 'required',
         ]);
 
-        return Teacher::create($data);
+        $name = $teacherData['f_name'] . ' ' . $teacherData['l_name'];
+
+        // Create a new user
+        $user = User::create([
+            'name' => $name,
+            'email' => $userData['email'],
+            'password' => bcrypt($name),
+            'role' => 'teacher',
+        ]);
+
+        // Add the user_id to the teacherData array
+        $teacherData['user_id'] = $user->id;
+
+        // Create a new teacher
+        $teacher = Teacher::create($teacherData);
+
+        return response()->json(['user' => $user, 'teacher' => $teacher]);
     }
+
 
     public function update(Request $request, $id)
     {

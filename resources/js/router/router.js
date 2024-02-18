@@ -8,6 +8,8 @@ import Profile from '../components/profile.vue'
 import Generation from '../components/admin/Generation.vue'
 import Major from '../components/admin/Major.vue'
 import Term from '../components/admin/Term.vue'
+import Students from '../components/student.vue'
+import Teacher from '../components/teacher.vue'
 
 const routes=[
     {
@@ -60,6 +62,18 @@ const routes=[
       component: Student,
       name: 'studentlist'
     },
+
+    {
+      path: '/student',
+      component: Students,
+      name: 'student'
+  },
+  {
+      path: '/teacher',
+      component: Teacher,
+      name: 'teacher'
+  },
+
 
 
 ];
