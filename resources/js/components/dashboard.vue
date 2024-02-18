@@ -26,6 +26,7 @@
           <span class="text-black">{{user.name }}</span>
         </div>
       </div>
+      
       <!-- <div class="max-w-95 mx-auto mt-20 bg-black shadow-md header_fixed">
         <nav>
             <router-link to="/schedule" exact class="nav-link" :class="{ 'active': $route.path === '/schedule' }">Schdeule</router-link>
@@ -42,7 +43,8 @@
             <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
           </div>
         </div>
-        
+        <button class="button" @click="goToAnotherPage">Go to Another Page</button>
+      <button class="button" @click="goToAnotherPages">Go to Another Page</button>
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
         </div>
@@ -50,6 +52,7 @@
           <TeacherPage></TeacherPage>
         </div>
       </div>
+      
     </div>
   </template>
 <script>
@@ -108,6 +111,18 @@ export default{
 
                 });
 
+        },
+        goToAnotherPage() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/student';
+          // Navigate to the new path
+          this.$router.push(newPath);
+        },
+        goToAnotherPages() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/teacher';
+          // Navigate to the new path
+          this.$router.push(newPath);
         },
         logout() {
             localStorage.removeItem('authToken');
