@@ -28,12 +28,12 @@ const routes=[
                 component: Major,
             },
             {
-                path: '/:name',
+                path: '/:name:id',
                 name: 'Generation',
                 component: Generation
             },
             {
-                path: '/:name/:id',
+                path: '/:name:id/:genid',
                 name: 'Term',
                 component: Term
             },
