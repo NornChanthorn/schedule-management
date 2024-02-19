@@ -1,8 +1,11 @@
 <template>
-  <div class="w-full h-screen bg-slate-50 flex font-istok">
-    <div class="w-1/2 h-full" :style="{ 'background-image': `url('/img/login_pic.svg')`, 'background-size': '600px 450px', 'background-repeat': 'no-repeat', 'background-position': 'right' }"></div>
-    <div class="w-1/2 h-full flex justify-center items-center">
-      <form action="" class="w-3/4 p-10" @submit.prevent="login">
+ <div class="w-full h-screen flex h-screen font-istok">
+      <!-- Use image as background with 3/4 width on medium screens -->
+    <div class="md:w-1/2 md:flex items-center justify-center">
+      <img class="w-full md:w-1/2 absolute md:block max-h-full py-10" src="/img/login_pic.svg" alt="Login Image"/>
+    </div>
+    <div class="z-10 back md:w-1/2 flex justify-center items-center bg-blue-700 bg-opacity-50 relative w-full ">
+      <form action="" class="w-full max-w-md p-10 mx-auto my-auto bg-white" @submit.prevent="login">
         <div class="flex mb-8">
           <h1 class="text-5xl font-bold transition-all duration-300 mr-2 text-custom-color font-istok">Hello,</h1>
           <span class="text-3xl transition-all duration-300 mt-2 text-custom-color-small font-istok"> Guyss!</span>
@@ -14,14 +17,12 @@
               <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             </div>
         </div>
-        <div class="mb-8 relative">
+        <div class="mb-5 relative">
           <label for="password" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': pwFocused }">Password</label>
           <div class="relative mt-1">
             <input :type="showPassword ? 'text' : 'password'" v-model="password" required @focus="handle_PW_Focus" @blur="handleBlur" class="p-2 w-full border rounded focus:outline-none" :placeholder="pwFocused ? '' : 'Password'"/>
             <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" @click="togglePasswordVisibility">
-              <!-- Placeholder text for accessibility -->
-              <!-- <span class="sr-only">Toggle Password Visibility</span> -->
               <img
                 class="h-5 w-5 text-gray-500"
                 :src="showPassword ? 'https://img.icons8.com/?size=60&id=60022&format=png' : 'https://img.icons8.com/?size=160&id=3PEmEecIkSOo&format=png'"
@@ -30,6 +31,7 @@
             </button>
         </div>
        </div>
+       <div v-if="errors" class="text-red-500 text-sm mt-1 text-center">{{ errors }}</div>
         <div class="flex justify-end">
           <button type="submit" class="px-4 py-2 text-white w-full font-istok" style="background-color: #4B687A;">Login</button>
         </div>
@@ -91,11 +93,21 @@ methods: {
     })
     .catch(error => {
       if (error.response && error.response.status === 422) {
-        this.error_email = Object.values(error.response.data.errors.email).flat();
-        this.error_pass = Object.values(error.response.data.errors.password).flat();
-      } else {
-        this.error.push('An error occurred while logging in.');
-      }
+        const errors = error.response.data.errors;
+      if (errors.email) {
+            this.error_email = 'Invalid email address or email not found.';
+          } else {
+            this.error_email = null;
+          }
+
+          if (errors.password) {
+            this.error_pass = 'Incorrect password.';
+          } else {
+            this.error_pass = null;
+          }
+        } else {
+          this.errors = 'An error occurred while logging in.';
+        }
     });
   },
 
@@ -132,5 +144,8 @@ methods: {
 }
 .text-custom-color-small {
     color: #567281;
+}
+.back{
+  background-color: rgba(0, 0, 0, 0.3);
 }
 </style>
