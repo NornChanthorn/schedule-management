@@ -2,13 +2,13 @@
     <!-- <div  v-if="user.role==='teacher'"  class="flex p-4">
       <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
     </div> -->
-    <div class="content-container font-istok " >
-        <a href="/schedule">
+    <div class="font-istok " >
           <div v-for="major in majors" :key="major.id">
             <div @click="toggleMajorDetails(major)" class="text-xl font-bold mb-4 mt-4">
-              <span v-if="major.showDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
+              <span v-if="major.showDetails"><i class="fa-solid fa-chevron-up mr-4" style="transform: rotate(90deg);"></i></span>
               <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> {{ major.name }}
             </div>
+            <a href="/schedule">
             <div v-if="major.showDetails" class="details-container">
               <div class="icon-container">
                 <div class="w-10 h-10 bg-white mr-3 flex items-center justify-center">
@@ -22,9 +22,10 @@
                 <p class="text-lg mr-24">Generation: 10</p>
                 <p class="text-lg">Term 10</p>
               </div>
+            
             </div>
+          </a>
           </div>
-        </a>
     </div>
 </template>
 

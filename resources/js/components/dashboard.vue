@@ -4,35 +4,50 @@
         <div class="flex items-center">
           <a href="/"><img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8"></a>
         </div>
-      <div class="flex items-center">
-          <i class="fas fa-bell text-xl mr-4 "></i>
-          <button class="button" @click="TogglePopup('buttonTrigger')">
-            <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
-          </button>
-          <transition name="slide" appear>
-            <div class="modal" v-if="popupTriggers.buttonTrigger">
-              <div class="modal-content">
-                <div class="modal-item bg-blue flex">
-                  <a href="/profile" class="flex_item">
-                    <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
-                  </a>
-                </div>
-                <div class="modal-item bg-blue flex" @click="logout">
-                  <i class="fas fa-sign-out-alt text-white text-xl mr-2"></i> Logout
+        <div  v-if="user.role==='teacher'">
+          <div class="flex items-center">
+            <i class="fas fa-bell text-xl mr-4 "></i>
+            <button class="button" @click="TogglePopup('buttonTrigger')">
+              <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
+            </button>
+            <transition name="slide" appear>
+              <div class="modal" v-if="popupTriggers.buttonTrigger">
+                <div class="modal-content">
+                  <div class="modal-item bg-blue flex">
+                    <a href="/profile" class="flex_item">
+                      <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
+                    </a>
+                  </div>
+                  <div class="modal-item bg-blue flex" @click="logout">
+                    <i class="fas fa-sign-out-alt text-white text-xl mr-2"></i> Logout
+                  </div>
                 </div>
               </div>
-            </div>
-          </transition>
-          <span class="text-black">{{user.name }}</span>
+            </transition>
+            <span class="text-black">{{user.name }}</span>
+          </div>
+        </div>
+        <div  v-if="user.role==='admin'">
+          <button class="ml-auto border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+            <span class="flex items-center">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
+                Teacher
+            </span>
+          </button>
+          <button class="ml-auto border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+            <span class="flex items-center">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
+                Student
+            </span>
+          </button>
+          <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="logout">
+              <span class="flex items-center">
+                Log out
+              <i class="fas fa-sign-out-alt mr-2"></i>
+              </span>
+          </button>
         </div>
       </div>
-      <!-- <div class="max-w-95 mx-auto mt-20 bg-black shadow-md header_fixed">
-        <nav>
-            <router-link to="/schedule" exact class="nav-link" :class="{ 'active': $route.path === '/schedule' }">Schdeule</router-link>
-            <router-link to="/studentList" class="nav-link" :class="{ 'active': $route.path === '/studentList' }">Student</router-link>
-            <router-link to="/teacherlist" class="nav-link" :class="{ 'active': $route.path === '/teacherlist' }">Teacher</router-link>
-        </nav>
-      </div> -->
       <div class="max-w-95 mx-auto p-8 mt-20">
         <div class="text-center border-2 mb-6 font-istok bg-white">
           <div  v-if="user.role==='admin'" class="flex p-4">
@@ -42,11 +57,10 @@
             <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
           </div>
         </div>
-        
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
         </div>
-        <div v-else class=" border-2 ml-10 mr-10 mt-5 font-istok bg-white rounded-md">
+        <div v-else class="content-container">
           <TeacherPage></TeacherPage>
         </div>
       </div>
@@ -55,6 +69,7 @@
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import Swal from 'sweetalert2'; 
 import TeacherPage from '../components/teacher/MainPage.vue'
 export default{
     components:{
@@ -109,9 +124,9 @@ export default{
                 });
 
         },
-        logout() {
-            localStorage.removeItem('authToken');
-            this.$router.push({ path: '/login' });
+        // logout() {
+        //     localStorage.removeItem('authToken');
+        //     this.$router.push({ path: '/login' });
             // axios.post('logout')
             //     .then(response => {
             //         localStorage.removeItem('authToken');
@@ -121,6 +136,25 @@ export default{
             //     .catch(error => {
             //         console.error('Logout error:', error);
             //     });
+        // },
+        async logout() {
+      // Use SweetAlert for logout confirmation
+          const result = await Swal.fire({
+            title: 'Are you sure you want to log out?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log out'
+          });
+
+          if (result.isConfirmed) {
+            // Perform logout action here
+            localStorage.removeItem('authToken');
+            this.$router.push({ path: '/login' });
+            // Optionally, show a success message
+            Swal.fire('Logged Out!', 'You have been logged out.', 'success');
+          }
         },
         checkRoute(){
         if(localStorage.getItem('authToken')==null){
