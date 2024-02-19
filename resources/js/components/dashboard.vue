@@ -43,8 +43,8 @@
             <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
           </div>
         </div>
-        <button class="button" @click="goToAnotherPage">Go to Another Page</button>
-      <button class="button" @click="goToAnotherPages">Go to Another Page</button>
+        <button class="button" @click="goToAnotherPage">Go to student Page</button>
+      <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
         </div>

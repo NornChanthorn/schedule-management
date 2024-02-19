@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
@@ -18,24 +19,39 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'student_id' => 'required',
-            'gender' => 'required',
-            'dob' => 'required',
-            'user_id' => 'required',
-            'generation_id' => 'required',
-            'group_id' => 'required',
-            'major_id' => 'required'
+            'f_name' => 'required|string',
+            'l_name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'student_id' => 'required|string',
+            'gender' => 'required|string',
+            'dob' => 'required|date',
+            'generation_id' => 'required|exists:generations,id',
+            'group_id' => 'required|exists:groups,id',
+            'major_id' => 'required|exists:majors,id'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $student = Student::create($validator->validated());
+        $name = $request->f_name . ' ' . $request->l_name;
+
+        // Create a new user
+        $user = User::create([
+            'name' => $name,
+            'email' => $request->email,
+            'password' => bcrypt($name),
+            'role' => 'student',
+        ]);
+
+        // Add the user_id to the request data
+        $requestData = $request->all();
+        $requestData['user_id'] = $user->id;
+
+        $student = Student::create($requestData);
         return response()->json(['message' => 'Created successfully', 'data' => $student]);
     }
+
 
     public function update(Request $request, $id)
     {
