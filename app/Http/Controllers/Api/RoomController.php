@@ -32,7 +32,6 @@ class RoomController extends Controller
             'size' => 'required|integer',
             'type' => 'required|string',
             'status' => 'required|boolean',
-            // 'status' => 'boolean',
         ]);
 
         $room = Room::create($validatedData);
@@ -61,10 +60,10 @@ class RoomController extends Controller
     public function update(Request $request, Room $room)
     {
         $validatedData = $request->validate([
-            'name' => 'string',
-            'size' => 'integer',
-            'type' => 'string',
-            'status' => 'string',
+            'name' => 'required|string',
+            'size' => 'required|integer',
+            'type' => 'required|string',
+            'status' => 'required|boolean',
         ]);
 
         $room->update($validatedData);
@@ -85,3 +84,4 @@ class RoomController extends Controller
         return response()->json(null, 204);
     }
 }
+
