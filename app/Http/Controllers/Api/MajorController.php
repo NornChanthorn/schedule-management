@@ -44,11 +44,17 @@ class MajorController extends Controller
      * @param  \App\Models\Major  $major
      * @return \Illuminate\Http\Response
      */
-    public function show(Major $major)
-    {
-        return response()->json($major);
-    }
 
+    public function show(Request $req, $id){
+        $major = Major::where('id', $id)->get();
+        if(!$id){
+            return response()->json(['message'=> 'Major no found']);
+        }
+        return response()->json([
+            'message'=> 'gettt successfully',
+            'data' => $major
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      *

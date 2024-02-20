@@ -1,7 +1,7 @@
 <template>
    <Toast/>
     <div class="flex items-center mb-4 ml-4">
-        <h1 class="text-custom-color-small font-istok text-4xl font-bold">Generation</h1>
+        <h1 class="text-custom-color-small font-istok text-4xl font-bold"> {{ majorName1 }}</h1>
         <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
             <span class="flex items-center">
             <i class="fa-solid fa-circle-plus mr-2"></i>
@@ -83,6 +83,8 @@ export default{
     data(){
         return{
             majorId: null,
+            majorName:[],
+            majorName1: null,
             generations: [],
             generation: [],
             visible: false,
@@ -96,7 +98,8 @@ export default{
     },
     mounted(){
         this.getGeneration();
-        this.majorId = this.$route.params.id;
+        this.majorId = this.$route.params.majorId;
+        this.majorName1 = this.$route.params.name
 
     },
     methods:{
@@ -152,6 +155,7 @@ export default{
                 }
             )
         },
+
         showDialog(){
             this.visible= true
         },
