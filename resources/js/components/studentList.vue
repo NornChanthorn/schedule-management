@@ -1,65 +1,186 @@
 <template>
-  <Header>
-    <div class="content-container">
-      <div class="font-istok bg-white">
-        <div class="flex p-4 space-x-20">
-          <div class="flex text-4xl font-bold text-custom-color">
-            <h1 class="mr-5">Gen 7, </h1><span>CS</span>
-          </div>
-          <div class="flex items-ceter justify-center space-x-10">
-              <router-link to="/studentlist" class="text-black hover:underline hover:text-blue-500">All Students</router-link>
-              <router-link to="/ga" class="text-black hover:underline hover:text-blue-500">GA</router-link>
-              <router-link to="/gb" class="text-black hover:underline hover:text-blue-500">GB</router-link>
-          </div>
-        </div>
-      </div>
-      <div class="max-h-96 overflow-y-auto">
-        <table class="min-w-full bg-white border-gray-300 text-left">
-          <thead>
-            <tr>
-              <th class="py-2 px-4 border-b">No</th>
-              <th class="py-2 px-4 border-b">ID</th>
-              <th class="py-2 px-4 border-b">Student Name</th>
-              <th class="py-2 px-4 border-b">Date of Birth</th>
-              <th class="py-2 px-4 border-b">Email</th>
-              <th class="py-2 px-4 border-b">Phone Number</th>
-              <th class="py-2 px-4 border-b">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="py-2 px-4">1</td>
-              <td class="py-2 px-4">123456</td>
-              <td class="py-2 px-4">John Doe</td>
-              <td class="py-2 px-4">1990-01-01</td>
-              <td class="py-2 px-4">john.doe@example.com</td>
-              <td class="py-2 px-4">123-456-7890</td>
-              <td class="py-2 px-4">
-                <span class="cursor-pointer text-blue-500 hover:text-blue-700 mr-2" @click="editStudent">
-                  <i class="fas fa-edit"></i>
-                </span>
-                <span class="cursor-pointer text-red-500 hover:text-red-700" @click="removeStudent">
-                  <i class="fas fa-trash-alt"></i>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="flex flex-col">
+    <div
+      class="mx-auto flex flex-nowrap border-2 ml-10 mr-10 mt-5 font-istok bg-white"
+    >
+      <h1 class="m-6 text-center text-4xl font-bold text-custom-color">Gen</h1>
+
+      <h3
+        @click="showAllStudents"
+        :class="{ underline: activeTab === 'allStudents' }"
+        class="mt-4 text-center text-gray-500 text-xl p-4 cursor-pointer"
+      >
+        All Students
+      </h3>
+      <h3
+        @click="showGroupA"
+        :class="{ underline: activeTab === 'groupA' }"
+        class="mt-4 text-center text-gray-500 text-xl p-4 cursor-pointer"
+      >
+        Group A
+      </h3>
+      <h3
+        @click="showGroupB"
+        :class="{ underline: activeTab === 'groupB' }"
+        class="mt-4 text-center text-gray-500 text-xl p-4 cursor-pointer"
+      >
+        Group B
+      </h3>
+
+      <div class="flex mt-4 sm:mt-0 ml-auto items-center">
+        <button
+          @click="importCSV"
+          class="bg-blue-500 text-white px-4 py-2 mr-2"
+        >
+          Import
+        </button>
+        <button
+          @click="exportCSV"
+          class="bg-green-500 text-white px-4 py-2 mr-2"
+        >
+          Export
+        </button>
       </div>
     </div>
-  </Header>
+    <div class="mx-auto mt-5 border-2 ml-10 mr-10 font-istok bg-white">
+      <DataTable
+        :value="students"
+        paginator
+        :rows="5"
+        :rowsPerPageOptions="[5, 10, 20, 50]"
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      >
+        <!-- Common columns ... -->
+        <Column field="id" header="No" :sortable="true"></Column>
+        <Column field="student_id" header="Student ID"></Column>
+        <Column header="Student Name">
+          <template #body="slotProps">
+            {{ slotProps.data.l_name }} {{ slotProps.data.f_name }}
+          </template>
+        </Column>
+        <Column field="major.name" header="Major"></Column>
+        <Column header="Action">
+          <template #body="slotProps">
+            <div class="flex items-center">
+              <button @click="editStudent(slotProps.data.id)">
+                <i class="fas fa-edit" style="color: blue"></i>
+                <!-- Replace with your preferred icon library or SVG -->
+              </button>
+              <button @click="deleteStudent(slotProps.data.id)">
+                <i class="fas fa-trash-alt" style="color: red"></i>
+                <!-- Replace with your preferred icon library or SVG -->
+              </button>
+            </div>
+          </template>
+        </Column>
+      </DataTable>
+    </div>
+  </div>
 </template>
 
-
 <script>
+import axios from "axios";
+import Papa from "papaparse";
+
 export default {
+  data() {
+    return {
+      activeTab: "",
+      students: [], // Ensure you have the data for DataTable
+    };
+  },
+  mounted() {
+    this.getStudent();
+  },
   methods: {
-    editStudent() {
-      console.log('Edit student clicked');
+    showAllStudents() {
+      // Set activeTab to 'allStudents' when clicking on "All Student"
+      this.activeTab = "allStudents";
+      this.getStudent();
     },
-    removeStudent() {
-      console.log('Remove student clicked');
+    showGroupA() {
+      // Set activeTab to 'allStudents' when clicking on "All Student"
+      this.activeTab = "groupA";
+      this.students = this.filterStudentsByGroup("GroupA");
     },
-  }
-}
+    showGroupB() {
+      // Set activeTab to 'allStudents' when clicking on "All Student"
+      this.activeTab = "groupB";
+      his.students = this.filterStudentsByGroup("GroupB");
+    },
+    getStudent() {
+      axios
+        .get("students") // Update the URL to match your API endpoint
+        .then((response) => {
+          // Successfully fetched student information
+          this.students = response.data;
+          // console.log(this.students);
+        })
+        .catch((error) => {
+          // Handle error
+          if (error.response && error.response.status === 401) {
+            // Redirect to the login page
+            console.log("Unauthenticated");
+          } else {
+            // Handle other error cases
+            console.error("Error fetching student information:", error);
+          }
+        });
+    },
+    editStudent(student) {
+      // Implement the logic to handle editing a student
+      console.log("Editing student:", student);
+    },
+
+    filterStudentsByGroup(group) {
+      // Filter students based on the 'group' property
+      return this.students.filter((student) => student.group === group);
+    },
+    exportCSV() {
+      // Convert data to CSV format
+      const csv = Papa.unparse(this.students);
+      // Create a Blob containing the CSV data
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      // Create a download link and trigger a click
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "student_data.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    importCSV() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".csv";
+
+      input.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+          Papa.parse(file, {
+            complete: (result) => {
+              // Assuming the CSV has a header row
+              const header = result.data[0];
+              const data = result.data.slice(1);
+
+              // Handle the data as needed, e.g., update the DataTable
+              this.students = data.map((row) => {
+                const student = {};
+                header.forEach((key, index) => {
+                  student[key] = row[index];
+                });
+                return student;
+              });
+            },
+            header: true,
+          });
+        }
+      });
+
+      input.click();
+    },
+  },
+};
 </script>
