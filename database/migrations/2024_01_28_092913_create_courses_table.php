@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('teacher_id')->constrained('teachers');
             $table->foreignId('term_id')->constrained('terms');
+            $table->foreignId('gen_id')->constrained('generations');
+            $table->foreignId('major_id')->constrained('majors');
             $table->string('duration');
             $table->timestamps();
         });

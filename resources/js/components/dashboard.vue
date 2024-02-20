@@ -49,7 +49,6 @@
         </div>
       </div>
 
-
       <div class="max-w-95 mx-auto p-8 mt-20">
         <div class="text-center border-2 mb-6 font-istok bg-white">
           <div  v-if="user.role==='admin'" class="flex p-4">
@@ -61,7 +60,7 @@
         </div>
 
         <button class="button" @click="goToAnotherPage">Go to student Page</button>
-      <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
+        <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
 
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
@@ -126,8 +125,6 @@ export default{
                     // Handle other error cases
                       console.error('Error fetching user information:', error);
                     }
-
-
                 });
 
         },
@@ -144,24 +141,7 @@ export default{
           // Navigate to the new path
           this.$router.push(newPath);
         },
-        // logout() {
-        //     localStorage.removeItem('authToken');
-        //     this.$router.push({ path: '/login' });
-        // },
 
-        // logout() {
-        //     localStorage.removeItem('authToken');
-        //     this.$router.push({ path: '/login' });
-            // axios.post('logout')
-            //     .then(response => {
-            //         localStorage.removeItem('authToken');
-            //         console.log('Logout successful');
-            //         this.$router.push({ path: '/login' });
-            //     })
-            //     .catch(error => {
-            //         console.error('Logout error:', error);
-            //     });
-        // },
         async logout() {
       // Use SweetAlert for logout confirmation
           const result = await Swal.fire({
