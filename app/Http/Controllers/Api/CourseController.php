@@ -84,5 +84,19 @@ class CourseController extends Controller
             'schedules' => $schedules,
         ]);
     }
+    public function getCourseByMGT($major_id,$gen_id, $term_id ){
+        $course = Course::where('major_id', $major_id)
+        ->where('gen_id', $gen_id)
+        ->where('term_id', $term_id)
+        ->with('term', 'generation', 'major')
+        ->get();
+
+        return response()->json([
+            'message'=> 'Get Successfully',
+            'data' => $course
+        ]);
+
+    }
+
 
 }
