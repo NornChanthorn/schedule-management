@@ -7,11 +7,11 @@ import axios from 'axios'
 import  {ref} from "vue";
 import '../css/app.css';
 import Tailwind from 'primevue/passthrough/tailwind';
-
 import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import "primeicons/primeicons.css"; //icons
 import Header from "./components/header.vue";
+
 
 //component primevue
 import Button from "primevue/button"
@@ -24,6 +24,9 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import ConfirmationService from 'primevue/confirmationservice';
 import ContextMenu from 'primevue/contextmenu';
 import OverlayPanel  from 'primevue/overlaypanel';
+import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/calendar';
+
 
 
 //set token in header
@@ -45,17 +48,19 @@ app.use(ToastService);
 // })
 
 app.component('test', App)
-app.component('Button', Button)
-app.component('Dialog', Dialog)
-app.component('Toast', Toast)
-app.component('InputText', InputText)
-app.component('SpeedDial', SpeedDial)
+app.component('Button', Button);
+app.component('Dialog', Dialog);
+app.component('Toast', Toast);
+app.component('InputText', InputText);
+app.component('SpeedDial', SpeedDial);
 
-app.component('Header', Header)
+app.component('Header', Header);
 
-app.component('ConfirmPop', ConfirmPopup)
-app.component('ContextMenu', ContextMenu)
+app.component('ConfirmPop', ConfirmPopup);
+app.component('ContextMenu', ContextMenu);
 app.component('OverlayPanel', OverlayPanel);
+app.component('Dropdown', Dropdown);
+app.component('Calendar', Calendar);
 app.use(ConfirmationService)
 
 app.mount('#app')

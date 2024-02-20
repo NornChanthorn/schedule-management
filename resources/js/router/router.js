@@ -11,6 +11,9 @@ import Term from '../components/admin/Term.vue'
 import Terms from '../components/term.vue'
 import Students from '../components/student.vue'
 import Teacher from '../components/teacher.vue'
+import Room from '../components/room.vue'
+import Course from '../components/admin/Course.vue'
+
 
 const routes=[
     {
@@ -31,20 +34,26 @@ const routes=[
                 component: Major,
             },
             {
-                path: '/:name',
+                path: '/:name/:majorId',
                 name: 'Generation',
                 component: Generation
             },
             {
-                path: '/:name/:id',
+                path: '/:name/:majorId/:genid',
                 name: 'Term',
                 component: Term
             },
             {
-              path: '/schedule',
-              component: Schedule,
-              name: 'schedule'
+                path: '/:name/:majorId/:genid/:termId',
+                name: 'Course',
+                component: Course
             },
+
+            // {
+            //   path: '/schedule',
+            //   component: Schedule,
+            //   name: 'schedule'
+            // },
             {
               path: '/profile',
               component: Profile,
@@ -64,6 +73,11 @@ const routes=[
             path: '/terms',
             component: Terms,
             name: 'terms'
+        },
+        {
+          path: '/room',
+          component: Room,
+          name: 'room'
         },
 
         ]

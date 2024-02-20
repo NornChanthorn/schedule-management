@@ -53,3 +53,4 @@ Route::post('/schedule',[ScheduleController::class, 'store'] );
 Route::put('/schedule/{id}',[ScheduleController::class, 'update'] );
 Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );
 Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedulesByCourse']);
+Route::get('/course/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByMGT']);

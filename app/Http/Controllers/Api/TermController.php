@@ -31,7 +31,6 @@ class TermController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|integer',
             'start_date' => 'required|date',
-            'active' => 'required|boolean',
         ]);
 
         $term = Term::create($validatedData);
@@ -62,7 +61,6 @@ class TermController extends Controller
         $validatedData = $request->validate([
             'name' => 'integer',
             'start_date' => 'date',
-            'active' => 'boolean',
         ]);
 
         $term->update($validatedData);

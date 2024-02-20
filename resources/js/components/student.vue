@@ -6,7 +6,7 @@
         <router-link to="/ga" :class="{ 'active-link': $route.path === '/' }"  class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link " >CS</router-link>
         <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
         <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
-      </div>
+    </div>
       <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
           <span class="flex items-center">
           <i class="fa-solid fa-circle-plus mr-2"></i>
@@ -334,7 +334,7 @@ export default {
   },
   methods: {
     fetchPosts() {
-      axios.get('http://127.0.0.1:8000/api/students')
+      axios.get('students')
         .then(response => {
           this.posts = response.data;
         })
@@ -343,7 +343,7 @@ export default {
         });
     },
     createPost() {
-      axios.post('http://127.0.0.1:8000/api/students', this.newPost)
+      axios.post('students', this.newPost)
         .then(response => {
           // Handle success, maybe show a success message or update the post list
           console.log('Post created:', response.data);
@@ -378,7 +378,7 @@ export default {
       this.editModal = true;
     },
     updatePost() {
-      axios.put(`http://127.0.0.1:8000/api/students/${this.editedPost.id}`, this.editedPost)
+      axios.put(`students/${this.editedPost.id}`, this.editedPost)
         .then(response => {
           console.log('Post updated:', response.data);
           this.editModal = false;
@@ -389,7 +389,7 @@ export default {
         });
     },
     deletePost(postId) {
-      axios.delete(`http://127.0.0.1:8000/api/students/${postId}`)
+      axios.delete(`students/${postId}`)
         .then(response => {
           // Handle success, maybe show a success message or update the post list
           console.log('Post deleted:', response.data);

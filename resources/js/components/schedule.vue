@@ -68,7 +68,7 @@
                       </template>
                     </template>
                   </tr>
-                  
+
                   <!-- Only show the "Break 15min" row for the first 3 time slots -->
                   <template v-if="index < 3">
                     <tr>
@@ -164,7 +164,7 @@ export default {
     };
     
   },
-  
+
   created() {
     const term_id = 5;
     this.getSchedulesByTerm(term_id);
@@ -231,7 +231,7 @@ export default {
       popupTriggers,
     };
   },
-  
+
 };
 </script>
 
@@ -276,7 +276,7 @@ th {
 }
 
 th.time-header {
-  width: 180px; 
+  width: 180px;
 }
 
 th.day-header, td.group-cell {
@@ -300,10 +300,10 @@ td.break-row {
   text-align: right;
 }
 .theory{
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
 }
 .room{
-  margin-top: 8px; 
+  margin-top: 8px;
 }
 .schedule-info {
   display: flex;

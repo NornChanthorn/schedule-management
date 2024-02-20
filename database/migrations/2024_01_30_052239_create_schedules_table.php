@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->time('time_start');
             $table->time('time_end');
-            $table->foreignId('day_id')->constrained('day_of_weeks');
+            $table->foreignId('day_id')->constrained('dayofweeks');
             $table->foreignId('term_id')->constrained('terms');
             $table->foreignId('course_id')->constrained('courses');
             $table->foreignId('room_id')->constrained('rooms');

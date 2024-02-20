@@ -33,7 +33,7 @@
                       <p @click="goToAnotherPages" class="modal-item-list hover:bg-blue-100">Teacher</p>
                       <p @click="goToAnotherPage" class="modal-item-list hover:bg-blue-100">Student</p>
                       <p @click="TermPage" class="modal-item-list hover:bg-blue-100">Term</p>
-                      <p @click="TermPage" class="modal-item-list hover:bg-blue-100">Room</p>
+                      <p @click="goToAnotherPagesroom" class="modal-item-list hover:bg-blue-100">Room</p>
                     </div>
                   </transition>
             </div>
@@ -63,7 +63,6 @@
           </div>
         </div>
       </div>
-
 
       <div class="max-w-95 mx-auto p-8 mt-20">
         <!-- <div class="text-center border-2 mb-6 font-istok bg-white">
@@ -139,8 +138,6 @@ export default{
                     // Handle other error cases
                       console.error('Error fetching user information:', error);
                     }
-
-
                 });
 
         },
@@ -167,20 +164,13 @@ export default{
         //     localStorage.removeItem('authToken');
         //     this.$router.push({ path: '/login' });
         // },
+        goToAnotherPagesroom() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/room';
+          // Navigate to the new path
+          this.$router.push(newPath);
+        },
 
-        // logout() {
-        //     localStorage.removeItem('authToken');
-        //     this.$router.push({ path: '/login' });
-            // axios.post('logout')
-            //     .then(response => {
-            //         localStorage.removeItem('authToken');
-            //         console.log('Logout successful');
-            //         this.$router.push({ path: '/login' });
-            //     })
-            //     .catch(error => {
-            //         console.error('Logout error:', error);
-            //     });
-        // },
         async logout() {
       // Use SweetAlert for logout confirmation
           const result = await Swal.fire({
