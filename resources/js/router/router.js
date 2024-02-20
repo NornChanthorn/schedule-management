@@ -44,8 +44,8 @@ const routes=[
             },
             {
                 path: '/:name/:majorId/:genid/:termId',
-                name: 'schedule',
-                component: Schedule
+                name: 'Course',
+                component: Course
             },
 
             // {
