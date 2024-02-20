@@ -10,6 +10,8 @@ import Major from '../components/admin/Major.vue'
 import Term from '../components/admin/Term.vue'
 import Students from '../components/student.vue'
 import Teacher from '../components/teacher.vue'
+import Room from '../components/room.vue'
+
 
 const routes=[
     {
@@ -73,6 +75,11 @@ const routes=[
       component: Teacher,
       name: 'teacher'
   },
+  {
+    path: '/room',
+    component: Room,
+    name: 'room'
+},
 
 
 
