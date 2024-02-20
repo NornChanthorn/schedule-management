@@ -214,7 +214,7 @@ export default {
     },
     methods: {
         fetchPosts() {
-            axios.get('http://127.0.0.1:8000/api/rooms')
+            axios.get('rooms')
                 .then(response => {
                     this.posts = response.data;
                 })
@@ -223,7 +223,7 @@ export default {
                 });
         },
         createPost() {
-            axios.post('http://127.0.0.1:8000/api/rooms', this.newPost)
+            axios.post('rooms', this.newPost)
                 .then(response => {
                     // Handle success, maybe show a success message or update the post list
                     console.log('Post created:', response.data);
@@ -249,7 +249,7 @@ export default {
             this.editModal = true;
         },
         updatePost() {
-            axios.put(`http://127.0.0.1:8000/api/rooms/${this.editedPost.id}`, this.editedPost)
+            axios.put(`rooms/${this.editedPost.id}`, this.editedPost)
                 .then(response => {
                     console.log('Post updated:', response.data);
                     this.editModal = false;
@@ -260,7 +260,7 @@ export default {
                 });
         },
         deletePost(postId) {
-            axios.delete(`http://127.0.0.1:8000/api/rooms/${postId}`)
+            axios.delete(`rooms/${postId}`)
                 .then(response => {
                     // Handle success, maybe show a success message or update the post list
                     console.log('Post deleted:', response.data);
