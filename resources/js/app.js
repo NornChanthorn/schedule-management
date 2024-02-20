@@ -25,6 +25,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ContextMenu from 'primevue/contextmenu';
 import OverlayPanel  from 'primevue/overlaypanel';
 import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/calendar';
 
 
 
@@ -59,6 +60,7 @@ app.component('ConfirmPop', ConfirmPopup);
 app.component('ContextMenu', ContextMenu);
 app.component('OverlayPanel', OverlayPanel);
 app.component('Dropdown', Dropdown);
+app.component('Calendar', Calendar);
 app.use(ConfirmationService)
 
 app.mount('#app')

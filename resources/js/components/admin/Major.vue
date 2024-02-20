@@ -2,7 +2,7 @@
     <Toast/>
        <div class="flex items-center mb-4 ml-4">
             <h1 class="text-custom-color-small font-istok text-4xl font-bold">Department</h1>
-            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+            <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
                 <span class="flex items-center">
                 <i class="fa-solid fa-circle-plus mr-2"></i>
                 Add More
@@ -28,11 +28,11 @@
                 <form action="" @submit.prevent="addMajor">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Major</label>
-                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded">
+                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                     </div>
                     <div class="flex justify-between mt-6">
-                        <button v-on:click="closeDialog" class="w-32 bg-red-400 mr-2 text-white border border-2 hover:bg-red-700" >Cancel</button>
-                        <button type="submit" class="w-32 py-2  bg-blue-400 text-white hover:bg-blue-700" >Save</button>
+                        <button v-on:click="closeDialog" class="w-32 bg-red-500 mr-2 text-white border-2  hover:bg-red-700" >Cancel</button>
+                        <button type="submit" class="w-32 py-2  bg-blue-500 border-2 text-white hover:bg-blue-700" >Save</button>
                     </div>
                 </form>
             </div>
@@ -48,11 +48,11 @@
                 <form action="" @submit.prevent="editMajor(id)">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Major's name</label>
-                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded" :placeholder="major.name">
+                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" :placeholder="major.name">
                     </div>
                     <div class="flex justify-between mt-6">
-                        <button v-on:click="closeEditDialog" class="w-32 bg-red-400 mr-2 text-white border border-2 hover:bg-red-700" >Cancel</button>
-                        <button type="submit" class="w-32 py-2  bg-blue-400 text-white hover:bg-blue-700" >Save</button>
+                        <button v-on:click="closeEditDialog" class="w-32 bg-red-500 mr-2 text-white border-2 hover:bg-red-700" >Cancel</button>
+                        <button type="submit" class="w-32 py-2  border-2 bg-blue-500 text-white hover:bg-blue-700" >Save</button>
                     </div>
                 </form>
             </div>
