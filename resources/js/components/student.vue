@@ -317,7 +317,7 @@ export default {
   },
   methods: {
     fetchPosts() {
-      axios.get('http://127.0.0.1:8000/api/students')
+      axios.get('students')
         .then(response => {
           this.posts = response.data;
         })
@@ -326,7 +326,7 @@ export default {
         });
     },
     createPost() {
-      axios.post('http://127.0.0.1:8000/api/students', this.newPost)
+      axios.post('students', this.newPost)
         .then(response => {
           // Handle success, maybe show a success message or update the post list
           console.log('Post created:', response.data);
@@ -361,7 +361,7 @@ export default {
       this.editModal = true;
     },
     updatePost() {
-      axios.put(`http://127.0.0.1:8000/api/students/${this.editedPost.id}`, this.editedPost)
+      axios.put(`students/${this.editedPost.id}`, this.editedPost)
         .then(response => {
           console.log('Post updated:', response.data);
           this.editModal = false;
@@ -372,7 +372,7 @@ export default {
         });
     },
     deletePost(postId) {
-      axios.delete(`http://127.0.0.1:8000/api/students/${postId}`)
+      axios.delete(`students/${postId}`)
         .then(response => {
           // Handle success, maybe show a success message or update the post list
           console.log('Post deleted:', response.data);

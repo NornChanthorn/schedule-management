@@ -61,6 +61,7 @@
 
         <button class="button" @click="goToAnotherPage">Go to student Page</button>
         <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
+        <button class="button" @click="goToAnotherPagesroom">Go to room Page</button>
 
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
@@ -138,6 +139,12 @@ export default{
         goToAnotherPages() {
           // Define the path for the page you want to navigate to
           const newPath = '/teacher';
+          // Navigate to the new path
+          this.$router.push(newPath);
+        },
+        goToAnotherPagesroom() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/room';
           // Navigate to the new path
           this.$router.push(newPath);
         },
