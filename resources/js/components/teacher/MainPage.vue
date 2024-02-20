@@ -5,8 +5,8 @@
     <div class="font-istok " >
           <div v-for="major in majors" :key="major.id">
             <div @click="toggleMajorDetails(major)" class="text-xl font-bold mb-4 mt-4">
-              <span v-if="major.showDetails"><i class="fa-solid fa-chevron-up mr-4" style="transform: rotate(90deg);"></i></span>
-              <span v-else><i class="fa-solid fa-chevron-down mr-4"></i></span> {{ major.name }}
+              <span v-if="major.showDetails"><i class="fa-solid fa-chevron-up mr-4"></i></span>
+              <span v-else><i class="fa-solid fa-chevron-down mr-4" style="transform: rotate(90deg);"></i></span> {{ major.name }}
             </div>
             <a href="/schedule">
             <div v-if="major.showDetails" class="details-container">

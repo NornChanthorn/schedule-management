@@ -1,160 +1,178 @@
 <template>
-  <div class="container max-w-7xl mx-auto mt-8">
-    <div class="mb-4">
-      <h1 class="font-serif text-3xl font-bold underline decoration-gray-400"> Post Index</h1>
-      <div class="flex justify-end">
-        <button @click="showModal = true" class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600">Create
-          Post</button>
+  <div class="flex items-center mb-4 ml-4">
+    <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
+    <div class="flex items-ceter justify-center ml-16">
+        <router-link to="/student"  :class="{ 'active-link': $route.path === '/student' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link">All</router-link>
+        <router-link to="/ga" :class="{ 'active-link': $route.path === '/' }"  class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link " >CS</router-link>
+        <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
+        <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
       </div>
+      <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
+          <span class="flex items-center">
+          <i class="fa-solid fa-circle-plus mr-2"></i>
+              Add Student
+          </span>
+      </button>
     </div>
     <!-- Modal for creating a new post -->
-    <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-          <div class="mb-4">
-            <h1 class="font-serif text-3xl font-bold underline decoration-gray-400">Create Post</h1>
-          </div>
-          <form @submit.prevent="createPost">
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="f_name">f_name</label>
-              <input v-model="newPost.f_name"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="f_name" placeholder="Enter f_name" />
+    <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white w-full max-w-lg p-6 border border-2">
+                    <div class="mb-4 text-center">
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Student Information</h1>
+                    </div>
+                    <form @submit.prevent="createPost">
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                            </div>
+
+                            <div class="w-1/2 ml-2">
+                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" v-model="newPost.f_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            </div>
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
+                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="w-1/2 ml-2">
+                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
+                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                              <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
+                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Enter student_id" />
+                            </div>
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
+                                <select v-model="newPost.generation_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Generation</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
+                                <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Group</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
+                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Major</option>
+                                    <option value="1">Compunter Science</option>
+                                    <option value="2">Ecommerce</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end mt-4 gap-x-2">
+                            <button @click="showModal = false" type="button"
+                                class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                            <button type="submit"
+                                class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="l_name">l_name</label>
-              <input v-model="newPost.l_name"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="l_name" placeholder="Enter l_name" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="email">Email</label>
-              <input v-model="newPost.email"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="email" name="email" placeholder="Enter email" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="gender">Gender</label>
-              <input v-model="newPost.gender"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="gender" placeholder="Enter gender" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="dob">DOB</label>
-              <input v-model="newPost.dob"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="date" name="dob" placeholder="Enter dob" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="student_id">Student ID</label>
-              <input v-model="newPost.student_id"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="student_id" placeholder="Enter student_id" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="generation_id">Generation ID</label>
-              <input v-model="newPost.generation_id"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="generation_id" placeholder="Enter generation_id" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="group_id">Group ID</label>
-              <input v-model="newPost.group_id"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="group_id" placeholder="Enter group_id" />
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700" for="major_id">Major ID</label>
-              <input v-model="newPost.major_id"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                type="text" name="major_id" placeholder="Enter major_id" />
-            </div>
-            <div class="flex items-center justify-start mt-4 gap-x-2">
-              <button type="submit"
-                class="px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">Save</button>
-              <button @click="showModal = false" type="button"
-                class="px-6 py-2 text-sm font-semibold text-gray-100 bg-gray-400 rounded-md shadow-md hover:bg-gray-600 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">Cancel</button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
 
     <!-- Modal for editing a post -->
-    <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-          <div class="mb-4">
-            <h1 class="font-serif text-3xl font-bold underline decoration-gray-400">
-              Edit Post
-            </h1>
-          </div>
-          <div class="w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10">
-            <form @submit.prevent="updatePost">
-              <div>
-                <label class="block text-sm font-bold text-gray-700" for="f_name">first Name</label>
-                <input v-model="editedPost.f_name"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="f_name" placeholder="Enter first Name" />
-              </div>
-              <div>
-                <label class="block text-sm font-bold text-gray-700" for="l_name">Last Name</label>
-                <input v-model="editedPost.l_name"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="l_name" placeholder="Enter Last Name" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="gender">Gender</label>
-                <input v-model="editedPost.gender"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="gender" placeholder="Enter Gender" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="dob">DOB</label>
-                <input v-model="editedPost.dob"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="dob" placeholder="Enter Date of Birth" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="student_id">Student ID</label>
-                <input v-model="editedPost.student_id"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="student_id" placeholder="Enter Student ID" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="generation_id">Generation ID</label>
-                <input v-model="editedPost.generation_id"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="generation_id" placeholder="Enter Generation ID" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="group_id">Group ID</label>
-                <input v-model="editedPost.group_id"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="group_id" placeholder="Enter Group ID" />
-              </div>
-              <div class="mt-4">
-                <label class="block text-sm font-bold text-gray-700" for="major_id">Major ID</label>
-                <input v-model="editedPost.major_id"
-                  class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  type="text" name="major_id" placeholder="Enter Major ID" />
-              </div>
-              <div class="flex items-center justify-start mt-4 gap-x-2">
-                <button type="submit"
-                  class="px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">
-                  Update
-                </button>
-                <button @click="editModal = false" type="button"
-                  class="px-6 py-2 text-sm font-semibold text-gray-100 bg-gray-400 rounded-md shadow-md hover:bg-gray-600 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white w-full max-w-lg p-6 border border-2">
+                    <div class="mb-4 text-center">
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Student Information</h1>
+                    </div>
+                    <form @submit.prevent="updatePost">
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                            </div>
 
+                            <div class="w-1/2 ml-2">
+                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" v-model="editedPost.f_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            </div>
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
+                                <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="w-1/2 ml-2">
+                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
+                                <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" v-model="editedPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                              <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
+                              <input v-model="editedPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Enter student_id" />
+                            </div>
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
+                                <select v-model="editedPost.generation_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Generation</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex mb-2">
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
+                                <select v-model="editedPost.group_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Group</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="w-1/2 mr-2">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
+                                <select v-model="editedPost.major_id" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Major</option>
+                                    <option value="1">Compunter Science</option>
+                                    <option value="2">Ecommerce</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end mt-4 gap-x-2">
+                            <button @click="editModal = false" type="button"
+                                class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                            <button type="submit"
+                                class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     <div class="flex flex-col">
       <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -167,11 +185,11 @@
                   ID</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  Name</th>
+                  First Name</th>
 
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  Name</th>
+                  Last Name</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                   Gender</th>
@@ -180,19 +198,19 @@
                   DOB</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  User_id</th>
+                  User id</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  student_id</th>
+                  student id</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  generation_id</th>
+                  generation</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  group_id</th>
+                  group</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  major_id</th>
+                  major</th>
                 <th class="px-6 py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50" colspan="3">
                   Action</th>
               </tr>
@@ -275,7 +293,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -386,3 +403,13 @@ export default {
   }
 };
 </script>
+<style scoped>
+  .nav-link {
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+  .active-link {
+    border-bottom: 2px solid #4299e1;
+    color: #4299e1;
+  }
+</style>

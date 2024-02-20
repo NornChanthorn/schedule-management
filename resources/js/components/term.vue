@@ -1,16 +1,10 @@
 <template>
     <div class="flex items-center mb-4 ml-4">
-        <h1 class="text-custom-color-small font-istok text-4xl font-bold">Teacher List</h1>
-        <div class="flex items-ceter justify-center ml-16">
-              <router-link to="/teacher"  :class="{ 'active-link': $route.path === '/teacher' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link">All</router-link>
-              <router-link to="/ga" :class="{ 'active-link': $route.path === '/' }"  class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link " >CS</router-link>
-              <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
-              <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
-        </div>
+        <h1 class="text-custom-color-small font-istok text-4xl font-bold">Term List</h1>
            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
                <span class="flex items-center">
                <i class="fa-solid fa-circle-plus mr-2"></i>
-               Add Teacher
+               Add Term
                </span>
         </button>
     </div>
@@ -18,45 +12,30 @@
             <div class="flex items-center justify-center min-h-screen">
                 <div class="bg-white w-full max-w-lg p-6 border border-2">
                     <div class="mb-4 text-center">
-                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Teacher Information</h1>
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Term Information</h1>
                     </div>
                     <form @submit.prevent="createPost">
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
-                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                            <label for="firstName" class="block text-sm font-medium text-gray-700">Term</label>
+                            <input type="text" v-model="newPost.term" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="Input term">
                             </div>
 
                             <div class="w-1/2 ml-2">
-                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.f_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            <label for="lastName" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input type="date" v-model="newPost.start_date"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="">
                             </div>
                         </div>
                         <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded">
-                                    <option value="" disabled>Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                            <div class="w-full">
+                                <label class="block text-sm font-medium text-gray-700" for="gender">Title</label>
+                                <select v-model="newPost.title" class="mt-1 p-2 w-full border rounded">
+                                    <option value="" disabled>Select Tile</option>
+                                    <option value="male">class</option>
+                                    <option value="female">Internship</option>
+                                    <option value="female">Capstone</option>
                                 </select>
                             </div>
-                            <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
-                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
-                        </div>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700" for="phone_num">Phone Number</label>
-                            <input v-model="newPost.phone_num" class="mt-1 p-2 w-full border rounded" type="tel" name="phone_num" placeholder="Enter phone number"/>
-                        </div>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700" for="title">Title</label>
-                            <input v-model="newPost.title" class="mt-1 p-2 w-full border rounded" type="text" name="title" placeholder="Enter title" />
                         </div>
                         <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="showModal = false" type="button"
@@ -73,38 +52,20 @@
             <div class="flex items-center justify-center min-h-screen">
                 <div class="bg-white w-full max-w-lg p-6 border border-2">
                     <div class="mb-4 text-center">
-                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Teacher Information</h1>
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Term Information</h1>
                     </div>
                     <div class="w-full px-6 py-4 bg-white">
                         <form @submit.prevent="updatePost">
                             <div class="flex mb-2">
                                 <div class="w-1/2 mr-2">
-                                    <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                                    <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                                    <label for="firstName" class="block text-sm font-medium text-gray-700">Term</label>
+                                    <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="Input term">
                                 </div>
 
                                 <div class="w-1/2 ml-2">
-                                    <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                                    <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                                    <label for="lastName" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                    <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="Start date">
                                 </div>
-                            </div>
-                            <div class="flex mb-2">
-                                <div class="w-1/2 mr-2">
-                                    <label for="lastName" class="block text-sm font-medium text-gray-700">Gender</label>
-                                    <input type="text" v-model="editedPost.gender"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="Gender">
-                                </div>
-                                <div class="w-1/2 ml-2">
-                                    <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
-                                    <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded" type="text" name="dob" placeholder="Enter dob" />
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" v-model="editedPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
-                            </div>
-                            <div class="mb-2">
-                                <label class="block text-sm font-medium text-gray-700" for="phone_num">Phone Number</label>
-                                <input v-model="editedPost.phone_num" class="mt-1 p-2 w-full border rounded" type="tel" name="phone_num" placeholder="Enter phone number"/>
                             </div>
                             <div class="mb-2">
                                 <label class="block text-sm font-medium text-gray-700" for="title">Title</label>
@@ -132,28 +93,17 @@
                             <tr>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    ID</th>
+                                    No</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Name</th>
+                                    Term</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Gender</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Email</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Phone Number</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    DOB</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    User_id</th>
+                                    Start Date</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Title</th>
+ 
                                 <th class="px-6 py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50"
                                     colspan="3">
                                     Action</th>
@@ -169,32 +119,12 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.l_name }}
+                                    <div class="text-sm leading-5 text-gray-900">{{ post.term }}
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.gender }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.email }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.phone_num }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.dob }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.user_id }}
+                                    <div class="text-sm leading-5 text-gray-900">{{ post.start_date }}
                                     </div>
                                 </td>
 
@@ -241,24 +171,15 @@ export default {
             showModal: false,
             newPost: {
                 title: '',
-                f_name: '',
-                l_name: '',
-                email: '',
-                gender: '',
-                dob: '',
-                phone_num: '',
+                term: '',
+                start_date: '',
             },
             editModal: false,
             editedPost: {
                 id: null,
                 title: '',
-                f_name: '',
-                l_name: '',
-                gender: '',
-                dob: '',
-                phone_num: '',
-                user_id: '',
-                f_name: ''
+                term: '',
+                start_date: '',
             },
             posts: []
         };
@@ -283,12 +204,8 @@ export default {
                     console.log('Post created:', response.data);
                     this.showModal = false;
                     this.newPost.title = '';
-                    this.newPost.f_name = '';
-                    this.newPost.l_name = '';
-                    this.newPost.email = '';
-                    this.newPost.gender = '';
-                    this.newPost.dob = '';
-                    this.newPost.phone_num = '';
+                    this.newPost.term = '';
+                    this.newPost.start_date = '';
 
                     this.fetchPosts(); // Refresh posts after creating a new one
                 })
@@ -300,13 +217,8 @@ export default {
         editPost(post) {
             this.editedPost.id = post.id;
             this.editedPost.title = post.title;
-            this.editPost.f_name = post.f_name;
-            this.editedPost.l_name = post.l_name;
-            this.editedPost.gender = post.gender;
-            this.editedPost.dob = post.dob;
-            this.editedPost.phone_num = post.phone_num;
-            this.editedPost.user_id = post.user_id;
-            this.editedPost.f_name = post.f_name;
+            this.editPost.term = post.term;
+            this.editedPost.start_date = post.start_date;
             this.editModal = true;
         },
         updatePost() {
@@ -335,14 +247,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-  .nav-link {
-    text-align: center;
-    transition: background-color 0.3s;
-  }
-  .active-link {
-    border-bottom: 2px solid #4299e1;
-    color: #4299e1;
-  }
-</style>

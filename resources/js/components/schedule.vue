@@ -1,7 +1,21 @@
 <template>
   <!-- <Header> -->
     <!-- <div class="content-container"> -->
-      <h1 class="text-custom-color-small font-istok text-4xl font-bold">Schedule , CS</h1>
+      <div class="flex items-center ml-4">
+        <h1 class="text-custom-color-small font-istok text-4xl font-bold">Schedule , CS</h1>
+        <div class="ml-auto">
+          <!-- <select v-if="terms.length" class="w-32 bg-white ring-1 ring-blue ring-opacity-5 p-2 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2" v-model="selectedTerm">
+            <option disabled value="" style="display:none;">Select Term</option>
+            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+                <span class="flex items-center">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
+                Add More
+                </span>
+            </button>
+            <option v-for="term in terms" :key="term" :value="term" class="py-2 px-4 hover:bg-gray-100">{{ term }}</option>
+          </select> -->
+        </div>
+      </div>
       <div class="schedule-container p-4">
         <div class="schedule">
           <div class="table-container">
@@ -147,9 +161,8 @@ export default {
       groups: ['G1'],
       timeSlots: ['08:30:00', '10:15:00', '12:15:00', '13:15:00'],
       dataFromDatabase: {},
-      
-
     };
+    
   },
   
   created() {
