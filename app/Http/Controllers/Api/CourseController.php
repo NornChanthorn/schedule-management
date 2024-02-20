@@ -20,6 +20,8 @@ class CourseController extends Controller
         $validator = Validator::make($req->all(), [
             'name' => 'required',
             'term_id' => 'required',
+            'gen_id' => 'required',
+            'major_id' => 'required',
             'teacher_id' => 'required',
             'duration' => 'required'
         ]);
@@ -48,6 +50,8 @@ class CourseController extends Controller
         $validator = Validator::make($req->all(), [
             'name' => 'required',
             'term_id' => 'required',
+            'gen_id' => 'required',
+            'major_id' => 'required',
             'teacher_id' => 'required',
             'duration' => 'required'
         ]);
