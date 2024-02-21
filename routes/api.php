@@ -54,7 +54,8 @@ Route::put('/schedule/{id}',[ScheduleController::class, 'update'] );
 Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );
 Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedulesByCourse']);
 Route::get('/course/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByMGT']);
-
+Route::get('courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor']);
 
 //additional route
 Route::get('student/{major}', [StudentController::class, 'getStudentByMajor']);
+

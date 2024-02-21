@@ -26,6 +26,12 @@ import ContextMenu from 'primevue/contextmenu';
 import OverlayPanel  from 'primevue/overlaypanel';
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/calendar';
+import TabMenu from 'primevue/tabmenu';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';
+
 
 
 
@@ -48,19 +54,23 @@ app.use(ToastService);
 // })
 
 app.component('test', App)
+app.component('Header', Header);
 app.component('Button', Button);
 app.component('Dialog', Dialog);
 app.component('Toast', Toast);
 app.component('InputText', InputText);
 app.component('SpeedDial', SpeedDial);
-
-app.component('Header', Header);
-
 app.component('ConfirmPop', ConfirmPopup);
 app.component('ContextMenu', ContextMenu);
 app.component('OverlayPanel', OverlayPanel);
 app.component('Dropdown', Dropdown);
 app.component('Calendar', Calendar);
+app.component('TabMenu', TabMenu);
+app.component('DataTable', DataTable)
+app.component('Column', Column)
+app.component('Row', Row)
+app.component('ColumnGroup', ColumnGroup)
+
 app.use(ConfirmationService)
 
 app.mount('#app')

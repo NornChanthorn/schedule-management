@@ -79,6 +79,11 @@ const routes=[
                 component: Room,
                 name: 'room'
             },
+            {
+                path: '/courses',
+                component: Course,
+                name: 'Course'
+            }
 
         ]
     },

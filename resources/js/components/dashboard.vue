@@ -33,6 +33,7 @@
                       <p @click="goToAnotherPages" class="modal-item-list hover:bg-blue-100">Teacher</p>
                       <p @click="goToAnotherPage" class="modal-item-list hover:bg-blue-100">Student</p>
                       <p @click="goToAnotherPagesroom" class="modal-item-list hover:bg-blue-100">Room</p>
+                      <p @click="goToCourse" class="modal-item-list hover:bg-blue-100">Course</p>
                     </div>
                   </transition>
             </div>
@@ -142,6 +143,9 @@ export default{
           const newPath = '/teacher';
           // Navigate to the new path
           this.$router.push(newPath);
+        },
+        goToCourse(){
+            this.$router.push({path: '/courses'})
         },
 
         TermPage() {

@@ -97,6 +97,17 @@ class CourseController extends Controller
         ]);
 
     }
+    public function getCourseByMajor($major_id){
+        $course = Course::where('major_id', $major_id)
+        ->with('term', 'generation', 'major')
+        ->get();
+
+        return response()->json([
+            'message'=> 'Get Successfully',
+            'data' => $course
+        ]);
+
+    }
 
 
 }
