@@ -4,9 +4,9 @@
       <div class="text-custom-color-small font-istok text-4xl font-bold p-4">
         <h1>Profile</h1>
       </div>
-      <div class="absolute right-60 top-60 items-end">
+      <div class="absolute right-60 top-40 items-end">
         <label for="profileImage" class="cursor-pointer">
-          <img @click="changeProfileImage" src="/img/user-profile.jpg" alt="User Profile" class="rounded-full h-20 w-20 mb-4 border border-2 cursor-pointer hover:border-blue-500"/>
+          <img @click="changeProfileImage" src="/img/profile.png" alt="User Profile" class="rounded-full h-20 w-20 mb-4 border border-2 cursor-pointer hover:border-blue-500"/>
         </label>
         <input type="file" id="profileImage" style="display: none" @change="handleProfileImageChange"/>
       </div>

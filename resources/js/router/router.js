@@ -8,6 +8,7 @@ import Profile from '../components/profile.vue'
 import Generation from '../components/admin/Generation.vue'
 import Major from '../components/admin/Major.vue'
 import Term from '../components/admin/Term.vue'
+import Terms from '../components/term.vue'
 import Students from '../components/student.vue'
 import Teacher from '../components/teacher.vue'
 import Room from '../components/room.vue'
@@ -58,6 +59,26 @@ const routes=[
               component: Profile,
               name: 'profile'
             },
+            {
+              path: '/student',
+              component: Students,
+              name: 'student'
+          },
+          {
+              path: '/teacher',
+              component: Teacher,
+              name: 'teacher'
+          },
+          {
+            path: '/terms',
+            component: Terms,
+            name: 'terms'
+        },
+        {
+          path: '/room',
+          component: Room,
+          name: 'room'
+        },
 
         ]
     },
@@ -71,12 +92,11 @@ const routes=[
       component: Student,
       name: 'studentlist'
     },
-
     {
       path: '/student',
       component: Students,
       name: 'student'
-  },
+    },
   {
       path: '/teacher',
       component: Teacher,
@@ -87,8 +107,6 @@ const routes=[
     component: Room,
     name: 'room'
 },
-
-
 
 ];
 

@@ -65,6 +65,7 @@ export default{
             majorID: null,
             majorName: null,
             MajorName: null,
+
             gen: '',
             terms: [],
             term: [],

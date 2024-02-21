@@ -1,98 +1,94 @@
 <template>
-    <div class="container max-w-7xl mx-auto mt-8">
-        <div class="mb-4">
-            <h1 class="font-serif text-3xl font-bold underline decoration-gray-400"> Post Index</h1>
-            <div class="flex justify-end">
-                <button @click="showModal = true"
-                    class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600">Create Post</button>
+    <!-- <div class="container max-w-7xl mx-auto mt-8"> -->
+        <div class="flex items-center mb-4 ml-4">
+            <h1 class="text-custom-color-small font-istok text-4xl font-bold">Room List</h1>
+            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
+                <span class="flex items-center">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
+                    Add Room
+                </span>
+            </button>
             </div>
-        </div>
         <!-- Modal for creating a new post -->
-        <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto">
+        <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-                    <div class="mb-4">
-                        <h1 class="font-serif text-3xl font-bold underline decoration-gray-400">Create Post</h1>
+                <div class="bg-white w-full max-w-lg p-6 border border-2">
+                    <div class="mb-4 text-center">
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Add Room</h1>
                     </div>
                     <form @submit.prevent="createPost">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700" for="name">Name</label>
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-700" for="name">Name</label>
                             <input v-model="newPost.name"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                type="text" name="name" placeholder="Enter name" />
+                                class="mt-1 p-2 w-full border rounded"
+                                type="text" name="name"  placeholder="Enter name" />
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700" for="size">Size</label>
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-700" for="size">Size</label>
                             <input v-model="newPost.size"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                class="mt-1 p-2 w-full border rounded"
                                 type="text" name="size" placeholder="Enter size" />
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700" for="type">Type</label>
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-700" for="type">Type</label>
                             <input v-model="newPost.type"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                class="mt-1 p-2 w-full border rounded"
                                 type="text" name="type" placeholder="Enter type" />
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700" for="stutus">Status</label>
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-700" for="stutus">Status</label>
                             <input v-model="newPost.status"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                class="mt-1 p-2 w-full border rounded"
                                 type="text" name="status" placeholder="Enter status" />
                         </div>
-                        <div class="flex items-center justify-start mt-4 gap-x-2">
-                            <button type="submit"
-                                class="px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">Save</button>
+                        <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="showModal = false" type="button"
-                                class="px-6 py-2 text-sm font-semibold text-gray-100 bg-gray-400 rounded-md shadow-md hover:bg-gray-600 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">Cancel</button>
+                                class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                            <button type="submit"
+                                class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Save</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
         <!-- Modal for editing a post -->
-        <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto">
+        <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-                    <div class="mb-4">
-                        <h1 class="font-serif text-3xl font-bold underline decoration-gray-400">
-                            Edit Post
-                        </h1>
+                <div class="bg-white w-full max-w-lg p-6">
+                    <div class="mb-4 text-center">
+                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Room Information</h1>
                     </div>
-                    <div class="w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10">
+                    <div class="w-full px-6 py-4 bg-white">
                         <form @submit.prevent="updatePost">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700" for="name">Name</label>
+                            <div class="mb-2">
+                                <label class="block text-sm font-medium text-gray-700" for="name">Name</label>
                                 <input v-model="editedPost.name"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    class="mt-1 p-2 w-full border rounded"
                                     type="text" name="name" placeholder="Enter Name" />
                             </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700" for="size">Size</label>
+                            <div class="mb-2">
+                                <label class="block text-sm font-medium text-gray-700" for="size">Size</label>
                                 <input v-model="editedPost.size"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    class="mt-1 p-2 w-full border rounded"
                                     type="text" name="size" placeholder="Enter size" />
                             </div>
-                            <div class="mt-4">
-                                <label class="block text-sm font-bold text-gray-700" for="type">Type</label>
+                            <div class="mb-2">
+                                <label class="block text-sm font-medium text-gray-700" for="type">Type</label>
                                 <input v-model="editedPost.type"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    class="mt-1 p-2 w-full border rounded"
                                     type="text" name="type" placeholder="Enter type" />
                             </div>
-                            <div class="mt-4">
-                                <label class="block text-sm font-bold text-gray-700" for="status">Status</label>
+                            <div class="mb-2">
+                                <label class="block text-sm font-medium text-gray-700" for="status">Status</label>
                                 <input v-model="editedPost.status"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    class="mt-1 p-2 w-full border rounded"
                                     type="text" name="status" placeholder="Enter Status" />
                             </div>
-                            <div class="flex items-center justify-start mt-4 gap-x-2">
-                                <button type="submit"
-                                    class="px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">
-                                    Update
-                                </button>
+                            <div class="flex items-center justify-end mt-4 gap-x-2">
                                 <button @click="editModal = false" type="button"
-                                    class="px-6 py-2 text-sm font-semibold text-gray-100 bg-gray-400 rounded-md shadow-md hover:bg-gray-600 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">
-                                    Cancel
-                                </button>
+                                    class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                                <button type="submit"
+                                    class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Save</button>
                             </div>
                         </form>
                     </div>
@@ -182,7 +178,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 
 <script>

@@ -1,33 +1,10 @@
 <template>
     <div class="backgroud_new" >
-      <div class="flex header_fixed items-center justify-between bg-white p-6 shadow-md">
+      <div class="flex header_fixed items-center justify-between bg-white p-6 shadow-md z-10">
         <div class="flex items-center">
           <a href="/"><img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8"></a>
         </div>
-        <div  v-if="user.role==='teacher'">
-          <div class="flex items-center">
-            <i class="fas fa-bell text-xl mr-4 "></i>
-            <button class="button" @click="TogglePopup('buttonTrigger')">
-              <img src="/img/user-avatar.jpg" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
-            </button>
-            <transition name="slide" appear>
-              <div class="modal" v-if="popupTriggers.buttonTrigger">
-                <div class="modal-content">
-                  <div class="modal-item bg-blue flex">
-                    <a href="/profile" class="flex_item">
-                      <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
-                    </a>
-                  </div>
-                  <div class="modal-item bg-blue flex" @click="logout">
-                    <i class="fas fa-sign-out-alt text-white text-xl mr-2"></i> Logout
-                  </div>
-                </div>
-              </div>
-            </transition>
-            <span class="text-black">{{user.name }}</span>
-          </div>
-        </div>
-        <div  v-if="user.role==='admin'">
+        <!-- <div  v-if="user.role==='admin'">
           <button class="ml-auto border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
             <span class="flex items-center">
                 <i class="fa-solid fa-circle-plus mr-2"></i>
@@ -40,28 +17,70 @@
                 Student
             </span>
           </button>
-          <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="logout">
-              <span class="flex items-center">
-                Log out
-              <i class="fas fa-sign-out-alt mr-2"></i>
-              </span>
-          </button>
+        </div> -->
+        <div>
+          <div class="flex items-center">
+            <div v-if="user.role==='admin'" class="mr-6">
+              <div class="flex items-center mx-auto">
+                <button class="flex items-center justify-center w-32 border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none mr-2" label="Add New" severity="secondary" @click="showDialog">
+                  <span class="flex items-center mr-8"> List </span>
+                  <i :class="{ 'fa-solid fa-chevron-down': !isDialogVisible, 'fa-solid fa-chevron-down rotated': isDialogVisible }"></i>
+                </button>
+              </div>
+                  <!-- Modal or dropdown content -->
+                  <transition name="fade" appear>
+                    <div v-if="isDialogVisible" class="absolute bg-white mt-2 w-32 border-blue-500 border text-blue-500 modal-content">
+                      <p @click="goToAnotherPages" class="modal-item-list hover:bg-blue-100">Teacher</p>
+                      <p @click="goToAnotherPage" class="modal-item-list hover:bg-blue-100">Student</p>
+                      <p @click="TermPage" class="modal-item-list hover:bg-blue-100">Term</p>
+                      <p @click="goToAnotherPagesroom" class="modal-item-list hover:bg-blue-100">Room</p>
+                    </div>
+                  </transition>
+            </div>
+            <div v-if="user.role==='teacher'">
+              <i class="fas fa-bell text-xl mr-4 "></i>
+            </div>
+            <div>
+              <button class="button" @click="TogglePopup('buttonTrigger')">
+                <img src="/img/profile.png" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
+              </button>
+              <transition name="slide" appear>
+              <div class="modal_header" v-if="popupTriggers.buttonTrigger">
+                <div class="modal-content">
+                  <div class="modal-item">
+                    <a href="/profile" class="flex_item">
+                      <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
+                    </a>
+                  </div>
+                  <div class="modal-item bg-blue flex" @click="logout">
+                    <i class="fas fa-sign-out-alt text-white text-xl mr-2"></i> Logout
+                  </div>
+                </div>
+              </div>
+            </transition>
+            </div>
+            <span class="text-black">{{user.name }}</span>
+          </div>
         </div>
       </div>
 
       <div class="max-w-95 mx-auto p-8 mt-20">
-        <div class="text-center border-2 mb-6 font-istok bg-white">
+        <!-- <div class="text-center border-2 mb-6 font-istok bg-white">
           <div  v-if="user.role==='admin'" class="flex p-4">
             <h1 class="text-4xl font-bold text-custom-color mr-5 ml-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
           </div>
           <div  v-if="user.role==='teacher'"  class="flex p-4">
             <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
           </div>
+
         </div>
 
         <button class="button" @click="goToAnotherPage">Go to student Page</button>
         <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
         <button class="button" @click="goToAnotherPagesroom">Go to room Page</button>
+
+        </div> -->
+
 
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
@@ -84,7 +103,8 @@ export default{
     },
     data(){
         return{
-            user: []
+            user: [],
+            isDialogVisible: false,
         }
     },
 
@@ -142,6 +162,18 @@ export default{
           // Navigate to the new path
           this.$router.push(newPath);
         },
+
+        TermPage() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/terms';
+          // Navigate to the new path
+          this.$router.push(newPath);
+        },
+        // logout() {
+        //     localStorage.removeItem('authToken');
+        //     this.$router.push({ path: '/login' });
+        // },
+
         goToAnotherPagesroom() {
           // Define the path for the page you want to navigate to
           const newPath = '/room';
@@ -174,8 +206,17 @@ export default{
         }else{
             console.log('Not loggin yet')
         }
-  },
 
+  },
+  showDialog() {
+      this.isDialogVisible = !this.isDialogVisible;
+    },
+    selectOption(option) {
+      // Handle the selected option
+      console.log(`Selected option: ${option}`);
+      // You can replace the above line with the actual code to handle the selected option
+      this.isDialogVisible = false; // Close the dialog after selecting an option
+    },
 
     },
     beforeRouteEnter(to, from, next) {
@@ -279,10 +320,9 @@ export default{
   outline: none;
   width: 300px;
 }
-.modal{
+.modal_header{
   position: absolute;
-  margin-top: 270px;
-  margin-right: 100px;
+  margin-top: 60px;
   background-color: #212b38;
   color: white;
   border: 2px solid #0693E4;
@@ -293,6 +333,11 @@ export default{
 }
 .modal-item {
   padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.modal-item-list {
+  padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -343,4 +388,26 @@ export default{
     border: 1px solid #ccc;
     padding: 20px 35px;
   }
+  .rotated {
+  transform: rotate(-180deg);
+  transition: transform 0.3s ease-in-out;
+}
+.fa-solid.fa-chevron-down {
+  transition: transform 0.3s ease-in-out;
+}
+/* Fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s ease-in-out;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px); /* Adjust the translateY value based on your design */
+}
+
+/* Transform on click */
+.modal-content.clicked {
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
+}
 </style>
