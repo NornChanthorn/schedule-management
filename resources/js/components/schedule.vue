@@ -1,21 +1,15 @@
 <template>
-  <!-- <Header> -->
-    <!-- <div class="content-container"> -->
-      <div class="flex items-center ml-4">
-        <h1 class="text-custom-color-small font-istok text-4xl font-bold">Schedule , CS</h1>
-        <div class="ml-auto">
-          <!-- <select v-if="terms.length" class="w-32 bg-white ring-1 ring-blue ring-opacity-5 p-2 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2" v-model="selectedTerm">
-            <option disabled value="" style="display:none;">Select Term</option>
-            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
-                <span class="flex items-center">
-                <i class="fa-solid fa-circle-plus mr-2"></i>
-                Add More
-                </span>
-            </button>
-            <option v-for="term in terms" :key="term" :value="term" class="py-2 px-4 hover:bg-gray-100">{{ term }}</option>
-          </select> -->
-        </div>
-      </div>
+
+    <div class="flex items-center mb-4 ml-4">
+        <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName}}, Generation {{ GenName }}, Term {{ termName }}</h1>
+        <!-- <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" > -->
+            <!-- <span class="flex items-center">
+            <i class="fa-solid fa-circle-plus mr-2"></i>
+            Add Course
+            </span> -->
+        <!-- </button> -->
+    </div>
+
 
       <div class="schedule-container p-4">
         <div class="schedule">
@@ -162,14 +156,35 @@ export default {
       groups: ['G1'],
       timeSlots: ['08:30:00', '10:15:00', '12:15:00', '13:15:00'],
       dataFromDatabase: {},
+      termID: null,
+      genID: null,
+      majorID: null,
+      termName: null,
+      GenName: null,
+      majorName: null,
+      courses: [],
 
     }
 
   },
-
+  mounted(){
+        this.termID = this.$route.params.termId;
+        this.genID = this.$route.params.genid;
+        this.majorID = this.$route.params.majorId;
+        this.majorName = this.$route.params.name;
+        this.getTermID(this.termID);
+        this.getGenerationID(this.genID);
+  },
   created() {
     const term_id = 5;
     this.getSchedulesByTerm(term_id);
+    // this.termID = this.$route.params.termId;
+    // this.genID = this.$route.params.genid;
+    // this.majorID = this.$route.params.majorId;
+    // this.majorName = this.$route.params.name;
+    // this.getCourse(this.majorID, this.genID, this.termID);
+    // this.getGenerationID(this.genID);
+    // this.getTermID(this.termID);
   },
   methods: {
     getSchedulesByTerm(term_id) {
@@ -212,6 +227,34 @@ export default {
         schedule.group.group_name === group
       );
     },
+    // getCourse(majorId, genId, termId){
+    //     axios.get(`course/${majorId}/${genId}/${termId}`).then(
+    //         res=>{
+    //             this.courses= res.data.data
+
+    //         }
+    //     ).catch(er=>{
+    //             console.error(er)
+    //     })
+
+    // },
+    getGenerationID(id){
+        axios.get(`generations/${id}`).then(
+            res=>{
+                this.GenName = res.data.gen
+            }
+        )
+
+    },
+    getTermID(id){
+        axios.get(`terms/${id}`).then(
+            res=>{
+                this.termName = res.data.name
+            }
+        )
+
+    },
+
   },
   setup() {
     const popupTriggers = ref({

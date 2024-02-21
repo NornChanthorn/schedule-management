@@ -7,7 +7,7 @@
               <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
               <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
         </div>
-           <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
+           <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
                <span class="flex items-center">
                <i class="fa-solid fa-circle-plus mr-2"></i>
                Add Teacher
@@ -16,7 +16,7 @@
     </div>
         <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6 border border-2">
+                <div class="bg-white w-full max-w-lg p-6 border-2">
                     <div class="mb-4 text-center">
                         <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Teacher Information</h1>
                     </div>
@@ -29,7 +29,7 @@
 
                             <div class="w-1/2 ml-2">
                             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.f_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
@@ -60,9 +60,9 @@
                         </div>
                         <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="showModal = false" type="button"
-                                class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                                class="w-32 py-2  bg-gray-500 text-white border-2 hover:bg-gray-600">Cancel</button>
                             <button type="submit"
-                                class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Save</button>
+                                class="w-32 py-2 bg-blue-500 mr-2 text-white border-2 hover:bg-blue-600">Save</button>
                         </div>
                     </form>
                 </div>
@@ -112,9 +112,9 @@
                             </div>
                             <div class="flex items-center justify-end mt-4 gap-x-2">
                                 <button @click="editModal = false" type="button"
-                                    class="w-32 py-2  bg-gray-600 text-white hover:bg-gray-400">Cancel</button>
+                                    class="w-32 py-2  bg-gray-500 text-white border-2 hover:bg-gray-600">Cancel</button>
                                 <button type="submit"
-                                    class="w-32 py-2 bg-blue-600 mr-2 text-white border border-2 hover:bg-blue-400">Update</button>
+                                    class="w-32 py-2 bg-blue-500 mr-2 text-white  border-2 hover:bg-blue-600">Update</button>
                             </div>
                         </form>
                     </div>
@@ -147,10 +147,7 @@
                                     Phone Number</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    DOB</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    User_id</th>
+                                    Date of Birth</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Title</th>
@@ -179,7 +176,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.email }}
+                                    <div class="text-sm leading-5 text-gray-900">{{ post.user.email }}
                                     </div>
                                 </td>
 
@@ -193,10 +190,7 @@
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ post.user_id }}
-                                    </div>
-                                </td>
+
 
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                     <div class="text-sm leading-5 text-gray-900">{{ post.title }}
@@ -205,7 +199,7 @@
 
                                 <td
                                     class="text-sm font-medium leading-5 text-center whitespace-no-wrap border-b border-gray-200">
-                                    <button @click="editPost(post)" class="text-red-600 hover:text-red-800">
+                                    <button @click="editPost(post)" class="text-green-600 hover:text-green-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

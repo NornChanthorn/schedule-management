@@ -13,7 +13,7 @@
     <!-- <p v-if="selectedTerm">Here is term {{ selectedTerm}}</p> -->
     <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:gap-4 md:gap-3 sm:gap-2 justify-center mb-2">
             <div v-for="term in terms" :key="term?.id" class="border-2 hover:shadow-md transition-shadow duration-300 m-2">
-                <router-link :to="{ name: 'Course', params: { termId: term.id }}" >
+                <router-link :to="{ name: 'schedule', params: { termId: term.id }}" >
                     <div class="flex justify-center items-center">
                         <img src="../../../../public/img/major-logo.jpg" alt="" class="">
                     </div>

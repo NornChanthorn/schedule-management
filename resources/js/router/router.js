@@ -45,8 +45,8 @@ const routes=[
             },
             {
                 path: '/:name/:majorId/:genid/:termId',
-                name: 'Course',
-                component: Course
+                name: 'schedule',
+                component: Schedule
             },
 
             // {
@@ -60,25 +60,25 @@ const routes=[
               name: 'profile'
             },
             {
-              path: '/student',
-              component: Students,
-              name: 'student'
-          },
-          {
-              path: '/teacher',
-              component: Teacher,
-              name: 'teacher'
-          },
-          {
-            path: '/terms',
-            component: Terms,
-            name: 'terms'
-        },
-        {
-          path: '/room',
-          component: Room,
-          name: 'room'
-        },
+                path: '/student',
+                component: Students,
+                name: 'student'
+            },
+            {
+                path: '/teacher',
+                component: Teacher,
+                name: 'teacher'
+            },
+            {
+                path: '/terms',
+                component: Terms,
+                name: 'terms'
+            },
+            {
+                path: '/room',
+                component: Room,
+                name: 'room'
+            },
 
         ]
     },
@@ -92,23 +92,18 @@ const routes=[
       component: Student,
       name: 'studentlist'
     },
-    {
-      path: '/student',
-      component: Students,
-      name: 'student'
-    },
-  {
-      path: '/teacher',
-      component: Teacher,
-      name: 'teacher'
-  },
-  {
-    path: '/room',
-    component: Room,
-    name: 'room'
-},
+    // {
+    //   path: '/student',
+    //   component: Students,
+    //   name: 'student'
+    // },
+    // {
+    //     path: '/teacher',
+    //     component: Teacher,
+    //     name: 'teacher'
+    // },
 
-];
+]
 
 const router = createRouter({
     history: createWebHistory(),

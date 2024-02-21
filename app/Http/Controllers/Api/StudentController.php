@@ -92,4 +92,10 @@ class StudentController extends Controller
         $student->delete();
         return response()->json(['message' => 'Deleted successfully']);
     }
+    public function getStudentByMajor($majorId){
+        $data = Student::where('major_id', $majorId)->with('major', 'generation')->get()->groupBy('major');
+        return response()->json($data);
+    }
+
+
 }

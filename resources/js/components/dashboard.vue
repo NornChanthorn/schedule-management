@@ -23,7 +23,7 @@
             <div v-if="user.role==='admin'" class="mr-6">
               <div class="flex items-center mx-auto">
                 <button class="flex items-center justify-center w-32 border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none mr-2" label="Add New" severity="secondary" @click="showDialog">
-                  <span class="flex items-center mr-8"> List </span>
+                  <span class="flex items-center mr-8"> Menu </span>
                   <i :class="{ 'fa-solid fa-chevron-down': !isDialogVisible, 'fa-solid fa-chevron-down rotated': isDialogVisible }"></i>
                 </button>
               </div>
@@ -32,7 +32,6 @@
                     <div v-if="isDialogVisible" class="absolute bg-white mt-2 w-32 border-blue-500 border text-blue-500 modal-content">
                       <p @click="goToAnotherPages" class="modal-item-list hover:bg-blue-100">Teacher</p>
                       <p @click="goToAnotherPage" class="modal-item-list hover:bg-blue-100">Student</p>
-                      <p @click="TermPage" class="modal-item-list hover:bg-blue-100">Term</p>
                       <p @click="goToAnotherPagesroom" class="modal-item-list hover:bg-blue-100">Room</p>
                     </div>
                   </transition>
@@ -63,25 +62,7 @@
           </div>
         </div>
       </div>
-
       <div class="max-w-95 mx-auto p-8 mt-20">
-        <!-- <div class="text-center border-2 mb-6 font-istok bg-white">
-          <div  v-if="user.role==='admin'" class="flex p-4">
-            <h1 class="text-4xl font-bold text-custom-color mr-5 ml-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
-          </div>
-          <div  v-if="user.role==='teacher'"  class="flex p-4">
-            <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small">{{user.name }} !</span>
-          </div>
-
-        </div>
-
-        <button class="button" @click="goToAnotherPage">Go to student Page</button>
-        <button class="button" @click="goToAnotherPages">Go to teacher Page</button>
-        <button class="button" @click="goToAnotherPagesroom">Go to room Page</button>
-
-        </div> -->
-
-
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
         </div>
