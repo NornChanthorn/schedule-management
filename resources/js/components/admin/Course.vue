@@ -1,5 +1,8 @@
 <template>
     <div>Here is your code course in major:{{ majorID }},  gen: {{ genID }}, term:{{ termID }}</div>
+    <div>
+        
+    </div>
 
 
 </template>
@@ -24,7 +27,7 @@ export default{
     },
     methods:{
         getCourse(majorId, genId, termId){
-            axios.get(`courses/${majorId}/${genId}/${termId}`).then(
+            axios.get(`course/${majorId}/${genId}/${termId}`).then(
                 res=>{
                     this.courses= res.data
                     console.log(this.courses)

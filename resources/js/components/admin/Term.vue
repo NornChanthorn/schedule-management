@@ -1,8 +1,8 @@
 <template>
     <Toast/>
     <div class="flex items-center mb-4 ml-4">
-        <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName}}, Generation {{ gen }}</h1>
-        <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+        <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ MajorName}}, Generation {{ gen }}</h1>
+        <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
             <span class="flex items-center">
             <i class="fa-solid fa-circle-plus mr-2"></i>
             Add Term
@@ -64,6 +64,7 @@ export default{
             genId: null,
             majorID: null,
             majorName: null,
+            MajorName: null,
             gen: '',
             terms: [],
             term: [],
@@ -81,6 +82,7 @@ export default{
         this.getTerms();
         this.genId= this.$route.params.genid;
         this.majorID = this.$route.params.majorId;
+        this.MajorName= this.$route.params.name;
         this.getMajorID(this.majorID);
         this.getSchedule(this.majorID, this.genId, this.selectedTerm)
         this.getGenerationID(this.genId)
@@ -137,6 +139,7 @@ export default{
             axios.get(`majors/${id}`).then(
                 res=>{
                     this.majorName = res.data.name
+                    console.log(this.majorName)
                 }
             )
 
