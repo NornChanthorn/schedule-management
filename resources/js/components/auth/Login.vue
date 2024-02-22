@@ -35,7 +35,7 @@
         <div class="flex justify-end">
           <button type="submit" class="px-4 py-2 text-white w-full font-istok" style="background-color: #4B687A;">Login</button>
         </div>
-        <a href="#" @click.prevent="forgotPassword" class="block text-center mt-2 text-blue-500 text-xs font-istok">Forgot Password?</a>
+        <a href="/forgotpassword" class="block text-center mt-2 text-blue-500 text-xs font-istok">Forgot Password?</a>
       </form>
     </div>
   </div>

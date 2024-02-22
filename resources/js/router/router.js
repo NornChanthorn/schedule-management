@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from '../components/auth/Login.vue'
+import forgotpassword from '../components/auth/forgotpassword.vue'
 import Main from '../components/dashboard.vue'
 import Test from '../components/ExampleComponent.vue'
 import Schedule from '../components/schedule.vue'
@@ -22,6 +23,12 @@ const routes=[
         component: Login
 
     },
+    {
+      path: '/forgotpassword',
+      name: 'forgotpassword',
+      component: forgotpassword
+
+  },
     {
         path: '/',
         name: 'Main',

@@ -37,9 +37,6 @@
                     </div>
                   </transition>
             </div>
-            <div v-if="user.role==='teacher'">
-              <i class="fas fa-bell text-xl mr-4 "></i>
-            </div>
             <div>
               <button class="button" @click="TogglePopup('buttonTrigger')">
                 <img src="/img/profile.png" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
@@ -48,9 +45,9 @@
               <div class="modal_header" v-if="popupTriggers.buttonTrigger">
                 <div class="modal-content">
                   <div class="modal-item">
-                    <a href="/profile" class="flex_item">
+                    <router-link to="/profile" class="flex_item">
                       <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
-                    </a>
+                    </router-link>
                   </div>
                   <div class="modal-item bg-blue flex" @click="logout">
                     <i class="fas fa-sign-out-alt text-white text-xl mr-2"></i> Logout
@@ -63,7 +60,16 @@
           </div>
         </div>
       </div>
-      <div class="max-w-95 mx-auto p-8 mt-20">
+      <!-- <div class="text-center border-2 ml-10 mr-10 mt-24 font-istok bg-white">
+        <div class="flex p-4">
+          <h1 class="text-4xl font-bold text-custom-color mr-5">Welcome </h1><span class="mt-2 text-xl text-custom-color-small"></span>
+        </div>
+      </div> -->
+      <div v-if="isHomePage" class="welcome-content ml-8 mr-8 mt-28 font-istok bg-white p-5">
+        <h1 class="text-4xl font-bold text-blue-400 ml-8">Welcome to our schedule system </h1>
+          <span class="mt-2 text-xl text-custom-color-small"></span>
+      </div>
+      <div :class="{ 'mt-24 p-8': !isHomePage }" class="max-w-95 mx-auto pt-4 px-8 pb-8">
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
         </div>
@@ -80,6 +86,11 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import TeacherPage from '../components/teacher/MainPage.vue'
 export default{
+    computed: {
+      isHomePage() {
+        return this.$route.path === '/';
+      }
+    },
     components:{
         TeacherPage
     },
@@ -372,6 +383,9 @@ export default{
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px 35px;
+  }
+  .welcome-content{
+    border: 1px solid #ccc;
   }
   .rotated {
   transform: rotate(-180deg);
