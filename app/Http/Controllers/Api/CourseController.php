@@ -99,7 +99,7 @@ class CourseController extends Controller
     }
     public function getCourseByMajor($major_id){
         $course = Course::where('major_id', $major_id)
-        ->with('term', 'generation', 'major')
+        ->with('term', 'generation', 'major', 'teacher')
         ->get();
 
         return response()->json([
