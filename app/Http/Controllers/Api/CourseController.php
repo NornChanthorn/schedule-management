@@ -88,7 +88,7 @@ class CourseController extends Controller
         $course = Course::where('major_id', $major_id)
         ->where('gen_id', $gen_id)
         ->where('term_id', $term_id)
-        ->with('term', 'generation', 'major')
+        ->with('term', 'generation', 'major', 'teacher')
         ->get();
 
         return response()->json([

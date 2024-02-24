@@ -17,7 +17,9 @@
 
             <Column field="id" header="ID"></Column>
             <Column field="name" header="Name"></Column>
-            <Column field="term.name" header="Term"></Column>
+            <Column field="termName" header="Term"></Column>
+            <Column field="teacherName" header="Teacher"></Column>
+            <Column field="genName" header="Generation"></Column>
 
         </DataTable>
         <!-- <Paginator :first="1" :totalRecords="totalRecords" :rows="5" @change="handlePageChange" /> -->
@@ -40,6 +42,8 @@ export default{
             selectedTabId: 0,
             tableData: [],
             totalRecords: 0,
+            termName: '',
+
         }
     },
     mounted(){
@@ -48,15 +52,36 @@ export default{
 
     },
     methods:{
-        getCourse() {
-            axios.get('courses')
-                .then((res) => {
-                this.tableData = res.data.data;
-                })
-                .catch((error) => {
-                console.error('Error fetching courses:', error);
+       async getCourse() {
+            // axios.get('courses')
+            //     .then((res) => {
+            //     this.tableData = res.data.data;
+            //     this.termName = this.tableData.term.name
+            //     })
+            //     .catch((error) => {
+            //     console.error('Error fetching courses:', error);
+            //     });
+            try {
+                const response = await axios.get('courses');
+                const coursesWithTermNames = response.data.data.map((course) => {
+                const termName = course.term?.name;
+                const teacherFName = course.teacher?.f_name;
+                const teacherLName = course.teacher?.l_name;
+                const teacherName = teacherFName +' '+ teacherLName;
+                const genName = course.generation?.gen;
+                return {
+                    ...course,
+                    termName,
+                    teacherName,
+                    genName
+                };
                 });
-        },
+                this.tableData = coursesWithTermNames;
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+                // Handle errors appropriately (e.g., display an error message to the user)
+            }
+            },
         async getMajorName(){
             try {
                 const response = await axios.get('majors');
@@ -75,7 +100,21 @@ export default{
             this.tableData = []; // Clear previous data
             try {
                 const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${this.selectedTabId}` : `courses`); // Adjust for your API endpoint
-                this.tableData = response.data.data;
+                // this.tableData = response.data.data;
+                this.tableData = response.data.data.map((course) => {
+                const termName = course.term?.name;
+                const teacherFName = course.teacher?.f_name;
+                const teacherLName = course.teacher?.l_name;
+                const teacherName = teacherFName +' '+ teacherLName;
+                const genName = course.generation?.gen;
+                return {
+                    ...course,
+                    termName,
+                    teacherName,
+                    genName
+                };
+                });
+                this.tableData = coursesWithTermNames;
 
                 this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
             } catch (error) {
@@ -87,13 +126,9 @@ export default{
 
         },
 
-        handlePageChange(event) {
-        // Update data based on new page number
-        this.fetchData(event.page + 1); // Adjust for 0-based indexing if needed
-        },
+
     },
     setup(){
-
         const filters = ref({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         });
