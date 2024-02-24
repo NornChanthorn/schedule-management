@@ -1,10 +1,10 @@
 <template>
- <div class="w-full h-screen flex h-screen font-istok">
+ <div class="w-full  flex h-screen font-istok">
       <!-- Use image as background with 3/4 width on medium screens -->
     <div class="md:w-1/2 md:flex items-center justify-center">
-      <img class="w-full md:w-1/2 absolute md:block max-h-full py-10" src="/img/login_pic.svg" alt="Login Image"/>
+      <img class="w-full md:w-1/2 absolute md:block max-h-full py-10" src="/img/login_Pic.svg" alt="Login Image"/>
     </div>
-    <div class="z-10 back md:w-1/2 flex justify-center items-center bg-blue-700 bg-opacity-50 relative w-full ">
+    <div class="z-10  md:w-1/2 flex justify-center items-center bg-blue-700 bg-opacity-50 relative w-full ">
       <form action="" class="w-full max-w-md p-10 mx-auto my-auto bg-white" @submit.prevent="login">
         <div class="flex mb-8">
           <!-- <h1 class="text-5xl font-bold transition-all duration-300 mr-2 text-custom-color font-istok"></h1> -->

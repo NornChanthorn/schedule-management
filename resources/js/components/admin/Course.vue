@@ -10,13 +10,15 @@
     </div>
         <TabMenu :model="majorTabs" @tabChange="handleTabChange" />
         <DataTable :value="tableData" dataKey="id" :resizableColumns="true" columnResizeMode="expand"
-            showGridlines :paginator="true" :rows="10" 
+            showGridlines :paginator="true" :rows="10"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
 
             <Column field="id" header="ID"></Column>
             <Column field="name" header="Name"></Column>
+            <Column field="term.name" header="Term"></Column>
+
         </DataTable>
         <!-- <Paginator :first="1" :totalRecords="totalRecords" :rows="5" @change="handlePageChange" /> -->
 
