@@ -52,12 +52,51 @@
             </template>
         </Dialog>
 
+        <!-- edit  -->
+        <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '35vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <div class="w-full flex justify-center items-center ">
+                <form action="" @submit.prevent="editTerm" class=" w-full flex justify-center ">
+                    <div class="  w-[80%] ">
+                        <div class="lg:justify-between items-center mb-4 ">
+                            <label for="name" class="text-lg mr-2 mb-2">Term</label>
+                            <input type="text" v-model="name" class=" outline  outline-slate-200 appearance-none  rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 "/>
+                        </div>
+                        <div class="lg:justify-between items-center mb-4">
+                            <label for="name" class="text-lg mr-2 mb-2">Start Date</label>
+                            <input  type="date" v-model="start_date" class="outline  outline-slate-200 appearance-none  rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200  "  />
+                        </div>
+                        <input type="text" v-model="active" hidden>
+                        <div class="flex justify-between mt-6">
+                            <button v-on:click="closeEditDialog" class="w-32 bg-red-400 mr-2 text-white  border-2 hover:bg-red-700" >Cancel</button>
+                            <button type="submit" class="w-32 py-2  bg-blue-400 text-white hover:bg-blue-700" >Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <template #header>
+                <div class="text-center border-b border-gray-300 w-full pb-4">
+                <h2 class="text-lg font-bold">Edit Term</h2>
+                </div>
+            </template>
+        </Dialog>
 
 
+
+    <OverlayPanel ref="op" class="">
+        <div class=" w-30 flex flex-col items-start ">
+            <button @click="showEditDialog(itemID)" class="w-full p-2 text-blue-500 flex items-center justify-start hover:bg-gray-200 focus:outline-none" >
+                <i class="fas fa-edit mr-2"></i> Edit
+            </button>
+            <button @click="confirmDelete(itemID)" class="w-full p-2 text-red-500 flex items-center justify-start hover:bg-gray-200 focus:outline-none">
+                <i class="fas fa-trash-alt mr-2"></i> Delete
+            </button>
+        </div>
+    </OverlayPanel>
 
 </template>
 <script>
 import axios from 'axios';
+import { ref } from 'vue';
 export default{
     data(){
         return{
@@ -75,7 +114,7 @@ export default{
             schedule: [],
             selectedTerm: null,
             visible: false,
-
+            visibleEdit: false,
 
         }
     },
@@ -143,7 +182,26 @@ export default{
                     console.log(this.majorName)
                 }
             )
+        },
+        editTerm(id){
+            axios.put(`terms/${id}`, {name: this.name, start_date: this.start_date}).then(
+                res=>{
+                    this.getTerms();
+                    this.visibleEdit= false
+                    this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Term Edit Successfully', life: 3000 });
+                }
 
+            ).catch(er=>{
+                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
+            })
+        },
+        getByID(id){
+            axios.get(`terms/${id}`).then(
+                res=>{
+                    this.term = res.data
+                    console.log(this.major)
+                }
+            )
         },
         // dialog
         showDialog(){
@@ -151,9 +209,35 @@ export default{
         },
         closeDialog(){
             this.visible = false
-        }
+        },
+        showEditDialog(id){
+            this.visibleEdit= true
+            this.id = id
+            this.getByID(this.id);
+        },
+        closeEditDialog(){
+            this.visibleEdit= false
+        },
 
-    }
+    },
+    setup() {
+    const op = ref(null);
+    const itemID = ref(null);
+
+
+    const showOptions = (id) => {
+        itemID.value= id
+        op.value.toggle(event);
+
+    };
+
+    return {
+      op,
+      itemID,
+      showOptions,
+    };
+  },
+
 
 }
 </script>

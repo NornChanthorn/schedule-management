@@ -2,7 +2,7 @@
     <Toast/>
        <div class="flex items-center mb-4 ml-4">
             <h1 class="text-custom-color-small font-istok text-4xl font-bold">Department</h1>
-            <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
+            <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
                 <span class="flex items-center">
                 <i class="fa-solid fa-circle-plus mr-2"></i>
                 Add More
@@ -28,7 +28,7 @@
                 <form action="" @submit.prevent="addMajor">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Major</label>
-                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
+                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of Major">
                     </div>
                     <div class="flex justify-between mt-6">
                         <button v-on:click="closeDialog" class="w-32 bg-red-500 mr-2 text-white border-2  hover:bg-red-700" >Cancel</button>
@@ -48,7 +48,7 @@
                 <form action="" @submit.prevent="editMajor(id)">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Major's name</label>
-                        <input type="text" v-model="name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" :placeholder="major.name">
+                        <input type="text" v-model="name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" :placeholder="major.name">
                     </div>
                     <div class="flex justify-between mt-6">
                         <button v-on:click="closeEditDialog" class="w-32 bg-red-500 mr-2 text-white border-2 hover:bg-red-700" >Cancel</button>
@@ -96,6 +96,7 @@ export default{
     },
     mounted(){
         this.getMajors();
+
     },
     methods:{
         getMajors(){
@@ -143,7 +144,7 @@ export default{
                 }
 
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
+                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
             })
         },
         getByID(id){

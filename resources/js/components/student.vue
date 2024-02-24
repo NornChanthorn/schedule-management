@@ -13,6 +13,24 @@
               Add Student
           </span>
       </button>
+      <button
+        @click="importCSV"
+        class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-upload mr-2"></i>
+          Import
+        </span>
+      </button>
+      <button
+        @click="exportCSV"
+        class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-file-export mr-2"></i>
+          Export
+        </span>
+      </button>
     </div>
     <!-- Modal for creating a new post -->
     <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -43,7 +61,7 @@
                                 </select>
                             </div>
                             <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
+                                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
                                 <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
                             </div>
                         </div>
@@ -54,14 +72,13 @@
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                               <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
-                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Enter student_id" />
+                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Example B20210021" />
                             </div>
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
                                 <select v-model="newPost.generation_id" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select Generation</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
                                 </select>
                             </div>
                         </div>
@@ -70,16 +87,14 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
                                 <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select Group</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.group_name }}</option>
                                 </select>
                             </div>
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
-                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded" >
                                     <option value="" disabled>Select Major</option>
-                                    <option value="1">Compunter Science</option>
-                                    <option value="2">Ecommerce</option>
+                                    <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -110,7 +125,7 @@
 
                             <div class="w-1/2 ml-2">
                             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="editedPost.f_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
@@ -118,12 +133,12 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
                                 <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
+                                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
                                 <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
                             </div>
                         </div>
@@ -140,8 +155,7 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
                                 <select v-model="editedPost.generation_id" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select Generation</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
                                 </select>
                             </div>
                         </div>
@@ -150,16 +164,15 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
                                 <select v-model="editedPost.group_id" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select Group</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.group_name }}</option>
                                 </select>
                             </div>
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
                                 <select v-model="editedPost.major_id" class="mt-1 p-2 w-full border rounded">
                                     <option value="" disabled>Select Major</option>
-                                    <option value="1">Compunter Science</option>
-                                    <option value="2">Ecommerce</option>
+                                    <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
+                                    <!-- <option value="2">Ecommerce</option> -->
                                 </select>
                             </div>
                         </div>
@@ -289,7 +302,7 @@
 
 <script>
 import axios from 'axios';
-
+import Papa from "papaparse";
 export default {
   data() {
     return {
@@ -306,6 +319,9 @@ export default {
         major_id: '',
       },
       editModal: false,
+      majors: [],
+      generations: [],
+      groups: [],
       editedPost: {
         id: null,
         f_name: '',
@@ -323,6 +339,9 @@ export default {
   },
   mounted() {
     this.fetchPosts();
+    this.getMajor();
+    this.getGeneration();
+    this.getGroups();
   },
   methods: {
     fetchPosts() {
@@ -334,6 +353,31 @@ export default {
           console.error('Error fetching posts:', error);
         });
     },
+    getMajor(){
+        axios.get('majors').then(
+            res=>{
+                this.majors = res.data
+            }
+        )
+
+    },
+    getGeneration(){
+        axios.get('generations').then(
+            res=>{
+                this.generations = res.data
+            }
+        )
+
+    },
+    getGroups(){
+        axios.get('groups').then(
+            res=>{
+                this.groups = res.data
+            }
+        )
+
+    },
+
     createPost() {
       axios.post('students', this.newPost)
         .then(response => {
@@ -391,7 +435,20 @@ export default {
           console.error('Error deleting post:', error);
           // Handle error, maybe show an error message
         });
-    }
+    },
+    exportCSV() {
+      // Convert data to CSV format
+      const csv = Papa.unparse(this.posts);
+      // Create a Blob containing the CSV data
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      // Create a download link and trigger a click
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "student_data.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
   }
 };
 </script>

@@ -1,5 +1,4 @@
 <template>
-
     <div class="flex items-center mb-4 ml-4">
         <h1  class="text-custom-color-small font-istok text-4xl font-bold">All Course</h1>
         <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" >
@@ -8,103 +7,94 @@
             Add Course
             </span>
         </button>
-        <!-- <Dropdown v-model="selectedTerm" :options="terms" optionValue="id" optionLabel="name" placeholder="Select a term" class="w-full md:w-14rem" /> -->
     </div>
+        <TabMenu :model="majorTabs" @tabChange="handleTabChange" />
+        <DataTable :value="tableData" dataKey="id" :resizableColumns="true" columnResizeMode="expand"
+            showGridlines :paginator="true" :rows="10" 
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
 
-    <div>
-
-        <TabMenu :model="majorTabs" @onChange="handleTabChange" />
-        <DataTable :value="filteredCourses">
             <Column field="id" header="ID"></Column>
             <Column field="name" header="Name"></Column>
-            <Column field="term.name" header="Term"></Column>
-         
-            <Column field="duration" header="Duration"></Column>
         </DataTable>
-    </div>
-
-
+        <!-- <Paginator :first="1" :totalRecords="totalRecords" :rows="5" @change="handlePageChange" /> -->
 
 </template>
 <script>
 import axios from 'axios';
+import { FilterMatchMode } from "primevue/api";
+import { ref } from "vue";
 export default{
     data(){
         return{
-            termID: null,
-            genID: null,
-            termName: null,
-            majorId: null,
-            GenName: null,
-            majorName: null,
             courses: [],
             majors: [],
-            majorTabs: [],
+            majorTabs: [
+                { label: 'All Courses', icon: 'pi pi-book', major: null },
+            ],
             selectedMajor: null,
             filteredCourses: [],
-
+            selectedTabId: 0,
+            tableData: [],
+            totalRecords: 0,
         }
     },
     mounted(){
-        this.termID = this.$route.params.termId;
-        this.genID = this.$route.params.genid;
-        this.majorName = this.$route.params.name;
-        this.getCourse();
         this.getMajorName();
+        this.getCourse();
 
     },
     methods:{
         getCourse() {
-        axios.get('courses')
-            .then((res) => {
-            this.courses = res.data.data;
-            this.filteredCourses = this.courses; // Directly assign the courses array
-            console.log(this.filteredCourses);
-            })
-            .catch((error) => {
-            console.error('Error fetching courses:', error);
-            });
-        }
-        ,
-        getMajorName(){
-            axios.get('majors').then(
-                (res) => {
-                    this.majors = res.data;
-                    // Add an option for all courses
-                    this.majorTabs = [
-                        ...this.majors.map((major) => ({ label: major.name, icon: 'pi pi-users', major })),
-                        { label: 'All Courses', icon: 'pi pi-users', major: null },
-                    ];
-            })
-            .catch((er) => {
-            console.error(er);
-            });
-
-        },
-        getCourseByMajorID(majorId){
-            if (majorId) {
-                axios
-                .get(`courseMajor/${majorId}`) // Adjust according to your API endpoint
+            axios.get('courses')
                 .then((res) => {
-                    this.filteredCourses = res.data.data; // Update filteredCourses with filtered data
+                this.tableData = res.data.data;
                 })
                 .catch((error) => {
-                    console.error('Error fetching courses by major ID:', error);
+                console.error('Error fetching courses:', error);
                 });
-            } else {
-                // Return all courses when the "All Courses" tab is selected
-                this.filteredCourses = this.courses;
+        },
+        async getMajorName(){
+            try {
+                const response = await axios.get('majors');
+                this.majors = response.data;
+                this.majorTabs.push(...this.majors.map((major) => ({
+                label: major.name,
+                icon: 'pi pi-book',
+                major,
+                })));
+            } catch (error) {
+                console.error('Error fetching majors:', error);
             }
         },
+        async handleTabChange(newTab) {
+            this.selectedTabId = newTab.index;
+            this.tableData = []; // Clear previous data
+            try {
+                const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${this.selectedTabId}` : `courses`); // Adjust for your API endpoint
+                this.tableData = response.data.data;
 
+                this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+                // Handle errors appropriately
+            } finally {
+                this.loading = false;
+            }
 
-        handleTabChange(event) {
-        console.log('handleTabChange called');
-        this.selectedMajor = event.item.major;
-        this.getCourseByMajorID(this.selectedMajor ? this.selectedMajor.id : null);
         },
 
+        handlePageChange(event) {
+        // Update data based on new page number
+        this.fetchData(event.page + 1); // Adjust for 0-based indexing if needed
+        },
+    },
+    setup(){
 
+        const filters = ref({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        });
 
     }
 
