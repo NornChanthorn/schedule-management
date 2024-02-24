@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class CourseController extends Controller
 {
     public function index(){
-        $course = Course::all();
+        $course = Course::with('term', 'generation', 'teacher')->get();
         return response()->json([
             'message'=> 'Get Successfully',
             'data'=> $course

@@ -1,8 +1,9 @@
 <template>
     <!-- <div class="container max-w-7xl mx-auto mt-8"> -->
+        <Toast/>
         <div class="flex items-center mb-4 ml-4">
             <h1 class="text-custom-color-small font-istok text-4xl font-bold">Room List</h1>
-            <button class="ml-auto bg-green-500 text-white px-2 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
+            <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
                 <span class="flex items-center">
                 <i class="fa-solid fa-circle-plus mr-2"></i>
                     Add Room
@@ -27,15 +28,15 @@
                             <label class="block text-sm font-medium text-gray-700" for="size">Size</label>
                             <input v-model="newPost.size"
                                 class="mt-1 p-2 w-full border rounded"
-                                type="text" name="size" placeholder="Enter size" />
+                                type="text" name="size" placeholder="Amount of student" />
                         </div>
                         <div class="mb-2">
                             <label class="block text-sm font-medium text-gray-700" for="type">Type</label>
                             <input v-model="newPost.type"
                                 class="mt-1 p-2 w-full border rounded"
-                                type="text" name="type" placeholder="Enter type" />
+                                type="text" name="type" placeholder="Type of room (Ex: Thoery, Lap...)" />
                         </div>
-                        <div class="mb-2">
+                        <div class="mb-2 hidden">
                             <label class="block text-sm font-medium text-gray-700" for="stutus">Status</label>
                             <input v-model="newPost.status"
                                 class="mt-1 p-2 w-full border rounded"
@@ -78,7 +79,7 @@
                                     class="mt-1 p-2 w-full border rounded"
                                     type="text" name="type" placeholder="Enter type" />
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-2 hidden" >
                                 <label class="block text-sm font-medium text-gray-700" for="status">Status</label>
                                 <input v-model="editedPost.status"
                                     class="mt-1 p-2 w-full border rounded"
@@ -111,14 +112,14 @@
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Name</th>
                                 <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50" >
                                     Size</th>
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Type</th>
-                                <th
+                                <!-- <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Status</th>
+                                    Status</th> -->
                                 <th class="px-6 py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50"
                                     colspan="3">
                                     Action</th>
@@ -148,10 +149,10 @@
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                <!-- <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                     <div class="text-sm leading-5 text-gray-900">{{ post.status }}
                                     </div>
-                                </td>
+                                </td> -->
                                 <td
                                     class="text-sm font-medium leading-5 text-center whitespace-no-wrap border-b border-gray-200">
                                     <button @click="editPost(post)" class="text-green-900 hover:text-green-800">
@@ -192,7 +193,7 @@ export default {
                 name: '',
                 size: '',
                 type: '',
-                status: ''
+                status: 1,
             },
             editModal: false,
             editedPost: {
@@ -200,7 +201,7 @@ export default {
                 name: '',
                 size: '',
                 type: '',
-                status: ''
+                status: 1,
             },
             posts: []
         };
@@ -230,6 +231,7 @@ export default {
                     this.newPost.status = '';
 
                     this.fetchPosts(); // Refresh posts after creating a new one
+                    this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'New Room added', life: 3000 });
                 })
                 .catch(error => {
                     console.error('Error creating post:', error);

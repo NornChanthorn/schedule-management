@@ -1,4 +1,5 @@
 <template>
+    <Toast></Toast>
     <div class="flex items-center mb-4 ml-4">
         <h1 class="text-custom-color-small font-istok text-4xl font-bold">Teacher List</h1>
         <div class="flex items-ceter justify-center ml-16">
@@ -13,6 +14,24 @@
                Add Teacher
                </span>
         </button>
+        <button
+        @click="importCSV"
+        class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-upload mr-2"></i>
+          Import
+        </span>
+      </button>
+      <button
+        @click="exportCSV"
+        class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-file-export mr-2"></i>
+          Export
+        </span>
+      </button>
     </div>
         <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
@@ -24,12 +43,12 @@
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                             <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="First name">
                             </div>
 
                             <div class="w-1/2 ml-2">
                             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="Last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
@@ -42,8 +61,8 @@
                                 </select>
                             </div>
                             <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">DOB</label>
-                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
+                                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
+                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter of birth" />
                             </div>
                         </div>
                         <div class="mb-2">
@@ -56,7 +75,7 @@
                         </div>
                         <div class="mb-2">
                             <label class="block text-sm font-medium text-gray-700" for="title">Title</label>
-                            <input v-model="newPost.title" class="mt-1 p-2 w-full border rounded" type="text" name="title" placeholder="Enter title" />
+                            <input v-model="newPost.title" class="mt-1 p-2 w-full border rounded" type="text" name="title" placeholder="Teacher's titile (Ex: professor, Dr.)" />
                         </div>
                         <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="showModal = false" type="button"
@@ -228,7 +247,7 @@
 
 <script>
 import axios from 'axios';
-
+import Papa from "papaparse";
 export default {
     data() {
         return {
@@ -285,6 +304,7 @@ export default {
                     this.newPost.phone_num = '';
 
                     this.fetchPosts(); // Refresh posts after creating a new one
+                    this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'New Teacher added', life: 3000 });
                 })
                 .catch(error => {
                     console.error('Error creating post:', error);
@@ -325,7 +345,20 @@ export default {
                     console.error('Error deleting post:', error);
                     // Handle error, maybe show an error message
                 });
-        }
+        },
+        exportCSV() {
+      // Convert data to CSV format
+      const csv = Papa.unparse(this.posts);
+      // Create a Blob containing the CSV data
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      // Create a download link and trigger a click
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Teacher Data.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     }
 };
 </script>

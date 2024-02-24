@@ -7,8 +7,8 @@
     <div class="z-10 back md:w-1/2 flex justify-center items-center bg-blue-700 bg-opacity-50 relative w-full ">
       <form action="" class="w-full max-w-md p-10 mx-auto my-auto bg-white" @submit.prevent="login">
         <div class="flex mb-8">
-          <h1 class="text-5xl font-bold transition-all duration-300 mr-2 text-custom-color font-istok">Hello,</h1>
-          <span class="text-3xl transition-all duration-300 mt-2 text-custom-color-small font-istok"> Guyss!</span>
+          <!-- <h1 class="text-5xl font-bold transition-all duration-300 mr-2 text-custom-color font-istok"></h1> -->
+          <span class="text-2xl transition-all duration-300 mt-2 text-custom-color-small font-bold font-istok">Schedule Management System</span>
         </div>
           <div class="mb-6">
             <label for="email" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': emailFocused }">Email</label>
