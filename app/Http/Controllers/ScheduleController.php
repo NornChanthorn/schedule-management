@@ -31,19 +31,33 @@ class ScheduleController extends Controller
             'data'=> $data
         ]);
     }
+    // public function getSchedule_MGT($major_id, $gen_id, $term_id){
+    //     $schedule = Schedule::where('major_id', $major_id)
+    //     ->where('gen_id', $gen_id)
+    //     ->where('term_id', $term_id)
+    //     ->with('term', 'course', 'generation', 'major')
+    //     ->get();
+
+    //     return response()->json([
+    //         'message'=> 'Get Successfully',
+    //         'data' => $schedule
+    //     ]);
+
+    // }
+
     public function getSchedule_MGT($major_id, $gen_id, $term_id){
-        $schedule = Schedule::where('major_id', $major_id)
-        ->where('gen_id', $gen_id)
-        ->where('term_id', $term_id)
-        ->with('term', 'course', 'generation', 'major')
-        ->get();
-
+        $schedules = Schedule::where('major_id', $major_id)
+            ->where('gen_id', $gen_id)
+            ->where('term_id', $term_id)
+            ->with('term', 'day', 'course.teacher', 'group', 'room', 'generation', 'major')
+            ->get();
+    
         return response()->json([
-            'message'=> 'Get Successfully',
-            'data' => $schedule
+            'message' => 'Get Successfully',
+            'data' => $schedules
         ]);
-
     }
+    
     public function store(Request $req){
         $validator = Validator::make($req->all(), [
             'time_start' => 'required',
