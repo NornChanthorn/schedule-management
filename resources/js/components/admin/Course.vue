@@ -10,7 +10,7 @@
     </div>
     <TabMenu :model="majorTabs" @tabChange="handleTabChange" />
     <DataTable :value="tableData" dataKey="id" :resizableColumns="true" columnResizeMode="expand"
-            showGridlines :paginator="true" :rows="10"
+            :paginator="true" :rows="10"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
@@ -19,6 +19,14 @@
             <Column field="teacherName" header="Teacher"></Column>
             <Column field="termName" header="Term"></Column>
             <Column field="genName" header="Generation"></Column>
+            <Column  style="width:15%;  min-width:8rem; " header="Action" bodyStyle="text-align:center" class=" space-x-2  ">
+                <template #body="slotProps">
+                    <div class="flex">
+                        <Button icon="pi pi-pencil" label="Edit" class=" p-button-success mr-2 p-button-sm "  @click="editData(slotProps.data)" />
+                        <Button icon="pi pi-trash" label="Delete" severity="danger" class=" p-button-sm" @click="confirmDelete(slotProps.data)" />
+                    </div>
+                </template>
+            </Column>
     </DataTable>
     <Dialog v-model:visible="visible" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="w-full flex justify-center items-center">
@@ -84,6 +92,8 @@
 import axios from 'axios';
 import { FilterMatchMode } from "primevue/api";
 import { ref } from "vue";
+import Swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 export default{
     data(){
         return{
@@ -108,7 +118,9 @@ export default{
                 gen_id: '',
                 major_id: '',
                 duration: ''
-            }
+            },
+            course: [],
+            deleteDialog: false
         }
     },
     mounted(){
@@ -225,6 +237,45 @@ export default{
         },
         openDialog(){
             this.visible = true;
+        },
+        // confirmDelete(prod){
+        //     this.course = prod;
+        //     this.deleteDialog = true;
+        // },
+        confirmDelete(prod){
+            Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.deleteCourse(prod.id);
+                this.deleteDialog = false;
+                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Course deleted Successfully', life: 3000 });
+                console.log(prod.id)
+                console.log('Provide delete function');
+            }
+            else {
+                console.log('Deletion canceled');
+                this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Faileddd', life: 3000 });
+            }
+        });
+        },
+        deleteCourse(id){
+            // axios.delete(`schedule`)
+
+            
+            axios.delete(`courses/${id}`).then(
+                res=>{
+                    this.getCourse();
+                }
+            ).catch(er=>{
+                console.error(er)
+            })
         }
 
 

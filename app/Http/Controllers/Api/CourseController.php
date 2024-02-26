@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Schedule;
 use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
@@ -69,6 +70,7 @@ class CourseController extends Controller
 
     }
     public function destroy($id){
+        Schedule::where('course_id', $id)->delete();
         $course = Course::find($id);
         $course->delete();
         return response()->json([
