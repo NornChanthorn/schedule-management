@@ -133,7 +133,7 @@ export default{
                     this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Generation Edit Successfully', life: 3000 });
                 }
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
             })
 
         },
@@ -145,7 +145,7 @@ export default{
                     this.$toast.add({ severity: 'success', summary: 'Generation has been delete', life: 3000 });
                 }
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
             })
         },
         getByID(id){

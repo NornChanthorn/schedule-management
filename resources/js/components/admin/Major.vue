@@ -121,7 +121,7 @@ export default{
                 }
             ).catch(er=>{
                 console.error(er);
-                this.$toast.add({ severity: 'error', summary: 'Failed to add ', detail: er, life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to add ', detail: er, life: 3000 });
             } )
         },
         deleteMajor(id){
@@ -132,7 +132,7 @@ export default{
                     this.$toast.add({ severity: 'success', summary: 'Major has been delete', life: 3000 });
                 }
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
             })
         },
         editMajor(id){
@@ -144,7 +144,7 @@ export default{
                 }
 
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
             })
         },
         getByID(id){

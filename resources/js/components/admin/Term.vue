@@ -192,7 +192,7 @@ export default{
                 }
 
             ).catch(er=>{
-                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
+                // this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
             })
         },
         getByID(id){
