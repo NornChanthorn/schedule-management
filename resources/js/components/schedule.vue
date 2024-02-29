@@ -2,15 +2,7 @@
   <div class="flex items-center mb-4 ml-4">
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName }}, Generation {{ GenName }}, Term {{
       termName }}</h1>
-    <!-- <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" > -->
-    <!-- <span class="flex items-center">
-            <i class="fa-solid fa-circle-plus mr-2"></i>
-            Add Course
-            </span> -->
-    <!-- </button> -->
   </div>
-
-
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
@@ -18,7 +10,7 @@
           <thead>
             <tr>
               <th class="time-header">Time</th>
-              <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day }}</th>
+              <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day.day }}</th>
             </tr>
           </thead>
           <tbody>
@@ -30,51 +22,52 @@
               <th rowspan="1" class="bg-green-200"></th>
               <template v-for="day in days">
                 <template v-for="group in groups">
-                  <td class="bg-green-200">{{ group }}
+                  <td class="bg-green-200">{{ group.group_name }}
                   </td>
                 </template>
               </template>
             </tr>
-            <template v-for="(timeSlot, index) in timeSlots" :key="index">
+            <template v-for="(timeSlot, index) in timeSlots_start" :key="index">
               <tr>
-                <td style="width: 120px">{{ timeSlot }}</td>
+                <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
                 <template v-for="day in days">
                   <template v-for="group in groups">
-                    <!-- Inside the template v-for="group in groups" -->
                     <td class="group-cell">
-                      <div v-if="hasMatchingSchedules(timeSlot, day, group)">
-                        <template v-for="schedule in matchingSchedules(timeSlot, day, group)">
+                      <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
+                        <template
+                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                           <div class="schedule-info">
                             <div class="flex">
                               <button class="button" @click="showPopup(schedule)">&hellip;</button>
                               <p class="theory">{{ schedule.room.type }}</p>
                             </div>
                             <p class="text-sm"> {{ schedule.course.name }}</p>
-                            <p class="text-sm"> {{ schedule.course.teacher.f_name }} {{
-                              schedule.course.teacher.l_name }}</p>
+                            <p class="text-sm"> {{ schedule.course.teacher.f_name }} {{ schedule.course.teacher.l_name }}
+                            </p>
                             <p class="room"> {{ schedule.room.name }}</p>
-
-                            <!-- <p>{{ schedule.course.name }}</p>
-                              <p>Teacher: {{ schedule.course.teacher.f_name }} {{ schedule.course.teacher.l_name }}</p>
-                              <p>Room: {{ schedule.room.name }}</p>
-                              <p>Group: {{ schedule.group.group_name }}</p> -->
                           </div>
-
                         </template>
                       </div>
-                      <div v-else @click="TogglePopup('buttonTrigger')">
+                      <div v-else @click="popupforadd(day.id, group.id)">
                         <button class="button">
                           <i class="fa-solid fa-circle-plus mr-2"></i>Add
                         </button>
                       </div>
                     </td>
-
                   </template>
                 </template>
               </tr>
-
-              <!-- Only show the "Break 15min" row for the first 3 time slots -->
-              <template v-if="index < 3">
+              <template v-if="index == 0">
+                <tr>
+                  <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
+                </tr>
+              </template>
+              <template v-if="index === 1">
+                <tr>
+                  <td :colspan="groups.length * days.length * 2" class="break-row">Lunch Break 1h 15mns</td>
+                </tr>
+              </template>
+              <template v-if="index == 2">
                 <tr>
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
                 </tr>
@@ -88,22 +81,12 @@
   <transition name="slide" appear>
     <div class="point" v-if="popupTriggers.buttonpoint">
       <div class="point-content">
-        <!-- <div class="point-item bg-blue flex">
-          <i class="fas fa-edit text-white text-xl mr-2"></i> Edit
-        </div> -->
-        <!-- <div class="point-item bg-red flex">
-          <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
-        </div> -->
-        <!-- <div class="point-item bg-red flex" @click="deleteSchedule(selectedScheduleId)">
-          <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
-        </div> -->
         <div class="point-item bg-blue flex" @click="editSchedule(selectedScheduleId)">
           <i class="fas fa-edit text-white text-xl mr-2"></i> Edit
         </div>
         <div class="point-item bg-red flex" @click="deleteSchedule(selectedScheduleId)">
           <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
         </div>
-
       </div>
     </div>
   </transition>
@@ -128,12 +111,6 @@
             </div>
           </div>
           <div class="mb-4">
-            <label for="day_id" class="block text-sm font-medium text-gray-600">Choose day</label>
-            <select v-model="newSchedule.day_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="day in day" :value="day.id">{{ day.day }}</option>
-            </select>
-          </div>
-          <div class="mb-4">
             <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
             <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
@@ -143,12 +120,6 @@
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
             <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label for="group_id" class="block text-sm font-medium text-gray-600">Choose a group</label>
-            <select v-model="newSchedule.group_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="group in group" :value="group.id">{{ group.group_name }}</option>
             </select>
           </div>
           <div class="flex justify-end">
@@ -162,7 +133,6 @@
   </div>
 </template>
 
-
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
@@ -170,10 +140,15 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      timeSlots_start: [
+        { start: '08:30:00', end: '10:00:00' },
+        { start: '10:15:00', end: '11:45:00' },
+        { start: '13:00:00', end: '14:30:00' },
+        { start: '14:45:00', end: '16:15:00' }
+      ],
       schedules: [],
       days: [],
       groups: [],
-      timeSlots: ['08:30:00', '10:15:00', '12:15:00', '13:15:00'],
       dataFromDatabase: {},
       termID: null,
       genID: null,
@@ -195,57 +170,29 @@ export default {
       courses: [],
       rooms: [],
       selectedScheduleId: null,
-
+      selectedDayId: null,
+      selectedGroupId: null,
     }
-
   },
   mounted() {
     this.termID = this.$route.params.termId;
     this.genID = this.$route.params.genid;
     this.majorID = this.$route.params.majorId;
     this.majorName = this.$route.params.name;
-    // this.termID = 1;
-    // this.genID = 1;
-    // this.majorID = 1;
     this.majorName = "Computer Science";
     this.getTermID(this.termID);
     this.getGenerationID(this.genID);
     this.getDaysOfWeek(); // Fetch days of the week
     this.getGroups(); // Fetch groups
-    // this.getSchedulesByTerm(this.termID);
     this.getSchedulesByTerm(this.termID, this.genID, this.majorID); // Fetch schedules
-
-    this.getCourses();
+    this.getCourses(this.termID, this.genID, this.majorID);
     this.getRooms();
-
   },
   created() {
-    const term_id = 5;
-    // this.getSchedulesByTerm(term_id);
     this.getDaysOfWeek(); // Fetch days of the week
     this.getGroups(); // Fetch groups
-
-    // this.termID = this.$route.params.termId;
-    // this.genID = this.$route.params.genid;
-    // this.majorID = this.$route.params.majorId;
-    // this.majorName = this.$route.params.name;
-    // this.getCourse(this.majorID, this.genID, this.termID);
-    // this.getGenerationID(this.genID);
-    // this.getTermID(this.termID);
   },
   methods: {
-    // getSchedulesByTerm(termId, genId, majorId) {
-    //   axios.get(`http://139.59.224.162/api/schedule/${termId}/${genId}/${majorId}`).then(
-    //     response => {
-    //       const firstKey = Object.keys(response.data)[0];
-    //       this.schedules = response.data[firstKey];
-    //       this.updateDataFromDatabase();
-    //     }
-    //   ).catch(err => {
-    //     console.error(err);
-    //   });
-    // },
-
     getSchedulesByTerm(termId, genId, majorId) {
       axios.get(`http://139.59.224.162/api/schedule/${majorId}/${genId}/${termId}`)
         .then(response => {
@@ -257,14 +204,22 @@ export default {
         });
     },
 
+    popupforadd(dayID, groupID) {
+      this.selectedDayId = dayID;
+      this.selectedGroupId = groupID;
+      this.popupTriggers.buttonTrigger = true;
+    },
     addNewSchedule() {
       this.newSchedule.term_id = this.termID;
       this.newSchedule.major_id = this.majorID;
       this.newSchedule.gen_id = this.genID;
+      this.newSchedule.day_id = this.selectedDayId;
+      this.newSchedule.group_id = this.selectedGroupId;
 
       axios.post('http://139.59.224.162/api/schedule', this.newSchedule)
         .then(response => {
           console.log(response.data);
+          this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
         })
         .catch(error => {
           console.error(error);
@@ -276,28 +231,19 @@ export default {
       this.popupTriggers.buttonpoint = true;
     },
     deleteSchedule(scheduleId) {
-  if (scheduleId !== null) {
-    axios.delete(`http://139.59.224.162/api/schedule/${scheduleId}`)
-      .then(response => {
-        // Handle successful deletion
-        console.log(`Schedule ${scheduleId} deleted`);
-        // Fetch updated schedule list
-        this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
-        // Optionally, you can update the schedule list or show a success message
-      })
-      .catch(error => {
-        // Handle error
-        console.error(error);
-        // Optionally, you can show an error message to the user
-      });
-  } else {
-    console.error('Invalid schedule ID');
-    // Optionally, show a message to the user indicating that the schedule ID is invalid
-  }
-},
-
-
-
+      if (scheduleId !== null) {
+        axios.delete(`http://139.59.224.162/api/schedule/${scheduleId}`)
+          .then(response => {
+            console.log(`Schedule ${scheduleId} deleted`);
+            this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      } else {
+        console.error('Invalid schedule ID');
+      }
+    },
 
     updateDataFromDatabase(newData) {
       // Assuming newData has the same structure as dataFromDatabase
@@ -314,38 +260,29 @@ export default {
         });
       });
     },
-    hasMatchingSchedules(timeSlot, day, group) {
+    hasMatchingSchedules(timeSlots_start, timeSlots_end, day, group) {
       return this.schedules.some(schedule =>
-        schedule.time_start === timeSlot &&
+        schedule.time_start <= timeSlots_end &&
+        schedule.time_end >= timeSlots_start &&
         schedule.day.day === day &&
         schedule.group.group_name === group
       );
     },
-    matchingSchedules(timeSlot, day, group) {
+    matchingSchedules(timeSlots_start, timeSlots_end, day, group) {
       return this.schedules.filter(schedule =>
-        schedule.time_start === timeSlot &&
+        schedule.time_start <= timeSlots_end &&
+        schedule.time_end >= timeSlots_start &&
         schedule.day.day === day &&
         schedule.group.group_name === group
       );
     },
-    // getCourse(majorId, genId, termId){
-    //     axios.get(`course/${majorId}/${genId}/${termId}`).then(
-    //         res=>{
-    //             this.courses= res.data.data
 
-    //         }
-    //     ).catch(er=>{
-    //             console.error(er)
-    //     })
-
-    // },
     getGenerationID(id) {
       axios.get(`generations/${id}`).then(
         res => {
           this.GenName = res.data.gen
         }
       )
-
     },
     getTermID(id) {
       axios.get(`terms/${id}`).then(
@@ -353,13 +290,12 @@ export default {
           this.termName = res.data.name
         }
       )
-
     },
     getDaysOfWeek() {
       axios.get('http://139.59.224.162/api/days-of-week').then(
         response => {
-          this.days = response.data.map(day => day.day);
-          this.day = response.data;
+          this.days = response.data;
+          // this.day = response.data;
         }
       ).catch(err => {
         console.error(err);
@@ -368,15 +304,15 @@ export default {
     getGroups() {
       axios.get('http://139.59.224.162/api/groups').then(
         response => {
-          this.groups = response.data.map(group => group.group_name);
-          this.group = response.data;
+          this.groups = response.data;
+          // this.group = response.data;
         }
       ).catch(err => {
         console.error(err);
       });
     },
-    getCourses() {
-      axios.get('http://139.59.224.162/api/courses')
+    getCourses(termId, genId, majorId) {
+      axios.get(`http://139.59.224.162/api/course/${majorId}/${genId}/${termId}`)
         .then(response => {
           this.courses = response.data.data;
         })
@@ -393,8 +329,6 @@ export default {
           console.error('Error fetching rooms:', error);
         });
     }
-
-
   },
   setup() {
     const popupTriggers = ref({
@@ -403,17 +337,9 @@ export default {
       buttonpoint: false,
     });
 
-    const TogglePopup = (trigger, scheduleId = null) => {
+    const TogglePopup = (trigger) => {
       popupTriggers.value[trigger] = !popupTriggers.value[trigger];
-      if (trigger === 'buttonpoint') {
-        this.selectedScheduleId = scheduleId;
-      }
     };
-    
-
-
-
-
 
     setTimeout(() => {
       popupTriggers.value.timedTrigger = true;
@@ -424,10 +350,8 @@ export default {
       popupTriggers,
     };
   },
-
 };
 </script>
-
 
 <style scoped>
 .schedule-container {
