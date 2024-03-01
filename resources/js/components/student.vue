@@ -39,8 +39,9 @@
     <p>{{ tableData }}</p>
 
     <DataTable :value="tableData" v-if="tableData">
-        <Column field="id" header="ID" ></Column>
-        <Column field="l_name" header="Name" ></Column>
+        <Column field="student_id" header="ID" ></Column>
+        <Column field="fullName" header="First Name" ></Column>
+        <Column field="majorName" header="Name" ></Column>
 
     </DataTable>
     <p v-else>no data</p>
@@ -348,6 +349,7 @@ export default {
         user_id: '',
       },
       students: [],
+      student: [],
       selectedTabId: 0,
       tableData: [],
       totalRecords: 0,
@@ -416,20 +418,17 @@ export default {
             this.tableData = [];
             try {
                 const response = await axios.get(this.selectedTabId != 0 ? `student/${this.selectedTabId}` : `students`); // Adjust for your API endpoint
-                this.tableData = response.data;
-                // this.tableData = response.data.data.map((student) => {
-                // const studentFName = student.f_name;
-                // const studentLName = student.l_name;
-                // const studentName = studentFName +' '+ studentLName;
-                // const genName = student.generation?.gen;
-                // return {
-                //     ...student,
-                //     studentName,
-                //     genName
-                // };
-                // });
-                // this.tableData = coursesWithTermNames;
-
+                // this.tableData = response.data;
+                const coursesWithTermNames = response.data.map((student) => {
+                const genName = student.generation?.gen;
+                const fullName = student.f_name + ' '+ student.l_name;
+                return {
+                    ...student,
+                    genName,
+                    fullName // Add termName property to each course object
+                };
+                });
+                this.tableData = coursesWithTermNames;
                 this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
             } catch (error) {
                 console.error('Error fetching courses:', error);
