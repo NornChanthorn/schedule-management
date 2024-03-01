@@ -32,6 +32,9 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';
 import Paginator from 'primevue/paginator';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
+
 
 
 
@@ -71,6 +74,8 @@ app.component('Column', Column)
 app.component('Row', Row)
 app.component('ColumnGroup', ColumnGroup)
 app.component('Paginator', Paginator)
+app.component('InputGroup', InputGroup)
+app.component('InputGroupAddon', InputGroupAddon)
 
 app.use(ConfirmationService)
 

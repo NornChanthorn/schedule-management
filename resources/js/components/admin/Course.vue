@@ -1,28 +1,38 @@
 <template>
     <Toast/>
-    <div class="flex items-center mb-4 ml-4">
+    <div class="flex justify-between items-center mb-4 ml-4">
         <h1  class="text-custom-color-small font-istok text-4xl font-bold">All Course</h1>
-        <button @click="openDialog" class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" >
-            <span class="flex items-center">
-            <i class="fa-solid fa-circle-plus mr-2"></i>
-            Add Course
-            </span>
-        </button>
+        <div class="flex justify-evenly items-center w-[35%]">
+            <div class="relative flex items-center">
+                <input type="text" v-model="filters['global'].value" class="border border-blue-300  rounded-lg px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full" placeholder="Search ">
+                <button type="button" class="absolute right-3 top-3 disabled ">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path></svg>
+                </button>
+            </div>
+            <button @click="openDialog" class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" >
+                <span class="flex items-center">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
+                Add Course
+                </span>
+            </button>
+        </div>
     </div>
-    <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline"/>
-    <DataTable :value="tableData" dataKey="id" :resizableColumns="true" columnResizeMode="expand"
+
+    <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
+    <DataTable :value="tableData"  dataKey="id" :resizableColumns="true" columnResizeMode="expand"
             :paginator="true" :rows="10"
+            :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
-            <Column field="id" header="ID"></Column>
-            <Column field="name" header="Name"></Column>
-            <Column field="teacherName" header="Teacher"></Column>
-            <Column field="termName" header="Term"></Column>
-            <Column field="genName" header="Generation"></Column>
-            <Column  style="width:15%;  min-width:8rem; " header="Action" bodyStyle="text-align:center" class=" space-x-2  ">
+            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'center' }"></Column>
+            <Column field="name" header="Name" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="teacherName" header="Teacher" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="termName" header="Term" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="genName" header="Generation" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column  style="width:15%;  min-width:8rem; " header="Action" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }" >
                 <template #body="slotProps">
-                    <div class="flex justify-evenly">
+                    <div class="flex justify-between items-start w-[60%]">
                         <button @click="openEdit(slotProps.data)" class="text-green-600 hover:text-green-800">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -223,7 +233,10 @@ export default{
             course: [],
             deleteDialog: false,
             visibleEdit: false,
-            submitted: false
+            submitted: false,
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+            }
         }
     },
     mounted(){

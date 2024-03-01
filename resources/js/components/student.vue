@@ -1,12 +1,12 @@
 <template>
   <div class="flex items-center mb-4 ml-4">
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
-    <div class="flex items-ceter justify-center ml-16">
+    <!-- <div class="flex items-ceter justify-center ml-16">
         <router-link to="/student"  :class="{ 'active-link': $route.path === '/student' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link">All</router-link>
         <router-link to="/ga" :class="{ 'active-link': $route.path === '/' }"  class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link " >CS</router-link>
         <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
         <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
-    </div>
+    </div> -->
       <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
           <span class="flex items-center">
           <i class="fa-solid fa-circle-plus mr-2"></i>
@@ -32,6 +32,19 @@
         </span>
       </button>
     </div>
+    <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
+    <p v-if="selectedTabId">
+      Selected Tab: {{ selectedTabLabel }} (ID: {{ selectedTabId }})
+    </p>
+    <p>{{ tableData }}</p>
+
+    <DataTable :value="tableData" v-if="tableData">
+        <Column field="id" header="ID" ></Column>
+        <Column field="l_name" header="Name" ></Column>
+
+    </DataTable>
+    <p v-else>no data</p>
+
     <!-- Modal for creating a new post -->
     <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
@@ -107,7 +120,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+    </div>
 
     <!-- Modal for editing a post -->
     <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -185,9 +198,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+    </div>
 
-    <div class="flex flex-col">
+    <!-- <div class="flex flex-col">
       <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
           <table class="min-w-full">
@@ -297,7 +310,7 @@
           </table>
         </div>
       </div>
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -334,7 +347,14 @@ export default {
         major_id: '',
         user_id: '',
       },
-      posts: []
+      students: [],
+      selectedTabId: 0,
+      tableData: [],
+      totalRecords: 0,
+      selectedMajor: null,
+      majorTabs: [
+                { label: 'All Student', icon: 'pi pi-book', major: null },
+     ],
     };
   },
   mounted() {
@@ -342,6 +362,7 @@ export default {
     this.getMajor();
     this.getGeneration();
     this.getGroups();
+    this.getMajorName();
   },
   methods: {
     fetchPosts() {
@@ -361,6 +382,19 @@ export default {
         )
 
     },
+    async getMajorName(){
+            try {
+                const response = await axios.get('majors');
+                this.majors = response.data;
+                this.majorTabs.push(...this.majors.map((major) => ({
+                label: major.name,
+                icon: 'pi pi-book',
+                major,
+                })));
+            } catch (error) {
+                console.error('Error fetching majors:', error);
+            }
+    },
     getGeneration(){
         axios.get('generations').then(
             res=>{
@@ -377,6 +411,33 @@ export default {
         )
 
     },
+    async handleTabChange(newTab) {
+            this.selectedTabId = newTab.index;
+            this.tableData = [];
+            try {
+                const response = await axios.get(this.selectedTabId != 0 ? `student/${this.selectedTabId}` : `students`); // Adjust for your API endpoint
+                this.tableData = response.data;
+                // this.tableData = response.data.data.map((student) => {
+                // const studentFName = student.f_name;
+                // const studentLName = student.l_name;
+                // const studentName = studentFName +' '+ studentLName;
+                // const genName = student.generation?.gen;
+                // return {
+                //     ...student,
+                //     studentName,
+                //     genName
+                // };
+                // });
+                // this.tableData = coursesWithTermNames;
+
+                this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            } finally {
+                this.loading = false;
+            }
+
+        },
 
     createPost() {
       axios.post('students', this.newPost)

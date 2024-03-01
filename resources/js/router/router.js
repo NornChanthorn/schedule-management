@@ -28,7 +28,7 @@ const routes=[
       name: 'forgotpassword',
       component: forgotpassword
 
-  },
+    },
     {
         path: '/',
         name: 'Main',
@@ -55,12 +55,6 @@ const routes=[
                 name: 'schedule',
                 component: Schedule
             },
-
-            // {
-            //   path: '/schedule',
-            //   component: Schedule,
-            //   name: 'schedule'
-            // },
             {
               path: '/profile',
               component: Profile,
