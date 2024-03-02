@@ -163,7 +163,7 @@
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </button>
-                        <button @click="confirmDelete(slotProps.data)" class="text-red-600 hover:text-red-800">
+                        <button @click="deletePostWithConfirmation(slotProps.data)" class="text-red-600 hover:text-red-800">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -371,10 +371,10 @@ export default {
                     console.error('Error updating post:', error);
                 });
         },
-        async deletePostWithConfirmation(postId) {
+        async deletePostWithConfirmation(prod) {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'You will not be able to recover this post!',
+                text: ` ${prod.id}You will not be able to recover this post!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -383,7 +383,7 @@ export default {
             });
 
             if (result.isConfirmed) {
-                this.deletePost(postId);
+                this.deletePost(prod.id);
             }
         },
 

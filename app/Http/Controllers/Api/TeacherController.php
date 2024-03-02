@@ -6,6 +6,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 
 class TeacherController extends Controller
 {
@@ -92,9 +93,9 @@ class TeacherController extends Controller
 
     public function destroy($id)
     {
+        Course::where('teacher_id', $id)->delete();
         $teacher = Teacher::findOrFail($id);
         $teacher->delete();
-
         return response()->json(['message' => 'Teacher deleted successfully']);
     }
 }
