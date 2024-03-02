@@ -1,8 +1,8 @@
 <template>
     <Toast/>
-    <div class="flex justify-between items-center mb-4 ml-4">
-        <h1  class="text-custom-color-small font-istok text-4xl font-bold">All Course</h1>
-        <div class="flex justify-evenly items-center w-[35%]">
+    <div class="lg:flex lg:justify-between items-center mb-4 ml-4 md:inline">
+        <h1  class="text-custom-color-small font-istok text-4xl font-bold">Course List</h1>
+        <div class="flex justify-evenly items-center lg:w-[32%] md:w-[80%] md:mt-2 sm:mt-8">
             <div class="relative flex items-center">
                 <input type="text" v-model="filters['global'].value" class="border border-blue-300  rounded-lg px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full" placeholder="Search ">
                 <button type="button" class="absolute right-3 top-3 disabled ">
@@ -11,26 +11,26 @@
             </div>
             <button @click="openDialog" class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" >
                 <span class="flex items-center">
-                <i class="fa-solid fa-circle-plus mr-2"></i>
-                Add Course
+                    <i class="fa-solid fa-circle-plus mr-2"></i>
+                    Add Course
                 </span>
             </button>
         </div>
     </div>
 
-    <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
-    <DataTable :value="tableData"  dataKey="id" :resizableColumns="true" columnResizeMode="expand"
+    <TabMenu :model="majorTabs" @tabChange="handleTabChange" />
+    <DataTable  :value="tableData"  dataKey="id" :resizableColumns="true" columnResizeMode="expand"
             :paginator="true" :rows="10"
             :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
-            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'center' }"></Column>
-            <Column field="name" header="Name" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="teacherName" header="Teacher" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="termName" header="Term" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="genName" header="Generation" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column  style="width:15%;  min-width:8rem; " header="Action" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }" >
+            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'center' }"></Column>
+            <Column field="name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="teacherName" header="TEACHER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="termName" header="TERM" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
                 <template #body="slotProps">
                     <div class="flex justify-between items-start w-[60%]">
                         <button @click="openEdit(slotProps.data)" class="text-green-600 hover:text-green-800">
@@ -365,9 +365,7 @@ export default{
                     this.visibleEdit = false
                     this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
                 }
-
             )
-
         },
         openDialog(){
             this.visible = true;
@@ -375,7 +373,6 @@ export default{
         closeDialog(){
             this.visible= false;
         },
-
         confirmDelete(prod){
             Swal.fire({
             title: 'Are you sure?',

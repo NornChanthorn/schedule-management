@@ -1,16 +1,14 @@
 <template>
-  <!-- <Header> -->
-    <!-- <div class="content-container"> -->
-      <div class="text-custom-color-small font-istok text-4xl font-bold p-4">
+    <div class="text-custom-color-small font-istok text-4xl font-bold p-4">
         <h1>Profile</h1>
-      </div>
-      <div class="absolute right-60 top-40 items-end">
+    </div>
+    <div class="absolute right-60 top-40 items-end">
         <label for="profileImage" class="cursor-pointer">
           <img @click="changeProfileImage" src="/img/profile.png" alt="User Profile" class="rounded-full h-20 w-20 mb-4 border border-2 cursor-pointer hover:border-blue-500"/>
         </label>
         <input type="file" id="profileImage" style="display: none" @change="handleProfileImageChange"/>
-      </div>
-      <div class="flex item-center justify-center mt-8">
+    </div>
+    <div class="flex item-center justify-center mt-8">
         <div class="w-2/3">
           <div class="flex mb-4">
             <div class="w-1/2 mr-2">
@@ -22,7 +20,7 @@
               <label for="lastName" class="block text-m font-medium text-gray-700">Last Name</label>
               <input type="text" v-model="user.lastName" id="lastName" class="mt-1 p-2 w-full border rounded">
             </div>
-          </div>
+        </div>
 
           <!-- Email -->
           <div class="mb-4">
@@ -47,9 +45,8 @@
             <button @click="save" class="w-32 px-4 py-2 text-white rounded bg-blue-500 hover:bg-blue-700">Save</button>
           </div>
         </div>
-      </div>
-    <!-- </div> -->
-  <!-- </Header> -->
+    </div>
+
 </template>
 
 <script>
@@ -74,7 +71,6 @@ export default {
       console.log('Cancelled');
     },
     save() {
-      // Implement save logic
       console.log('Saved', this.user);
     },
     changeProfileImage() {

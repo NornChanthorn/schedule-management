@@ -1,40 +1,60 @@
 <template>
     <Toast></Toast>
-  <div class="flex items-center mb-4 ml-4">
-    <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
-      <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
-          <span class="flex items-center">
-          <i class="fa-solid fa-circle-plus mr-2"></i>
-              Add Student
-          </span>
-      </button>
-      <button
-        @click="importCSV"
-        class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
-      >
-        <span class="flex items-center">
-          <i class="fa-solid fa-upload mr-2"></i>
-          Import
-        </span>
-      </button>
-      <button
-        @click="exportCSV"
-        class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
-      >
-        <span class="flex items-center">
-          <i class="fa-solid fa-file-export mr-2"></i>
-          Export
-        </span>
-      </button>
+    <div class="lg:flex lg:justify-between mb-4 ml-4 md:inline sm:inline ">
+      <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
+      <div class="flex justify-between items-center   w-auto">
+        <div class="relative flex items-center mr-2">
+            <input type="text" v-model="filters['global'].value" class="border border-blue-300  rounded-lg px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full" placeholder="Search ">
+                <button type="button" class="absolute right-3 top-3 disabled ">
+                <svg class="w-5 h-5   text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path></svg>
+            </button>
+        </div>
+        <button class=" hidden mr-2 bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 " label="Add New" severity="secondary" @click="showModal = true">
+            <span class="flex items-center">
+            <i class="fa-solid fa-circle-plus mr-2"></i>
+                Add Student
+            </span>
+        </button>
+        <button
+           @click="handleFileUpload"
+            class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+        >
+            <span class="flex items-center">
+            <i class="fa-solid fa-upload mr-2"></i>
+            Import
+            </span>
+        </button>
+        <div>
+            <h1>Import Students</h1>
+            <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload">
+            <button v-if="isLoading" disabled>Importing...</button>
+            <button v-else @click="handleFileUpload">Upload CSV</button>
+            <div v-if="errorMessage">{{ errorMessage }}</div>
+        </div>
+
+        <button
+            @click="exportCSV"
+            class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
+        >
+            <span class="flex items-center">
+            <i class="fa-solid fa-file-export mr-2"></i>
+            Export
+            </span>
+        </button>
+      </div>
     </div>
     <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
-    <DataTable :value="tableData" v-if="tableData">
-        <Column field="student_id" header="ID" ></Column>
-        <Column field="fullName" header="Name" ></Column>
-        <Column field="gender" header="Gender" ></Column>
-        <Column field="group_name" header="Group" ></Column>
-        <Column field="genName" header="Generation" ></Column>
-        <Column  style="width:15%;  min-width:8rem; " header="Action" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }" >
+    <DataTable :value="tableData" v-if="tableData"  :filters="filters"
+            dataKey="id" :resizableColumns="true" columnResizeMode="expand"  :paginator="true" :rows="10" class="text-center"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
+        <Column field="student_id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" ></Column>
+        <Column field="fullName" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+        <Column field="gender" header="GENDER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+        <Column field="group_name" header="GROUP" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+        <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+        <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
                 <template #body="slotProps">
                     <div class="flex justify-between items-start w-[60%]">
                         <button @click="editPost(slotProps.data)" class="text-green-600 hover:text-green-800">
@@ -51,14 +71,11 @@
                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
-                        <!-- <Button icon="pi pi-pencil" label="Edit" class=" p-button-success mr-2 p-button-sm "  @click="editData(slotProps.data)" />
-                        <Button icon="pi pi-trash" label="Delete" severity="danger" class=" p-button-sm" @click="confirmDelete(slotProps.data)" /> -->
                     </div>
                 </template>
             </Column>
-
     </DataTable>
-    <p v-else>Loading...</p>
+    <p v-if="tableData==null">Loading...</p>
 
     <!-- Modal for creating a new post -->
     <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -84,8 +101,8 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
                                 <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="w-1/2 ml-2">
@@ -215,117 +232,6 @@
             </div>
     </div>
 
-    <!-- <div class="flex flex-col">
-      <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
-          <table class="min-w-full">
-            <thead>
-              <tr>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  ID</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  First Name</th>
-
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  Last Name</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  Gender</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  DOB</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  student id</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  generation</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  group</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                  major</th>
-                <th class="px-6 py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50" colspan="3">
-                  Action</th>
-              </tr>
-            </thead>
-
-            <tbody class="bg-white">
-              <tr v-for="post in posts" :key="post.id">
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="flex items-center">
-                    {{ post.id }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.f_name }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.l_name }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.gender }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.dob }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.student_id }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.generation.gen }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.group.group_name }}
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ post.major.name }}
-                  </div>
-                </td>
-                <td class="text-sm font-medium leading-5 text-center whitespace-no-wrap border-b border-gray-200">
-                  <button @click="editPost(post)" class="text-green-600 hover:text-green-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                </td>
-                <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200">
-                  <button @click="deletePost(post.id)" class="text-red-600 hover:text-red-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </td>
-
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div> -->
 </template>
 
 <script>
@@ -338,43 +244,51 @@ import 'sweetalert2/dist/sweetalert2.min.css'
 export default {
   data() {
     return {
-      showModal: false,
-      newPost: {
-        f_name: '',
-        l_name: '',
-        email: '',
-        gender: '',
-        dob: '',
-        student_id: '',
-        generation_id: '',
-        group_id: '',
-        major_id: '',
-      },
-      editModal: false,
-      majors: [],
-      generations: [],
-      groups: [],
-      editedPost: {
-        id: null,
-        f_name: '',
-        l_name: '',
-        gender: '',
-        dob: '',
-        student_id: '',
-        generation_id: '',
-        group_id: '',
-        major_id: '',
-        user_id: '',
-      },
-      students: [],
-      student: [],
-      selectedTabId: 0,
-      tableData: [],
-      totalRecords: 0,
-      selectedMajor: null,
-      majorTabs: [
-                { label: 'All Student', icon: 'pi pi-book', major: null },
-     ],
+        showModal: false,
+        newPost: {
+            f_name: '',
+            l_name: '',
+            email: '',
+            gender: '',
+            dob: '',
+            student_id: '',
+            generation_id: '',
+            group_id: '',
+            major_id: '',
+        },
+        editModal: false,
+        majors: [],
+        generations: [],
+        groups: [],
+        editedPost: {
+            id: null,
+            f_name: '',
+            l_name: '',
+            gender: '',
+            dob: '',
+            student_id: '',
+            generation_id: '',
+            group_id: '',
+            major_id: '',
+            user_id: '',
+        },
+        students: [],
+        student: [],
+        selectedTabId: 0,
+        tableData: [],
+        totalRecords: 0,
+        selectedMajor: null,
+        majorTabs: [
+            { label: 'All Student', icon: 'pi pi-book', major: null },
+        ],
+        filters: {
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+        },
+        // upload csv
+        fileInput: null,
+        isLoading: false,
+        errorMessage: null,
+        studentData: [],
     };
   },
   mounted() {
@@ -383,7 +297,6 @@ export default {
     this.getGeneration();
     this.getGroups();
     this.getMajorName();
-
   },
   methods: {
     fetchPosts() {
@@ -572,6 +485,46 @@ export default {
       link.click();
       document.body.removeChild(link);
       this.fetchPosts()
+    },
+    handleFileUpload() {
+     this.$nextTick(() => {
+        const file = this.fileInput.files[0];
+        if (!file) {
+            this.errorMessage = 'Please select a CSV file.';
+            return;
+        }
+     });
+
+
+      this.isLoading = true;
+      this.errorMessage = null;
+
+      papaparse.parseFile(file.path, {
+        header: true, // Assuming your CSV has headers
+        complete: (results) => {
+          const studentData = results.data;
+          this.importStudents(studentData);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = `Error parsing CSV: ${error.message}`;
+        },
+      });
+    },
+    async importStudents(studentData) {
+      try {
+        // Validate student data here (optional)
+        const response = await axios.post('students', studentData);
+        if (response.status === 200) {
+          console.log('Students imported successfully!');
+        } else {
+          this.errorMessage = 'Error importing students. Check server response.';
+        }
+      } catch (error) {
+        this.errorMessage = `Error importing students: ${error.message}`;
+      } finally {
+        this.isLoading = false;
+      }
     },
 
 
