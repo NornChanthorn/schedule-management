@@ -163,7 +163,7 @@
                                     </button>
                                 </td>
                                 <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200">
-                                    <button @click="deletePost(post.id)" class="text-red-600 hover:text-red-800">
+                                    <button @click="deletePostWithConfirmation(post.id)" class="text-red-600 hover:text-red-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -183,7 +183,7 @@
 
 <script>
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 export default {
     data() {
         return {
@@ -256,18 +256,35 @@ export default {
                     console.error('Error updating post:', error);
                 });
         },
-        deletePost(postId) {
-            axios.delete(`rooms/${postId}`)
-                .then(response => {
-                    // Handle success, maybe show a success message or update the post list
-                    console.log('Post deleted:', response.data);
-                    this.fetchPosts(); // Refresh posts after deleting one
-                })
-                .catch(error => {
-                    console.error('Error deleting post:', error);
-                    // Handle error, maybe show an error message
-                });
-        }
+        async deletePostWithConfirmation(postId) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'This room will be remove from this system!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            });
+
+            if (result.isConfirmed) {
+                this.deletePost(postId);
+            }
+        },
+
+        async deletePost(postId) {
+            try {
+                const response = await axios.delete(`rooms/${postId}`);
+                // Handle success, maybe show a success message or update the post list
+                console.log('Post deleted:', response.data);
+                this.fetchPosts(); // Refresh posts after deleting one
+                Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                // Handle error, maybe show an error message
+                Swal.fire('Error', 'Could not delete the post. Please try again later.', 'error');
+            }
+        },
     }
 };
 </script>

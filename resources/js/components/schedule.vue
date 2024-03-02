@@ -32,13 +32,27 @@
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
                 <template v-for="day in days">
                   <template v-for="group in groups">
-                    <td class="group-cell">
+                    <td class="group-cell relative">
                       <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                         <template
                           v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                           <div class="schedule-info">
                             <div class="flex">
-                              <button class="button" @click="showPopup(schedule)">&hellip;</button>
+                              <button @click="showPopup(schedule)" class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
+                                <i class="fa-solid fa-ellipsis text-sm"></i>
+                              </button>
+                              <transition name="slide" appear>
+                                <div class="point" v-if="popupTriggers.buttonpoint">
+                                  <div>
+                                    <div class="point-item bg-blue flex text-sm" @click="showEditPopup(schedule)">
+                                      <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
+                                    </div>
+                                    <div class="point-item bg-red flex text-sm" @click="deleteSchedule(scheduleId)">
+                                      <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                    </div>
+                                  </div>
+                                </div>
+                              </transition>
                               <p class="theory">{{ schedule.room.type }}</p>
                             </div>
                             <p class="text-sm"> {{ schedule.course.name }}</p>
@@ -62,7 +76,7 @@
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
                 </tr>
               </template>
-              <template v-if="index === 1">
+              <template v-if="index == 1">
                 <tr>
                   <td :colspan="groups.length * days.length * 2" class="break-row">Lunch Break 1h 15mns</td>
                 </tr>
@@ -78,22 +92,11 @@
       </div>
     </div>
   </div>
-  <transition name="slide" appear>
-    <div class="point" v-if="popupTriggers.buttonpoint">
-      <div class="point-content">
-        <div class="point-item bg-blue flex" @click="editSchedule(selectedScheduleId)">
-          <i class="fas fa-edit text-white text-xl mr-2"></i> Edit
-        </div>
-        <div class="point-item bg-red flex" @click="deleteSchedule(selectedScheduleId)">
-          <i class="fas fa-trash-alt text-white text-xl mr-2"></i> Remove
-        </div>
-      </div>
-    </div>
-  </transition>
   <transition name="fade" appear>
     <div class="modal-overlay" v-if="popupTriggers.buttonTrigger"></div>
   </transition>
   <div>
+    <!-- Add -->
     <transition name="slide" appear>
       <div class="add_schedule" v-if="popupTriggers.buttonTrigger">
         <form @submit.prevent="addNewSchedule">
@@ -126,6 +129,44 @@
             <button type="button" class="bg-white text-black p-2 rounded-md mr-6 hover:bg-gray-200 cancel"
               @click="TogglePopup('buttonTrigger')">Cancel</button>
             <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Submit</button>
+          </div>
+        </form>
+      </div>
+    </transition>
+
+    <!-- Edit -->
+    <transition name="slide" appear>
+      <div class="add_schedule" v-if="popupTriggers.editschedule">
+        <form @submit.prevent="updateDataFromDatabase">
+          <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Edit Schedule</h2>
+          <div class="form_flex_name">
+            <div class="mb-4 flex-1">
+              <label for="time_start" class="block text-sm font-medium text-gray-600">Start Time</label>
+              <input type="text" id="time_start" v-model="newSchedule.time_start" name="time_start"
+                class="mt-1 p-2 border rounded-md w-full">
+            </div>
+            <div class="mb-4 flex-1">
+              <label for="time_end" class="block text-sm font-medium text-gray-600">End Time</label>
+              <input type="text" id="time_end" v-model="newSchedule.time_end" name="time_end"
+                class="mt-1 p-2 border rounded-md w-full">
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
+            <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
+              <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
+            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full">
+              <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
+            </select>
+          </div>
+          <div class="flex justify-end">
+            <button type="button" class="bg-white text-black p-2 rounded-md mr-6 hover:bg-gray-200 cancel"
+              @click="cancelEdit">Cancel</button>
+            <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Update</button>
           </div>
         </form>
       </div>
@@ -225,10 +266,17 @@ export default {
           console.error(error);
         });
     },
-
     showPopup(schedule) {
-      this.selectedScheduleId = schedule.id;
-      this.popupTriggers.buttonpoint = true;
+      if (this.popupTriggers.editschedule) {
+        this.popupTriggers.editschedule = false;
+      }
+
+      if (this.selectedScheduleId === schedule.id) {
+        this.popupTriggers.buttonpoint = !this.popupTriggers.buttonpoint;
+      } else {
+        this.selectedScheduleId = schedule.id;
+        this.popupTriggers.buttonpoint = true;
+      }
     },
     deleteSchedule(scheduleId) {
       if (scheduleId !== null) {
@@ -259,6 +307,17 @@ export default {
           });
         });
       });
+    },
+    showEditPopup(dayID, groupID) {
+      this.selectedDayId = dayID;
+      this.selectedGroupId = groupID;
+      this.popupTriggers.buttonTrigger = true;
+      this.popupTriggers.editschedule = true; // Add this line to show the edit form
+      this.popupTriggers.buttonpoint = false; // Close the buttonpoint popup
+    },
+    cancelEdit() {
+      this.popupTriggers.editschedule = false;
+      this.popupTriggers.buttonTrigger = false;
     },
     hasMatchingSchedules(timeSlots_start, timeSlots_end, day, group) {
       return this.schedules.some(schedule =>
@@ -335,6 +394,8 @@ export default {
       buttonTrigger: false,
       timedTrigger: false,
       buttonpoint: false,
+      button_cancel: false,
+      editschedule: false,
     });
 
     const TogglePopup = (trigger) => {
@@ -390,6 +451,7 @@ th {
 
 .group-cell {
   width: 50%;
+  /* position: relative; */
 }
 
 .cell {
@@ -425,10 +487,6 @@ td.break-row {
   font-size: 14px;
   margin-left: auto;
   text-align: right;
-}
-
-.theory {
-  margin-bottom: 8px;
 }
 
 .room {
@@ -490,16 +548,14 @@ body.modal-open {
   background-color: #212b38;
   color: white;
   border: 2px solid #0693E4;
-  font-size: 16px;
   transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 150px;
-  margin-left: 120px;
-  top: 500px;
+  top: 70px;
+  left: 74px;
 }
 
 .point-item {
-  padding: 10px;
+  padding: 8px;
+  width: 120px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -513,6 +569,11 @@ body.modal-open {
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 20px 40px;
+}
+.button_point{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

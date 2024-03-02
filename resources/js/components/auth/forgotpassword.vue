@@ -43,8 +43,3 @@
     }
   };
   </script>
-  
-  <style scoped>
-  /* Add your component-specific styles here */
-  </style>
-  

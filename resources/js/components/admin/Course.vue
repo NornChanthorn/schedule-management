@@ -1,7 +1,7 @@
 <template>
     <Toast/>
     <div class="flex items-center mb-4 ml-4">
-        <h1  class="text-custom-color-small font-istok text-4xl font-bold">All Course</h1>
+        <h1  class="text-custom-color-small font-istok text-4xl font-bold">Course</h1>
         <button @click="openDialog" class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" >
             <span class="flex items-center">
             <i class="fa-solid fa-circle-plus mr-2"></i>
