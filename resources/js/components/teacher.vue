@@ -91,7 +91,7 @@
     <!-- Modal for editing a post -->
     <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
             <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6 border border-2">
+                <div class="bg-white w-full max-w-lg p-6  border-2">
                     <div class="mb-4 text-center">
                         <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Teacher Information</h1>
                     </div>
@@ -260,7 +260,7 @@
                                     </button>
                                 </td>
                                 <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200">
-                                    <button @click="deletePost(post.id)" class="text-red-600 hover:text-red-800">
+                                    <button @click="deletePostWithConfirmation(post.id)" class="text-red-600 hover:text-red-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -282,6 +282,7 @@
 import axios from 'axios';
 import Papa from "papaparse";
 import { FilterMatchMode } from "primevue/api";
+import Swal from 'sweetalert2';
 export default {
     data() {
         return {
@@ -370,17 +371,34 @@ export default {
                     console.error('Error updating post:', error);
                 });
         },
-        deletePost(postId) {
-            axios.delete(`teachers/${postId}`)
-                .then(response => {
-                    // Handle success, maybe show a success message or update the post list
-                    console.log('Post deleted:', response.data);
-                    this.fetchPosts(); // Refresh posts after deleting one
-                })
-                .catch(error => {
-                    console.error('Error deleting post:', error);
-                    // Handle error, maybe show an error message
-                });
+        async deletePostWithConfirmation(postId) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this post!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            });
+
+            if (result.isConfirmed) {
+                this.deletePost(postId);
+            }
+        },
+
+        async deletePost(postId) {
+            try {
+                const response = await axios.delete(`teachers/${postId}`);
+                // Handle success, maybe show a success message or update the post list
+                console.log('Post deleted:', response.data);
+                this.fetchPosts(); // Refresh posts after deleting one
+                Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                // Handle error, maybe show an error message
+                Swal.fire('Error', 'Could not delete the post. Please try again later.', 'error');
+            }
         },
         exportCSV() {
             const teacherData = this.posts.map(teacher => ({

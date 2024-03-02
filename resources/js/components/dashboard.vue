@@ -19,10 +19,10 @@
           </button>
         </div> -->
         <div>
-          <div class="flex items-center">
+          <div class="header_menu">
             <div v-if="user.role==='admin'" class="mr-6">
               <div class="flex items-center mx-auto">
-                <button class="flex items-center justify-center w-32 border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none mr-2" label="Add New" severity="secondary" @click="showDialog">
+                <button class="flex items-center justify-center w-32 border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none mr-2" label="Add New" severity="secondary" @click="showDialog" >
                   <span class="flex items-center mr-8"> Menu </span>
                   <i :class="{ 'fa-solid fa-chevron-down': !isDialogVisible, 'fa-solid fa-chevron-down rotated': isDialogVisible }"></i>
                 </button>
@@ -37,15 +37,36 @@
                     </div>
                   </transition>
             </div>
-            <div>
+            <!-- <div @mouseover="isHovered = true" @mouseout="isHovered = false" @click="NotificationtogglePopup"
+                :class="{ 'text-xl mr-4 text-black hover:text-blue-500 transition-all': true, 'hover:text-blue-500': isHovered }">
+              <i class="fas fa-bell"></i>
+            </div> -->
+            <div class="relative mr-2 text-center cursor-pointer flex items-center justify-center flex-col" @click="togglePopup">
+              <div class="notification bg-white absolute top-10 text-black text-lg font-semibold opacity-0 pointer-events-none transition-transform transform -translate-y-full" :class="{ 'opacity-100 translate-y-0': showPopup }">
+                <div v-if="showPopup" class="notification-list">
+                  <!-- Loop through your notifications -->
+                  <div class="h-2 w-full bg-blue-500"></div>
+                  <div class="px-4 py-2">
+                    <div v-for="(notification, index) in notifications" :key="index" class="notification-item text-sm text-left">
+                      {{ notification }}
+                    </div>
+                  </div>
+                </div>
+                <div class="w-3 h-3 bg-blue-500 absolute top-[-6px] left-1/2 transform -translate-x-1/2 rotate-45 z-[-199]"></div>
+              </div>
+              <div @mouseover="isHovered = true" @mouseout="isHovered = false" :class="{ 'text-xl mr-4 text-black hover:text-blue-500 transition-all': true, 'hover:text-blue-500': isHovered }">
+                <i class="fas fa-bell"></i>
+              </div>
+            </div>
+            <div class="h-10 w-10 mr-2">
               <button class="button" @click="TogglePopup('buttonTrigger')">
-                <img src="/img/profile.png" alt="User Avatar" class="h-8 w-8 rounded-full mr-2 border-2">
+                <img src="/img/profile.png" alt="User Avatar" class=" rounded-full transition-all border-2 hover:border-blue-500">
               </button>
               <transition name="slide" appear>
               <div class="modal_header" v-if="popupTriggers.buttonTrigger">
                 <div class="modal-content">
                   <div class="modal-item">
-                    <router-link to="/profile" class="flex_item">
+                    <router-link to="/profile" @click="popupTriggers.buttonTrigger = false" class="flex_item">
                       <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
                     </router-link>
                   </div>
@@ -77,7 +98,6 @@
           <TeacherPage></TeacherPage>
         </div>
       </div>
-
     </div>
   </template>
 <script>
@@ -98,6 +118,9 @@ export default{
         return{
             user: [],
             isDialogVisible: false,
+            isHovered: false,
+            showPopup: false,
+            notifications: ["Notification 1", "Notification 2", "Notification 3"],
         }
     },
 
@@ -124,6 +147,9 @@ export default{
       };
     },
     methods:{
+        togglePopup() {
+          this.showPopup = !this.showPopup;
+        },
         userInfo(){
             axios.get('user')
                 .then(response => {
@@ -148,15 +174,26 @@ export default{
           const newPath = '/student';
           // Navigate to the new path
           this.$router.push(newPath);
+          this.isDialogVisible = false;
         },
         goToAnotherPages() {
           // Define the path for the page you want to navigate to
           const newPath = '/teacher';
           // Navigate to the new path
           this.$router.push(newPath);
+          this.isDialogVisible = false;
         },
         goToCourse(){
             this.$router.push({path: '/courses'})
+            this.isDialogVisible = false;
+        },
+
+        ProfilePage() {
+          // Define the path for the page you want to navigate to
+          const newPath = '/profile';
+          // Navigate to the new path
+          this.$router.push(newPath);
+          this.isDialogVisible = false;
         },
 
         TermPage() {
@@ -164,6 +201,7 @@ export default{
           const newPath = '/terms';
           // Navigate to the new path
           this.$router.push(newPath);
+          this.isDialogVisible = false;
         },
         // logout() {
         //     localStorage.removeItem('authToken');
@@ -175,6 +213,7 @@ export default{
           const newPath = '/room';
           // Navigate to the new path
           this.$router.push(newPath);
+          this.isDialogVisible = false;
         },
 
         async logout() {
@@ -238,7 +277,11 @@ export default{
   list-style: none;
   display: flex;
 }
-
+.header_menu{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .menu-bar ul li,.modal li {
   padding: 10px 30px;
   position: relative;
@@ -408,5 +451,25 @@ export default{
 .modal-content.clicked {
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
+}
+.notification{
+  height: 450px;
+  width: 300px;
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+.notification-list {
+  max-height: 300px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
 }
 </style>
