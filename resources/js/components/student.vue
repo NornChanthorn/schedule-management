@@ -1,12 +1,7 @@
 <template>
+    <Toast></Toast>
   <div class="flex items-center mb-4 ml-4">
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
-    <!-- <div class="flex items-ceter justify-center ml-16">
-        <router-link to="/student"  :class="{ 'active-link': $route.path === '/student' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link">All</router-link>
-        <router-link to="/ga" :class="{ 'active-link': $route.path === '/' }"  class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link " >CS</router-link>
-        <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">TN</router-link>
-        <router-link to="/gb" :class="{ 'active-link': $route.path === '/' }" class="w-16 ml-auto text-black px-2 py-2 hover:bg-blue-100 nav-link ">EM</router-link>
-    </div> -->
       <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showModal = true">
           <span class="flex items-center">
           <i class="fa-solid fa-circle-plus mr-2"></i>
@@ -33,18 +28,37 @@
       </button>
     </div>
     <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
-    <p v-if="selectedTabId">
-      Selected Tab: {{ selectedTabLabel }} (ID: {{ selectedTabId }})
-    </p>
-    <p>{{ tableData }}</p>
-
     <DataTable :value="tableData" v-if="tableData">
         <Column field="student_id" header="ID" ></Column>
-        <Column field="fullName" header="First Name" ></Column>
-        <Column field="majorName" header="Name" ></Column>
+        <Column field="fullName" header="Name" ></Column>
+        <Column field="gender" header="Gender" ></Column>
+        <Column field="group_name" header="Group" ></Column>
+        <Column field="genName" header="Generation" ></Column>
+        <Column  style="width:15%;  min-width:8rem; " header="Action" :headerStyle="{ 'text-align': 'center' }" :bodyStyle="{ 'text-align': 'start' }" >
+                <template #body="slotProps">
+                    <div class="flex justify-between items-start w-[60%]">
+                        <button @click="editPost(slotProps.data)" class="text-green-600 hover:text-green-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                        <button @click="confirmDelete(slotProps.data)" class="text-red-600 hover:text-red-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                        <!-- <Button icon="pi pi-pencil" label="Edit" class=" p-button-success mr-2 p-button-sm "  @click="editData(slotProps.data)" />
+                        <Button icon="pi pi-trash" label="Delete" severity="danger" class=" p-button-sm" @click="confirmDelete(slotProps.data)" /> -->
+                    </div>
+                </template>
+            </Column>
 
     </DataTable>
-    <p v-else>no data</p>
+    <p v-else>Loading...</p>
 
     <!-- Modal for creating a new post -->
     <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
@@ -57,18 +71,18 @@
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                             <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User first name">
                             </div>
 
                             <div class="w-1/2 ml-2">
                             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -76,37 +90,37 @@
                             </div>
                             <div class="w-1/2 ml-2">
                                 <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
-                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
+                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="date" name="dob" placeholder="Enter dob" />
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
+                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Enter Email">
                         </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
+                        <div class="flex justify-between mb-2 ">
+                            <div class="w-[48%]">
                               <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
-                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Example B20210021" />
+                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="text" name="student_id" placeholder="Example B20210021" />
                             </div>
-                            <div class="w-1/2 mr-2">
+                            <div class="w-[48%] ">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
-                                <select v-model="newPost.generation_id" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="newPost.generation_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select Generation</option>
                                     <option v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
+                        <div class="flex justify-between mb-2 ">
+                            <div class="w-[48%]">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
-                                <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select Group</option>
                                     <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.group_name }}</option>
                                 </select>
                             </div>
-                            <div class="w-1/2 mr-2">
+                            <div class="w-[48%]">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
-                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded" >
+                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " >
                                     <option value="" disabled>Select Major</option>
                                     <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name}}</option>
                                 </select>
@@ -133,19 +147,19 @@
                     <form @submit.prevent="updatePost">
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
-                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="User first name">
+                                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                                <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User first name">
                             </div>
 
                             <div class="w-1/2 ml-2">
-                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="User last name">
+                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                                <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -153,12 +167,12 @@
                             </div>
                             <div class="w-1/2 ml-2">
                                 <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
-                                <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter dob" />
+                                <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="date" name="dob" placeholder="Enter dob" />
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="editedPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
+                            <input type="email" v-model="editedPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Enter Email">
                         </div>
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
@@ -317,6 +331,10 @@
 <script>
 import axios from 'axios';
 import Papa from "papaparse";
+import { FilterMatchMode } from "primevue/api";
+import { ref } from "vue";
+import Swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 export default {
   data() {
     return {
@@ -365,12 +383,26 @@ export default {
     this.getGeneration();
     this.getGroups();
     this.getMajorName();
+
   },
   methods: {
     fetchPosts() {
       axios.get('students')
         .then(response => {
-          this.posts = response.data;
+               const students = response.data.map((student) => {
+                const genName = student.generation.gen;
+                const group_name = student.group.group_name;
+                const fullName = student.f_name + ' '+ student.l_name;
+                const Major = student.major.name;
+                return {
+                    ...student,
+                    genName,
+                    group_name,
+                    Major,
+                    fullName // Add termName property to each course object
+                };
+                });
+                this.tableData = students;
         })
         .catch(error => {
           console.error('Error fetching posts:', error);
@@ -382,7 +414,6 @@ export default {
                 this.majors = res.data
             }
         )
-
     },
     async getMajorName(){
             try {
@@ -421,10 +452,14 @@ export default {
                 // this.tableData = response.data;
                 const coursesWithTermNames = response.data.map((student) => {
                 const genName = student.generation?.gen;
+                const group_name = student.group?.group_name;
+                const Major = student.major.name;
                 const fullName = student.f_name + ' '+ student.l_name;
                 return {
                     ...student,
+                    group_name,
                     genName,
+                    Major,
                     fullName // Add termName property to each course object
                 };
                 });
@@ -436,7 +471,7 @@ export default {
                 this.loading = false;
             }
 
-        },
+    },
 
     createPost() {
       axios.post('students', this.newPost)
@@ -454,6 +489,7 @@ export default {
             this.newPost.major_id = '',
             this.newPost.student_id = '',
             this.fetchPosts(); // Refresh posts after creating a new one
+            this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
         })
         .catch(error => {
           console.error('Error creating post:', error);
@@ -479,36 +515,69 @@ export default {
           console.log('Post updated:', response.data);
           this.editModal = false;
           this.fetchPosts(); // Refresh posts after updating one
+          this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
         })
         .catch(error => {
           console.error('Error updating post:', error);
         });
     },
+    confirmDelete(prod){
+            Swal.fire({
+            title: 'Are you sure?',
+            text: `${prod.fullName} will remove from your system`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.deletePost(prod.id);
+                this.deleteDialog = false;
+                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Course deleted Successfully', life: 3000 });
+            }
+            else {
+                console.log('Deletion canceled');
+                // this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Faileddd', life: 3000 });
+            }
+        });
+    },
     deletePost(postId) {
       axios.delete(`students/${postId}`)
         .then(response => {
-          // Handle success, maybe show a success message or update the post list
-          console.log('Post deleted:', response.data);
-          this.fetchPosts(); // Refresh posts after deleting one
+          this.fetchPosts();
         })
         .catch(error => {
           console.error('Error deleting post:', error);
-          // Handle error, maybe show an error message
         });
     },
-    exportCSV() {
-      // Convert data to CSV format
-      const csv = Papa.unparse(this.posts);
-      // Create a Blob containing the CSV data
+    exportCSV(){
+      const studentData = this.tableData.map(student => ({
+          FullName: student.fullName,
+          ID: student.student_id,
+          Gender: student.gender,
+          DateOfBith: student.dob,
+          GroupName: student.group_name,
+          Major: student.Major,
+          Generation: student.genName
+
+      }));
+      this.tableData = studentData;
+      const csv = Papa.unparse(this.tableData);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      // Create a download link and trigger a click
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = "student_data.csv";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      this.fetchPosts()
     },
+
+
+  },
+  setup(){
+
   }
 };
 </script>
