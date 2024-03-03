@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\Schedule;
 
 class TeacherController extends Controller
 {
@@ -93,9 +94,43 @@ class TeacherController extends Controller
 
     public function destroy($id)
     {
-        Course::where('teacher_id', $id)->delete();
-        $teacher = Teacher::findOrFail($id);
-        $teacher->delete();
-        return response()->json(['message' => 'Teacher deleted successfully']);
+        // Course::where('teacher_id', $id)->delete();
+        // $teacher = Teacher::findOrFail($id);
+        // $teacher->delete();
+        // return response()->json(['message' => 'Teacher deleted successfully']);
+
+        try {
+            // Find the teacher
+            $teacher = Teacher::findOrFail($id);
+
+            // Find courses associated with the teacher
+            $courses = Course::where('teacher_id', $id)->get();
+
+            // Loop through courses
+            foreach ($courses as $course) {
+                // Find schedules associated with the course
+                $schedules = Schedule::where('course_id', $course->id)->get();
+
+                // Delete schedules first
+                foreach ($schedules as $schedule) {
+                    $schedule->delete();
+                }
+
+                // Now, delete the course
+                $course->delete();
+            }
+
+            // Finally, delete the teacher
+            $teacher->delete();
+
+            return response()->json([
+                'message' => 'delete success'
+            ]);
+        } catch (\Exception $e) {
+            // Handle any exceptions
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

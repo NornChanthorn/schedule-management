@@ -44,18 +44,18 @@
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                             <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded" placeholder="First name">
+                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" placeholder="First name">
                             </div>
 
                             <div class="w-1/2 ml-2">
                             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded" placeholder="Last name">
+                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" placeholder="Last name">
                             </div>
                         </div>
                         <div class="flex mb-2">
                             <div class="w-1/2 mr-2">
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded">
+                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200">
                                     <option value="" disabled>Select gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -63,20 +63,20 @@
                             </div>
                             <div class="w-1/2 ml-2">
                                 <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
-                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded" type="date" name="dob" placeholder="Enter of birth" />
+                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" type="date" name="dob" placeholder="Enter of birth" />
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded" placeholder="Enter Email">
+                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" placeholder="Enter Email">
                         </div>
                         <div class="mb-2">
                             <label class="block text-sm font-medium text-gray-700" for="phone_num">Phone Number</label>
-                            <input v-model="newPost.phone_num" class="mt-1 p-2 w-full border rounded" type="tel" name="phone_num" placeholder="Enter phone number"/>
+                            <input v-model="newPost.phone_num" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" type="tel" name="phone_num" placeholder="Enter phone number"/>
                         </div>
                         <div class="mb-2">
                             <label class="block text-sm font-medium text-gray-700" for="title">Title</label>
-                            <input v-model="newPost.title" class="mt-1 p-2 w-full border rounded" type="text" name="title" placeholder="Teacher's titile (Ex: professor, Dr.)" />
+                            <input v-model="newPost.title" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" type="text" name="title" placeholder="Teacher's titile (Ex: professor, Dr.)" />
                         </div>
                         <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="showModal = false" type="button"
@@ -374,7 +374,7 @@ export default {
         async deletePostWithConfirmation(prod) {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: ` ${prod.id}You will not be able to recover this post!`,
+                text: ` ${prod.f_name} ${prod.l_name} will not be delete from system!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -390,14 +390,12 @@ export default {
         async deletePost(postId) {
             try {
                 const response = await axios.delete(`teachers/${postId}`);
-                // Handle success, maybe show a success message or update the post list
                 console.log('Post deleted:', response.data);
-                this.fetchPosts(); // Refresh posts after deleting one
-                Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
+                this.fetchPosts();
+                Swal.fire('Deleted!', 'Teacher has been deleted.', 'success');
             } catch (error) {
                 console.error('Error deleting post:', error);
-                // Handle error, maybe show an error message
-                Swal.fire('Error', 'Could not delete the post. Please try again later.', 'error');
+                Swal.fire('Error', 'Could not delete. Please try again later.', 'error');
             }
         },
         exportCSV() {
