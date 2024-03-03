@@ -220,10 +220,10 @@ export default {
                     console.error('Error updating post:', error);
                 });
         },
-        async deletePostWithConfirmation(postId) {
+        async confirmDelete(prod) {
             const result = await Swal.fire({
                 title: 'Are you sure?',
-                text: 'This room will be remove from this system!',
+                text: `Room ${prod.name} will be remove from this system!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -232,21 +232,19 @@ export default {
             });
 
             if (result.isConfirmed) {
-                this.deletePost(postId);
+                this.deletePost(prod.id);
             }
         },
 
         async deletePost(postId) {
             try {
                 const response = await axios.delete(`rooms/${postId}`);
-                // Handle success, maybe show a success message or update the post list
                 console.log('Post deleted:', response.data);
-                this.fetchPosts(); // Refresh posts after deleting one
-                Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
+                this.fetchPosts();
+                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Room deleted Successfully', life: 3000 });
             } catch (error) {
                 console.error('Error deleting post:', error);
-                // Handle error, maybe show an error message
-                Swal.fire('Error', 'Could not delete the post. Please try again later.', 'error');
+                this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Failed to delete Room', life: 3000 });
             }
         },
     }

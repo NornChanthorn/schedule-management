@@ -365,10 +365,12 @@ export default {
                 .then(response => {
                     console.log('Post updated:', response.data);
                     this.editModal = false;
-                    this.fetchPosts(); // Refresh posts after updating one
+                    this.fetchPosts();
+                    this.$toast.add({ severity: 'success', summary: 'Update Successfully', detail: 'Teacher updated Successfully', life: 3000 });
                 })
                 .catch(error => {
                     console.error('Error updating post:', error);
+                    this.$toast.add({ severity: 'error', summary: 'Fail to edit', detail: 'Failed', life: 3000 });
                 });
         },
         async deletePostWithConfirmation(prod) {
@@ -392,10 +394,12 @@ export default {
                 const response = await axios.delete(`teachers/${postId}`);
                 console.log('Post deleted:', response.data);
                 this.fetchPosts();
-                Swal.fire('Deleted!', 'Teacher has been deleted.', 'success');
+                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Teacher deleted Successfully', life: 3000 });
+
             } catch (error) {
                 console.error('Error deleting post:', error);
-                Swal.fire('Error', 'Could not delete. Please try again later.', 'error');
+                this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Failed', life: 3000 });
+
             }
         },
         exportCSV() {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Models\Schedule;
 
 class RoomController extends Controller
 {
@@ -77,8 +78,10 @@ class RoomController extends Controller
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy(Room $id)
     {
+        Schedule::where('room_id', $id)->delete();
+        $room = Room::findOrFail($id);
         $room->delete();
 
         return response()->json(null, 204);
