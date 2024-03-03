@@ -80,8 +80,15 @@ class RoomController extends Controller
      */
     public function destroy(Room $id)
     {
-        Schedule::where('room_id', $id)->delete();
         $room = Room::findOrFail($id);
+        if(Schema::hasTable('schedules') && Schema::hasForeignKey(['room_id'])){
+            $schedules = Schedule::where('room_id', $room->id)->get();
+            foreach ($schedules as $schedule) {
+                $schedule->delete();
+            }
+        }
+        // Schedule::where('room_id', $id)->delete();
+
         $room->delete();
 
         return response()->json(null, 204);
