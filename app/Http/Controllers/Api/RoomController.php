@@ -79,10 +79,10 @@ class RoomController extends Controller
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $id)
+    public function destroy($id)
     {
         $room = Room::findOrFail($id);
-        $schedules = Schedule::where('room_id', $room->id)->get();
+        $schedules = Schedule::where('room_id', $id)->get();
         if( $schedules !=null){
             foreach ($schedules as $schedule) {
                 $schedule->delete();
