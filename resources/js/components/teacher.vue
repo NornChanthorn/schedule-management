@@ -57,8 +57,8 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
                                 <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200">
                                     <option value="" disabled>Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="w-1/2 ml-2">
@@ -111,7 +111,12 @@
                             <div class="flex mb-2">
                                 <div class="w-1/2 mr-2">
                                     <label for="lastName" class="block text-sm font-medium text-gray-700">Gender</label>
-                                    <input type="text" v-model="editedPost.gender"  name="l_name" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" placeholder="Gender">
+                                    <!-- <input type="text" v-model="editedPost.gender"  name="l_name" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200" placeholder="Gender"> -->
+                                    <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded outline-none hover:outline-blue-200">
+                                        <option value="" disabled>Select gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
                                 </div>
                                 <div class="w-1/2 ml-2">
                                     <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
@@ -388,7 +393,6 @@ export default {
                 this.deletePost(prod.id);
             }
         },
-
         async deletePost(postId) {
             try {
                 const response = await axios.delete(`teachers/${postId}`);
@@ -399,7 +403,6 @@ export default {
             } catch (error) {
                 console.error('Error deleting post:', error);
                 this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Failed', life: 3000 });
-
             }
         },
         exportCSV() {

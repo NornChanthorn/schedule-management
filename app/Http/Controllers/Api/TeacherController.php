@@ -94,20 +94,19 @@ class TeacherController extends Controller
 
     public function destroy($id)
     {
-        // Course::where('teacher_id', $id)->delete();
-        // $teacher = Teacher::findOrFail($id);
-        // $teacher->delete();
-        // return response()->json(['message' => 'Teacher deleted successfully']);
         try {
             $teacher = Teacher::findOrFail($id);
             $courses = Course::where('teacher_id', $id)->get();
-            foreach ($courses as $course) {
-                $schedules = Schedule::where('course_id', $course->id)->get();
-                // Delete schedules first
-                foreach ($schedules as $schedule) {
-                    $schedule->delete();
+            if($courses!=null){
+                foreach ($courses as $course){
+                    $schedules = Schedule::where('course_id', $course->id)->get();
+                    if($schedules!=null){
+                        foreach ($schedules as $schedule) {
+                            $schedule->delete();
+                        }
+                    }
+                    $course->delete();
                 }
-                $course->delete();
             }
             $teacher->delete();
             return response()->json([
@@ -119,4 +118,8 @@ class TeacherController extends Controller
             ]);
         }
     }
+    // Course::where('teacher_id', $id)->delete();
+    // $teacher = Teacher::findOrFail($id);
+    // $teacher->delete();
+    // return response()->json(['message' => 'Teacher deleted successfully']);
 }

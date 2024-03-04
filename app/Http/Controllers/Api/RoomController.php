@@ -88,8 +88,6 @@ class RoomController extends Controller
                 $schedule->delete();
             }
         }
-        // Schedule::where('room_id', $id)->delete();
-
         $room->delete();
 
         return response()->json(null, 204);
