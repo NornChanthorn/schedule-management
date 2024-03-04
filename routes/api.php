@@ -56,6 +56,7 @@ Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedu
 Route::get('/course/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByMGT']);
 Route::get('courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor']);
 Route::get('course_teacher/{id}', [CourseController::class, 'getCourse_Teacher']);
+Route::get('teacher_user/{id}', [TeacherController::class, 'getteacherbyuserid']);
 
 //additional route
 Route::get('student/{major}', [StudentController::class, 'getStudentByMajor']);

@@ -21,21 +21,18 @@ class TeacherController extends Controller
         return Teacher::with('user')->findOrFail($id);
     }
 
-    // public function store(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'user_id' => 'required',
-    //         'title' => 'required',
-    //         'f_name' => 'required',
-    //         'l_name' => 'required',
-    //         'gender' => 'required',
-    //         'dob' => 'required',
-    //         'phone_num' => 'required',
-    //     ]);
-
-    //     return Teacher::create($data);
-    // }
-
+    public function getteacherbyuserid($user_id)
+    {
+        $data = Teacher::whereHas('user', function($query) use ($user_id){
+            $query->where('id', $user_id);
+        })->with('user')->get();
+    
+        return response()->json([
+            'message' => 'Successfull',
+            'data'=> $data
+        ]);
+    }
+    
     public function store(Request $request)
     {
         $userData = $request->validate([
