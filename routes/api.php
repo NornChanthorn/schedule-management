@@ -55,7 +55,10 @@ Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );
 Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedulesByCourse']);
 Route::get('/course/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByMGT']);
 Route::get('courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor']);
+Route::get('course_teacher/{id}', [CourseController::class, 'getCourse_Teacher']);
 
 //additional route
 Route::get('student/{major}', [StudentController::class, 'getStudentByMajor']);
+
+Route::post('send-email-notification', [CourseController::class, 'sendEmailNotification']);
 

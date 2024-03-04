@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SendEmailNotification;
+use Illuminate\Support\Facades\Notification;
 
 class CourseController extends Controller
 {
@@ -111,5 +113,24 @@ class CourseController extends Controller
 
     }
 
+    public function sendEmailNotification()
+    {
+        // Send the email notification
+        Notification::route('mail', 'chichhorngkoem@gmail.com')
+                    ->notify(new SendEmailNotification());
 
+        return response()->json(['message' => 'Email notification sent successfully'], 200);
+    }
+
+
+    public function getCourse_Teacher($teacher_id){
+        $data = Course::whereHas('course.teacher', function($query) use ($teacher_id){
+            $query->where ('id', $teacher_id);
+
+        })->with('term', 'course.teacher', 'generation', 'major')->get();
+        return response()->json([
+            'message' => 'Successfull',
+            'data'=> $data
+        ]);
+    }
 }
