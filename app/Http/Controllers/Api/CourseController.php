@@ -124,7 +124,7 @@ class CourseController extends Controller
 
 
     public function getCourse_Teacher($teacher_id){
-        $data = Course::whereHas('course.teacher', function($query) use ($teacher_id){
+        $data = Course::whereHas('teacher', function($query) use ($teacher_id){
             $query->where ('id', $teacher_id);
 
         })->with('term', 'course.teacher', 'generation', 'major')->get();
