@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Validator;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function index($id)
     {
         // Retrieve notifications by user ID
-        $notifications = Notification::where('user_id', $request)->get();
+        $notifications = Notification::where('user_id', $id)->get();
 
         return response()->json($notifications);
     }
