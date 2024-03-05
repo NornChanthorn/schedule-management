@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Papa;
 
 class StudentController extends Controller
 {
@@ -95,6 +96,56 @@ class StudentController extends Controller
     public function getStudentByMajor($majorId){
         $data = Student::where('major_id', $majorId)->with('major', 'generation', 'group')->get();
         return response()->json($data);
+    }
+    private function validateStudentData($studentData)
+    {
+        $validator = Validator::make($studentData, [
+            // Define validation rules for each column in your student schema
+            'f_name' => 'required|string|max:255',
+            'l_name' => 'required|string|max:255',
+            'major_id' => 'required',
+            'gen_id' => 'required',
+            'group_id' => 'required',
+            'student_id' => 'required',
+            'dob' => 'required',
+            'gender' => 'required',
+            // ... other columns and validation rules ...
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation errors', 'errors' => $validator->errors()], 422);
+        }
+
+        return $studentData;
+    }
+
+    public function importStudents(Request $request)
+    {
+        // Validate file presence
+        if (!$request->hasFile('studentCsv')) {
+            return response()->json(['message' => 'No CSV file uploaded!'], 400);
+        }
+
+        $csvFile = $request->file('studentCsv');
+
+        // Read CSV content
+        $csvData = file_get_contents($csvFile);
+
+        // Parse CSV data
+        $parsedData = Papa::parse($csvData, [
+            'header' => true,
+        ]);
+
+        // Validate student data
+        $validatedData = $this->validateStudentData($parsedData['data']);
+
+        // Save students to the database
+        try {
+            Student::create($validatedData); // Adjust table name accordingly
+            return response()->json(['message' => 'Students imported successfully!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error importing students!', 'error' => $e->getMessage()], 500);
+        }
     }
 
 

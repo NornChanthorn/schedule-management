@@ -215,6 +215,7 @@ export default {
                     console.log('Post updated:', response.data);
                     this.editModal = false;
                     this.fetchPosts(); // Refresh posts after updating one
+                    this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Room update successfully!', life: 3000 });
                 })
                 .catch(error => {
                     console.error('Error updating post:', error);

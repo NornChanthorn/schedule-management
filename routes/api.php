@@ -58,4 +58,4 @@ Route::get('courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor'
 
 //additional route
 Route::get('student/{major}', [StudentController::class, 'getStudentByMajor']);
-
+Route::post('students/import', [StudentController::class, 'importStudents']);

@@ -28,7 +28,6 @@
             <h1>Import Students</h1>
             <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload">
             <button v-if="isLoading" disabled>Importing...</button>
-            <button v-else @click="handleFileUpload">Upload CSV</button>
             <div v-if="errorMessage">{{ errorMessage }}</div>
         </div>
 
@@ -487,29 +486,28 @@ export default {
       this.fetchPosts()
     },
     handleFileUpload() {
-     this.$nextTick(() => {
-        const file = this.fileInput.files[0];
-        if (!file) {
+        this.$nextTick(() => {
+            const file = this.fileInput.files[0];
+            if (!file) {
             this.errorMessage = 'Please select a CSV file.';
             return;
-        }
-     });
+            }
 
+            this.isLoading = true;
+            this.errorMessage = null;
 
-      this.isLoading = true;
-      this.errorMessage = null;
-
-      papaparse.parseFile(file.path, {
-        header: true, // Assuming your CSV has headers
-        complete: (results) => {
-          const studentData = results.data;
-          this.importStudents(studentData);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = `Error parsing CSV: ${error.message}`;
-        },
-      });
+            Papa.parseFile(file.path, {
+            header: true,
+            complete: (results) => {
+                const studentData = results.data;
+                this.importStudents(studentData);
+            },
+            error: (error) => {
+                this.isLoading = false;
+                this.errorMessage = `Error parsing CSV: ${error.message}`;
+            },
+            });
+        });
     },
     async importStudents(studentData) {
       try {
@@ -526,6 +524,40 @@ export default {
         this.isLoading = false;
       }
     },
+    async handleFileUpload1() {
+      this.$nextTick(async () => {
+        const file = this.fileInput.files[0];
+        if (!file) {
+          this.errorMessage = 'Please select a CSV file.';
+          return;
+        }
+
+        this.isLoading = true;
+        this.errorMessage = null;
+
+        try {
+          const formData = new FormData();
+          formData.append('studentCsv', file);
+
+          const response = await axios.post('students/import', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          if (response.status === 200) {
+            console.log('Students imported successfully!');
+          } else {
+            this.errorMessage = 'Error importing students. Check server response.';
+          }
+        } catch (error) {
+          console.error(error);
+          this.errorMessage = `Error importing students: ${error.message}`;
+        } finally {
+          this.isLoading = false;
+        }
+      });
+    }
 
 
   },
