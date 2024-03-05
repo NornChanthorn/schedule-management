@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\DayOfWeekController;
 use App\Http\Controllers\Api\ClassTypeController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -43,6 +44,7 @@ Route::apiResource('class-types', ClassTypeController::class);
 Route::apiResource('days-of-week', DayOfWeekController::class);
 Route::apiResource('groups', GroupController::class);
 Route::apiResource('teachers', TeacherController::class);
+Route::get('/notifications', [NotificationController::class, 'index']);
 
 // Schedule
 Route::get('/schedules', [ScheduleController::class, 'get']);
