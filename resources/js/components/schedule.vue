@@ -27,6 +27,7 @@
                 </template>
               </template>
             </tr>
+
             <template v-for="(timeSlot, index) in timeSlots_start" :key="index">
               <tr>
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
@@ -38,16 +39,17 @@
                           v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                           <div class="schedule-info">
                             <div class="flex">
-                              <button @click="showPopup(schedule)" class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
+                              <button @click="showPopup(schedule)"
+                                class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
                                 <i class="fa-solid fa-ellipsis text-sm"></i>
                               </button>
                               <transition name="slide" appear>
-                                <div class="point" v-if="popupTriggers.buttonpoint">
+                                <div class="point" v-if="schedule.showPopup">
                                   <div>
                                     <div class="point-item bg-blue flex text-sm" @click="showEditPopup(schedule)">
                                       <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
                                     </div>
-                                    <div class="point-item bg-red flex text-sm" @click="deleteSchedule(scheduleId)">
+                                    <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
                                       <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
                                     </div>
                                   </div>
@@ -55,14 +57,16 @@
                               </transition>
                               <p class="theory">{{ schedule.room.type }}</p>
                             </div>
-                            <p class="text-sm"> {{ schedule.course.name }}</p>
-                            <p class="text-sm"> {{ schedule.course.teacher.f_name }} {{ schedule.course.teacher.l_name }}
+                            <p class="text-sm">{{ schedule.course.name }}</p>
+                            <p class="text-sm">{{ schedule.course.teacher.title }}. {{ schedule.course.teacher.f_name }}
+                              {{ schedule.course.teacher.l_name
+                              }}
                             </p>
                             <p class="room"> {{ schedule.room.name }}</p>
                           </div>
                         </template>
                       </div>
-                      <div v-else @click="popupforadd(day.id, group.id)">
+                      <div v-else @click="popupforadd(day.id, group.id, timeSlot.start, timeSlot.end)">
                         <button class="button">
                           <i class="fa-solid fa-circle-plus mr-2"></i>Add
                         </button>
@@ -71,16 +75,19 @@
                   </template>
                 </template>
               </tr>
+
               <template v-if="index == 0">
                 <tr>
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
                 </tr>
               </template>
+
               <template v-if="index == 1">
                 <tr>
                   <td :colspan="groups.length * days.length * 2" class="break-row">Lunch Break 1h 15mns</td>
                 </tr>
               </template>
+
               <template v-if="index == 2">
                 <tr>
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
@@ -104,12 +111,12 @@
           <div class="form_flex_name">
             <div class="mb-4 flex-1">
               <label for="time_start" class="block text-sm font-medium text-gray-600">Start Time</label>
-              <input type="text" id="time_start" v-model="newSchedule.time_start" name="time_start"
+              <input type="text" id="time_start" v-model="selectedTimeStart" disabled
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
             <div class="mb-4 flex-1">
               <label for="time_end" class="block text-sm font-medium text-gray-600">End Time</label>
-              <input type="text" id="time_end" v-model="newSchedule.time_end" name="time_end"
+              <input type="text" id="time_end" v-model="selectedTimeEnd" disabled
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
           </div>
@@ -137,29 +144,29 @@
     <!-- Edit -->
     <transition name="slide" appear>
       <div class="add_schedule" v-if="popupTriggers.editschedule">
-        <form @submit.prevent="updateDataFromDatabase">
+        <form @submit.prevent="updateSchedule">
           <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Edit Schedule</h2>
           <div class="form_flex_name">
             <div class="mb-4 flex-1">
               <label for="time_start" class="block text-sm font-medium text-gray-600">Start Time</label>
-              <input type="text" id="time_start" v-model="newSchedule.time_start" name="time_start"
+              <input type="text" id="time_start" v-model="editschedule.time_start" disabled
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
             <div class="mb-4 flex-1">
               <label for="time_end" class="block text-sm font-medium text-gray-600">End Time</label>
-              <input type="text" id="time_end" v-model="newSchedule.time_end" name="time_end"
+              <input type="text" id="time_end" v-model="editschedule.time_end" disabled
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
           </div>
           <div class="mb-4">
             <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
-            <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
+            <select v-model="editschedule.course_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
             </select>
           </div>
           <div class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
-            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full">
+            <select v-model="editschedule.room_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
             </select>
           </div>
@@ -182,10 +189,10 @@ export default {
   data() {
     return {
       timeSlots_start: [
-        { start: '08:30:00', end: '10:00:00' },
-        { start: '10:15:00', end: '11:45:00' },
-        { start: '13:00:00', end: '14:30:00' },
-        { start: '14:45:00', end: '16:15:00' }
+        { start: '08:30', end: '10:00' },
+        { start: '10:15', end: '11:45' },
+        { start: '13:00', end: '14:30' },
+        { start: '14:45', end: '16:15' }
       ],
       schedules: [],
       days: [],
@@ -208,11 +215,25 @@ export default {
         major_id: '',
         gen_id: '',
       },
+      editschedule: {
+        id: null,
+        time_start: '',
+        time_end: '',
+        day_id: '',
+        term_id: '',
+        course_id: '',
+        room_id: '',
+        group_id: '',
+        major_id: '',
+        gen_id: '',
+      },
       courses: [],
       rooms: [],
       selectedScheduleId: null,
       selectedDayId: null,
       selectedGroupId: null,
+      selectedTimeStart: null,
+      selectedTimeEnd: null,
     }
   },
   mounted() {
@@ -235,7 +256,7 @@ export default {
   },
   methods: {
     getSchedulesByTerm(termId, genId, majorId) {
-      axios.get(`http://139.59.224.162/api/schedule/${majorId}/${genId}/${termId}`)
+      axios.get(`schedule/${majorId}/${genId}/${termId}`)
         .then(response => {
           this.schedules = response.data.data;
           this.updateDataFromDatabase();
@@ -245,9 +266,11 @@ export default {
         });
     },
 
-    popupforadd(dayID, groupID) {
+    popupforadd(dayID, groupID, time_start, time_end) {
       this.selectedDayId = dayID;
       this.selectedGroupId = groupID;
+      this.selectedTimeStart = time_start;
+      this.selectedTimeEnd = time_end;
       this.popupTriggers.buttonTrigger = true;
     },
     addNewSchedule() {
@@ -256,8 +279,10 @@ export default {
       this.newSchedule.gen_id = this.genID;
       this.newSchedule.day_id = this.selectedDayId;
       this.newSchedule.group_id = this.selectedGroupId;
+      this.newSchedule.time_start = this.selectedTimeStart;
+      this.newSchedule.time_end = this.selectedTimeEnd;
 
-      axios.post('http://139.59.224.162/api/schedule', this.newSchedule)
+      axios.post('schedule', this.newSchedule)
         .then(response => {
           console.log(response.data);
           this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
@@ -266,21 +291,59 @@ export default {
           console.error(error);
         });
     },
-    showPopup(schedule) {
-      if (this.popupTriggers.editschedule) {
-        this.popupTriggers.editschedule = false;
-      }
 
-      if (this.selectedScheduleId === schedule.id) {
-        this.popupTriggers.buttonpoint = !this.popupTriggers.buttonpoint;
-      } else {
-        this.selectedScheduleId = schedule.id;
-        this.popupTriggers.buttonpoint = true;
-      }
+    showEditPopup(schedule) {
+      this.editschedule.id = schedule.id;
+      this.editschedule.time_start = schedule.time_start;
+      this.editschedule.time_end = schedule.time_end;
+      this.editschedule.day_id = schedule.day_id;
+      this.editschedule.term_id = schedule.term_id;
+      this.editschedule.course_id = schedule.course_id;
+      this.editschedule.room_id = schedule.room_id;
+      this.editschedule.group_id = schedule.group_id;
+      this.editschedule.major_id = schedule.major_id;
+      this.editschedule.gen_id = schedule.gen_id;
+
+      this.popupTriggers.buttonTrigger = true;
+      this.popupTriggers.editschedule = true; // Add this line to show the edit form
+      this.popupTriggers.buttonpoint = false; // Close the buttonpoint popup
     },
+    updateSchedule() {
+      axios.put(`schedule/${this.editschedule.id}`, {
+        time_start: this.editschedule.time_start,
+        time_end: this.editschedule.time_end,
+        day_id: this.editschedule.day_id,
+        term_id: this.editschedule.term_id,
+        course_id: this.editschedule.course_id,
+        room_id: this.editschedule.room_id,
+        group_id: this.editschedule.group_id,
+        gen_id: this.editschedule.gen_id,
+        major_id: this.editschedule.major_id,
+      })
+        .then(response => {
+          console.log(response.data);
+          this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+
+    showPopup(schedule) {
+      // Toggle the showPopup property of the clicked schedule
+      schedule.showPopup = !schedule.showPopup;
+
+      // Close other popups
+      this.schedules.forEach(s => {
+        if (s.id !== schedule.id) {
+          s.showPopup = false;
+        }
+      });
+    },
+
     deleteSchedule(scheduleId) {
       if (scheduleId !== null) {
-        axios.delete(`http://139.59.224.162/api/schedule/${scheduleId}`)
+        axios.delete(`schedule/${scheduleId}`)
           .then(response => {
             console.log(`Schedule ${scheduleId} deleted`);
             this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
@@ -308,13 +371,7 @@ export default {
         });
       });
     },
-    showEditPopup(dayID, groupID) {
-      this.selectedDayId = dayID;
-      this.selectedGroupId = groupID;
-      this.popupTriggers.buttonTrigger = true;
-      this.popupTriggers.editschedule = true; // Add this line to show the edit form
-      this.popupTriggers.buttonpoint = false; // Close the buttonpoint popup
-    },
+    
     cancelEdit() {
       this.popupTriggers.editschedule = false;
       this.popupTriggers.buttonTrigger = false;
@@ -351,7 +408,7 @@ export default {
       )
     },
     getDaysOfWeek() {
-      axios.get('http://139.59.224.162/api/days-of-week').then(
+      axios.get('days-of-week').then(
         response => {
           this.days = response.data;
           // this.day = response.data;
@@ -361,7 +418,7 @@ export default {
       });
     },
     getGroups() {
-      axios.get('http://139.59.224.162/api/groups').then(
+      axios.get('groups').then(
         response => {
           this.groups = response.data;
           // this.group = response.data;
@@ -371,7 +428,7 @@ export default {
       });
     },
     getCourses(termId, genId, majorId) {
-      axios.get(`http://139.59.224.162/api/course/${majorId}/${genId}/${termId}`)
+      axios.get(`course/${majorId}/${genId}/${termId}`)
         .then(response => {
           this.courses = response.data.data;
         })
@@ -380,7 +437,7 @@ export default {
         });
     },
     getRooms() {
-      axios.get('http://139.59.224.162/api/rooms')
+      axios.get('rooms')
         .then(response => {
           this.rooms = response.data;
         })
@@ -570,10 +627,10 @@ body.modal-open {
   border: 1px solid #ccc;
   padding: 20px 40px;
 }
-.button_point{
+
+.button_point {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 </style>
-

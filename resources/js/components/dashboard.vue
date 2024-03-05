@@ -41,7 +41,7 @@
                 :class="{ 'text-xl mr-4 text-black hover:text-blue-500 transition-all': true, 'hover:text-blue-500': isHovered }">
               <i class="fas fa-bell"></i>
             </div> -->
-            <div class="relative mr-2 text-center cursor-pointer flex items-center justify-center flex-col" @click="togglePopup">
+            <div v-if="user.role=='teacher'" class="relative mr-2 text-center cursor-pointer flex items-center justify-center flex-col" @click="togglePopup">
               <div class="notification bg-white absolute top-10 text-black text-lg font-semibold opacity-0 pointer-events-none transition-transform transform -translate-y-full" :class="{ 'opacity-100 translate-y-0': showPopup }">
                 <div v-if="showPopup" class="notification-list">
                   <!-- Loop through your notifications -->
