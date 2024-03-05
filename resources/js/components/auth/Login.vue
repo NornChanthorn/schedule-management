@@ -89,7 +89,24 @@ methods: {
       const authToken = response.data.token;
       localStorage.setItem('authToken', authToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-      this.$router.push({ path: '/'});
+      axios.get('/user')
+        .then(response => {
+            const user = response.data;
+            const userRole = user.role;
+            if(userRole== 'admin'){
+                this.$router.push({ name: 'Main'});
+
+            }else{
+                this.$router.push({ name: 'TeacherPage'});
+            }
+            // Update your application state with user role (optional)
+            // const retrievedUserRole = getUserRole(); // Replace with your logic
+            // localStorage.setItem('userRole', retrievedUserRole);
+        })
+        .catch(error => {
+            console.error('Error fetching user data:', error);
+        });
+    //   this.$router.push({ path: '/'});
     })
     .catch(error => {
       if (error.response && error.response.status === 422) {

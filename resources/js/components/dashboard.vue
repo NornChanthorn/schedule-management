@@ -4,20 +4,6 @@
         <div class="flex items-center">
           <a href="/"><img src="/img/cadt_logo.png" alt="Logo" class="h-10 w-full ml-8"></a>
         </div>
-        <!-- <div  v-if="user.role==='admin'">
-          <button class="ml-auto border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
-            <span class="flex items-center">
-                <i class="fa-solid fa-circle-plus mr-2"></i>
-                Teacher
-            </span>
-          </button>
-          <button class="ml-auto border-blue-500 border text-blue-500 px-2 py-2 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
-            <span class="flex items-center">
-                <i class="fa-solid fa-circle-plus mr-2"></i>
-                Student
-            </span>
-          </button>
-        </div> -->
         <div>
           <div class="header_menu">
             <div v-if="user.role==='admin'" class="mr-6">
@@ -93,9 +79,6 @@
       <div :class="{ 'mt-24 p-8': !isHomePage }" class="max-w-95 mx-auto pt-4 px-8 pb-8">
         <div v-if="user.role =='admin'" class="content-container">
           <router-view></router-view>
-        </div>
-        <div v-else class="content-container">
-          <TeacherPage></TeacherPage>
         </div>
       </div>
     </div>
