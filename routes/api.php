@@ -44,7 +44,7 @@ Route::apiResource('class-types', ClassTypeController::class);
 Route::apiResource('days-of-week', DayOfWeekController::class);
 Route::apiResource('groups', GroupController::class);
 Route::apiResource('teachers', TeacherController::class);
-Route::get('/notifications', [NotificationController::class, 'index']);
+Route::get('/notifications/{user_id}', [NotificationController::class, 'index']);
 
 // Schedule
 Route::get('/schedules', [ScheduleController::class, 'get']);
