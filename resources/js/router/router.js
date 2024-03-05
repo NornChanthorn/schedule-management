@@ -14,6 +14,8 @@ import Students from '../components/student.vue'
 import Teacher from '../components/teacher.vue'
 import Room from '../components/room.vue'
 import Course from '../components/admin/Course.vue'
+import TeacherDashboard from '../components/teacher/MainPage.vue'
+import listCourse from '../components/teacher/CoursePage.vue'
 
 
 const routes=[
@@ -27,6 +29,20 @@ const routes=[
       path: '/forgotpassword',
       name: 'forgotpassword',
       component: forgotpassword
+
+    },
+    {
+        path: '/',
+        name: 'TeacherPage',
+        component: TeacherDashboard,
+        meta: { requiresAuth: true },
+        children:[
+            {
+                path: '',
+                component: listCourse,
+
+            },
+        ]
 
     },
     {
@@ -53,7 +69,7 @@ const routes=[
             {
                 path: '/:name/:majorId/:genid/:termId',
                 name: 'schedule',
-                component: Schedule
+                component: Schedule,
             },
             {
               path: '/profile',
@@ -98,16 +114,6 @@ const routes=[
       component: Student,
       name: 'studentlist'
     },
-    // {
-    //   path: '/student',
-    //   component: Students,
-    //   name: 'student'
-    // },
-    // {
-    //     path: '/teacher',
-    //     component: Teacher,
-    //     name: 'teacher'
-    // },
 
 ]
 
@@ -115,24 +121,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!isUserAuthenticated()) {
-        next('/login');
-      } else {
-        // If authenticated, prevent access to the login page
-        if (to.name === 'Login') {
-          next('/');
-        } else {
-          next();
-        }
-      }
-    } else {
-      next();
-    }
-});
-function isUserAuthenticated() {
-    return localStorage.getItem('authToken') !== null;
-}
+
 
 export default router
