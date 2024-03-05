@@ -26,7 +26,7 @@
         </button>
         <div>
             <h1>Import Students</h1>
-            <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload">
+            <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload1">
             <button v-if="isLoading" disabled>Importing...</button>
             <div v-if="errorMessage">{{ errorMessage }}</div>
         </div>
