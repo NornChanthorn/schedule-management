@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name');
+            $table->foreignId('gen_id')->constrained('generations');
+            $table->foreignId('major_id')->constrained('majors');
             $table->timestamps();
         });
     }
