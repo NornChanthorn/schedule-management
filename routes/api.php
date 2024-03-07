@@ -43,6 +43,7 @@ Route::apiResource('students', StudentController::class);
 Route::apiResource('class-types', ClassTypeController::class);
 Route::apiResource('days-of-week', DayOfWeekController::class);
 Route::apiResource('groups', GroupController::class);
+Route::get('/groups/{gen_id}/{major_id}', [GroupController::class, 'getGroupByMG']);
 Route::apiResource('teachers', TeacherController::class);
 Route::get('/notifications/{user_id}', [NotificationController::class, 'index']);
 
@@ -62,7 +63,6 @@ Route::get('teacher_user/{id}', [TeacherController::class, 'getteacherbyuserid']
 
 //additional route
 Route::get('student/{major}', [StudentController::class, 'getStudentByMajor']);
-
 Route::post('students/import', [StudentController::class, 'importStudents']);
 
 
