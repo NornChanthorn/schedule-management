@@ -1,7 +1,8 @@
 <template>
+    <Toast/>
   <div class="flex items-center mb-4 ml-4">
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName }}, Generation {{ GenName }}, Term {{
-      termName }}</h1>
+    termName }}</h1>
   </div>
   <div class="schedule-container p-4">
     <div class="schedule">
@@ -46,10 +47,11 @@
                               <transition name="slide" appear>
                                 <div class="point" v-if="schedule.showPopup">
                                   <div>
-                                    <div class="point-item bg-blue flex text-sm" @click="showEditPopup(schedule)">
+                                    <div v-if="user.role === 'admin'" class="point-item bg-blue flex text-sm"
+                                      @click="showEditPopup(schedule)">
                                       <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
                                     </div>
-                                    <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                    <div v-if="schedule.course.teacher.id == courseteacher.teacher.id" class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
                                       <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
                                     </div>
                                   </div>
@@ -120,13 +122,18 @@
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
           </div>
-          <div class="mb-4">
+          <div  v-if="user.role === 'admin'" class="mb-4">
             <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
             <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
             </select>
           </div>
           <div class="mb-4">
+            <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
+            <input type="text" id="course_id" v-model="courseteacher.name" disabled
+                class="mt-1 p-2 border rounded-md w-full">
+          </div>
+          <div v-if="user.role === 'admin'" class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
             <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full">
               <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
@@ -234,6 +241,9 @@ export default {
       selectedGroupId: null,
       selectedTimeStart: null,
       selectedTimeEnd: null,
+      user: [],
+      courseteacher: [],
+      teacher: {},
     }
   },
   mounted() {
@@ -249,6 +259,9 @@ export default {
     this.getSchedulesByTerm(this.termID, this.genID, this.majorID); // Fetch schedules
     this.getCourses(this.termID, this.genID, this.majorID);
     this.getRooms();
+    this.userInfo();
+    this.CourseTeacherInfo();
+    this.fetchTeacherInfo();
   },
   created() {
     this.getDaysOfWeek(); // Fetch days of the week
@@ -281,10 +294,11 @@ export default {
       this.newSchedule.group_id = this.selectedGroupId;
       this.newSchedule.time_start = this.selectedTimeStart;
       this.newSchedule.time_end = this.selectedTimeEnd;
-
+      this.newSchedule.course_id = this.courseteacher.name;
       axios.post('schedule', this.newSchedule)
         .then(response => {
           console.log(response.data);
+          this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
           this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
         })
         .catch(error => {
@@ -322,6 +336,7 @@ export default {
       })
         .then(response => {
           console.log(response.data);
+          this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
           this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
         })
         .catch(error => {
@@ -346,6 +361,7 @@ export default {
         axios.delete(`schedule/${scheduleId}`)
           .then(response => {
             console.log(`Schedule ${scheduleId} deleted`);
+            this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Schedule deleted Successfully', life: 3000 });
             this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
           })
           .catch(error => {
@@ -371,7 +387,7 @@ export default {
         });
       });
     },
-    
+
     cancelEdit() {
       this.popupTriggers.editschedule = false;
       this.popupTriggers.buttonTrigger = false;
@@ -444,7 +460,49 @@ export default {
         .catch(error => {
           console.error('Error fetching rooms:', error);
         });
-    }
+    },
+    userInfo() {
+      axios.get('user')
+        .then(response => {
+          // Successfully fetched user information
+          this.user = response.data;
+          this.fetchTeacherInfo();
+        })
+        .catch(error => {
+          // Handle error
+          if (error.response && error.response.status === 401) {
+            // Redirect to the login page
+            console.log('unauthenticated')
+          } else {
+            // Handle other error cases
+            console.error('Error fetching user information:', error);
+          }
+        });
+    },
+    CourseTeacherInfo() {
+      if (this.teacher && this.teacher.id) {
+        axios.get(`http://139.59.224.162/api/course_teacher/${this.teacher.id}`)
+          .then(response => {
+            this.courseteacher = response.data.data[0]; // Update the property with the API response
+          })
+          .catch(error => {
+            console.error('Error fetching course teacher information:', error);
+          });
+      }
+
+    },
+    fetchTeacherInfo() {
+      if (this.user && this.user.id) {
+        axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
+          .then(response => {
+            this.teacher = response.data.data[0]; // Update the teacher data with the API response4
+            this.CourseTeacherInfo();
+          })
+          .catch(error => {
+            console.error('Error fetching teacher information:', error);
+          });
+      }
+    },
   },
   setup() {
     const popupTriggers = ref({

@@ -16,6 +16,7 @@ import Room from '../components/room.vue'
 import Course from '../components/admin/Course.vue'
 import TeacherDashboard from '../components/teacher/MainPage.vue'
 import listCourse from '../components/teacher/CoursePage.vue'
+import Schedules from '../components/schedule.vue'
 
 
 const routes=[
@@ -40,7 +41,11 @@ const routes=[
             {
                 path: '',
                 component: listCourse,
-
+            },
+            {
+                path: '/Schedules/:majorId/:genid/:termId',
+                name: 'Schedules',
+                component: Schedules,
             },
         ]
 
