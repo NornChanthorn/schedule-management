@@ -26,13 +26,13 @@ class TeacherController extends Controller
         $data = Teacher::whereHas('user', function($query) use ($user_id){
             $query->where('id', $user_id);
         })->with('user')->get();
-    
+
         return response()->json([
             'message' => 'Successfull',
             'data'=> $data
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $userData = $request->validate([
@@ -71,22 +71,27 @@ class TeacherController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Teacher $teacher)
     {
-        $data = $request->validate([
-            // 'user_id' => 'required',
+        $validatedData = $request->validate([
             'title' => 'required',
             'f_name' => 'required',
             'l_name' => 'required',
             'gender' => 'required',
             'dob' => 'required',
             'phone_num' => 'required',
+            'email' => 'nullable|email|unique:users,email,'.$teacher->user->id, // Optional with unique validation
         ]);
 
-        $teacher = Teacher::findOrFail($id);
-        $teacher->update($data);
+        // Update teacher data
+        $teacher->update($validatedData);
 
-        return $teacher;
+        // Update user name (if f_name or l_name is changed)
+        $teacher->user->update([
+            'name' => $validatedData['f_name'] . ' ' . $validatedData['l_name'],
+        ]);
+
+        return response()->json(['message' => 'Teacher and user updated successfully.', 'teacher' => $teacher->fresh()]); // Return updated teacher data (optional)
     }
 
     public function destroy($id)
