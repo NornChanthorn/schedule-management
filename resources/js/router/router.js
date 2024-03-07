@@ -6,6 +6,7 @@ import Test from '../components/ExampleComponent.vue'
 import Schedule from '../components/schedule.vue'
 import Student from '../components/studentList.vue'
 import Profile from '../components/profile.vue'
+import Profiles from '../components/profile.vue'
 import Generation from '../components/admin/Generation.vue'
 import Major from '../components/admin/Major.vue'
 import Term from '../components/admin/Term.vue'
@@ -32,16 +33,23 @@ const routes=[
 
     },
     {
-        path: '/',
+        path: '/teacherPage',
         name: 'TeacherPage',
         component: TeacherDashboard,
         meta: { requiresAuth: true },
         children:[
             {
-                path: '',
+                path: '/teacherPage',
+                name: 'courseList',
                 component: listCourse,
 
             },
+            {
+                path: '/profiles',
+                component: Profiles,
+                name: 'profiles'
+            },
+
         ]
 
     },

@@ -52,7 +52,7 @@
               <div class="modal_header" v-if="popupTriggers.buttonTrigger">
                 <div class="modal-content">
                   <div class="modal-item">
-                    <router-link to="/profile" @click="popupTriggers.buttonTrigger = false" class="flex_item">
+                    <router-link to="/profiles" @click="popupTriggers.buttonTrigger = false" class="flex_item">
                       <i class="fas fa-user-circle text-white text-xl mr-2"></i> Profile
                     </router-link>
                   </div>
@@ -95,7 +95,7 @@ export default {
     };
   },
   mounted() {
-    this.CourseTeacherInfo();
+    // this.CourseTeacherInfo();
     this.userInfo();
     this.fetchTeacherInfo();
     this.checkRoute();
@@ -112,15 +112,15 @@ export default {
     toggleMajorDetails(major) {
       major.showDetails = !major.showDetails;
     },
-    CourseTeacherInfo(teacherId) {
-      axios.get(`http://139.59.224.162/api/course_teacher/${teacherId}`)
-        .then(response => {
-          this.courseteacher = response.data.data; // Update the property with the API response
-        })
-        .catch(error => {
-          console.error('Error fetching course teacher information:', error);
-        });
-    },
+    // CourseTeacherInfo(teacherId) {
+    //   axios.get(`http://139.59.224.162/api/course_teacher/${teacherId}`)
+    //     .then(response => {
+    //       this.courseteacher = response.data.data; // Update the property with the API response
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching course teacher information:', error);
+    //     });
+    // },
     async logout() {
       // Use SweetAlert for logout confirmation
           const result = await Swal.fire({
@@ -170,7 +170,7 @@ export default {
             axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
             .then(response => {
                 this.teacher = response.data.data[0]; // Update the teacher data with the API response4
-                this.CourseTeacherInfo(this.teacher.id); // Call CourseTeacherInfo with user ID
+                // this.CourseTeacherInfo(this.teacher.id); // Call CourseTeacherInfo with user ID
             })
             .catch(error => {
                 console.error('Error fetching teacher information:', error);
@@ -179,24 +179,24 @@ export default {
         },
   },
   setup() {
-      const popupTriggers = ref({
-        buttonTrigger: false,
-        timedTrigger: false,
-      });
+        const popupTriggers = ref({
+            buttonTrigger: false,
+            timedTrigger: false,
+        });
 
-      const TogglePopup = (trigger) => {
-        popupTriggers.value[trigger] = !popupTriggers.value[trigger];
-      };
+        const TogglePopup = (trigger) => {
+            popupTriggers.value[trigger] = !popupTriggers.value[trigger];
+        };
 
-      setTimeout(() => {
-        popupTriggers.value.timedTrigger = true;
-      }, 3000);
+        setTimeout(() => {
+            popupTriggers.value.timedTrigger = true;
+        }, 3000);
 
-      return {
-        TogglePopup,
-        popupTriggers,
-      };
-    },
+        return {
+            TogglePopup,
+            popupTriggers,
+        };
+        },
 };
 </script>
 

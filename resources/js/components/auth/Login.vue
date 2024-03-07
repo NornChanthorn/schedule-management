@@ -93,7 +93,7 @@ methods: {
         .then(response => {
             const user = response.data;
             const userRole = user.role;
-            if(userRole== 'admin'){
+            if(userRole == 'admin'){
                 this.$router.push({ name: 'Main'});
 
             }else{
