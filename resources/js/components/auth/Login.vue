@@ -77,10 +77,12 @@ methods: {
           axios.get('user').then(
             res=>{
                 const userRole = res.data.role;
+
                 if(userRole=='admin'){
                     this.$router.push({name: 'Main'})
                 }else{
                     this.$router.push({name: 'TeacherPage'})
+
                 }
 
 
@@ -106,10 +108,10 @@ methods: {
             const user = response.data;
             const userRole = user.role;
             if(userRole == 'admin'){
-                this.$router.push({ name: 'Main'});
+                this.$router.push({ name: 'Main', path: '/'});
 
             }else{
-                this.$router.push({ name: 'TeacherPage'});
+                this.$router.push({ name: 'TeacherPage', path:'/'});
             }
             // Update your application state with user role (optional)
             // const retrievedUserRole = getUserRole(); // Replace with your logic

@@ -34,13 +34,14 @@ const routes=[
 
     },
     {
-        path: '/',
+        path: '/teacher',
         name: 'TeacherPage',
         component: TeacherDashboard,
         meta: { requiresAuth: true },
+        redirect: '/teacher',
         children:[
             {
-                path: '/',
+                path: '/teacher',
                 name: 'courseList',
                 component: listCourse,
             },
@@ -63,6 +64,7 @@ const routes=[
         name: 'Main',
         component: Main,
         meta: { requiresAuth: true },
+        redirect: '/',
         children:[
             {
                 path: '',

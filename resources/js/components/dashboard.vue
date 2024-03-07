@@ -109,6 +109,7 @@ export default{
 
     mounted(){
         this.userInfo();
+        this.checkRoute();
     },
     setup() {
       const popupTriggers = ref({
@@ -219,13 +220,23 @@ export default{
           }
         },
         checkRoute(){
-        if(localStorage.getItem('authToken')==null){
-        this.$router.push({path: '/login'})
-        }else{
-            console.log('Not loggin yet')
-        }
+            if(localStorage.getItem('authToken')==null){
+                this.$router.push({path: '/login'})
+            }else{
+                axios.get('user').then(
+                    res=>{
+                        const userRole = res.data.role
+                        if(userRole=='teacher'){
+                            this.$router.push({path: '/teacher'})
 
-  },
+                        }
+                        console.log(userRole)
+                    }
+                )
+            }
+
+
+        },
   showDialog() {
       this.isDialogVisible = !this.isDialogVisible;
     },
@@ -237,16 +248,16 @@ export default{
     },
 
     },
-    beforeRouteEnter(to, from, next) {
-        // Check if the user is authenticated before entering the route
-        if (!localStorage.getItem('authToken')) {
-        // User is not authenticated, redirect to the login page
-        next({ path: '/login' });
-        } else {
-        // User is authenticated, proceed to the route
-        next();
-        }
-    },
+    // beforeRouteEnter(to, from, next) {
+    //     // Check if the user is authenticated before entering the route
+    //     if (!localStorage.getItem('authToken')) {
+    //     // User is not authenticated, redirect to the login page
+    //     next({ path: '/login' });
+    //     } else {
+    //     // User is authenticated, proceed to the route
+    //     next();
+    //     }
+    // },
 
 
 

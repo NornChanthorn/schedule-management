@@ -72,6 +72,7 @@
             <span class="mt-2 text-xl text-custom-color-small"></span>
     </div>
     <div  class="max-w-95 mx-auto pt-4 px-8 pb-8">
+
         <div class="content-container">
             <router-view></router-view>
         </div>
@@ -146,7 +147,7 @@
                 if(localStorage.getItem('authToken')==null){
                 this.$router.push({path: '/login'})
                 }else{
-                    console.log('Not loggin yet')
+                    this.$router.push({path: '/teacher'})
                 }
             },
             userInfo() {
