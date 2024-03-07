@@ -26,10 +26,8 @@
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Group" responsiveLayout="scroll">
-            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'center' }"></Column>
-            <Column field="name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="teacherName" header="TEACHER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="majorName" header="TERM" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+            <Column field="group_name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
                 <template #body="slotProps">
@@ -48,8 +46,6 @@
                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
-                        <!-- <Button icon="pi pi-pencil" label="Edit" class=" p-button-success mr-2 p-button-sm "  @click="editData(slotProps.data)" />
-                        <Button icon="pi pi-trash" label="Delete" severity="danger" class=" p-button-sm" @click="confirmDelete(slotProps.data)" /> -->
                     </div>
                 </template>
             </Column>
@@ -58,60 +54,34 @@
     <!-- add  -->
     <Dialog v-model:visible="visible" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="w-full flex justify-center items-center">
-            <form action="" @submit.prevent="addNewCourse">
+            <form action="" @submit.prevent="addNewGroup">
                 <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Name</label>
-                    <input type="text" v-model="addCourse.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of course"
+                    <label for="name" class="text-lg mr-2 mb-2">Group Name</label>
+                    <input type="text" v-model="addGroup.group_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of group"
                      :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !addCourse.name }">
-                     <small class="p-error " v-if="submitted && !addCourse.name">Course is required</small>
+                     : submitted && !addGroup.group_name }">
+                     <small class="p-error " v-if="submitted && !addGroup.group_name">Name is required</small>
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
-                    <select v-model="addCourse.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                    :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.teacher_id }">
-                        <option value="" disabled >Choose Teacher  </option>
-                        <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
-                    </select>
-                    <small class="p-error" v-if="submitted && !addCourse.teacher_id">Teacher is required</small>
-                </div>
+
                 <div class="lg:justify-between items-center mb-4">
                     <label class="text-lg mr-2 mb-2" for="major">Major</label>
-                    <select v-model="addCourse.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                    <select v-model="addGroup.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.major_id }">
+                    : submitted && !addGroup.major_id }">
                         <option value="" disabled>Choose Major</option>
                         <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
                     </select>
-                    <small class="p-error " v-if="submitted && !addCourse.major_id">Major is required</small>
+                    <small class="p-error " v-if="submitted && !addGroup.major_id">Major is required</small>
                 </div>
                 <div class="lg:justify-between items-center mb-4">
                     <label for="name" class="text-lg mr-2 mb-2">Generation</label>
-                    <select v-model="addCourse.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                    <select v-model="addGroup.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.gen_id }">
+                    : submitted && !addGroup.gen_id }">
                         <option value="" disabled >Choose Generation</option>
                         <option  v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
                     </select>
-                    <small class="p-error " v-if="submitted && !addCourse.gen_id">Generation is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Term</label>
-                    <select v-model="addCourse.term_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !addCourse.term_id }">
-                        <option value="" disabled >Choose Term</option>
-                        <option  v-for="term in terms" :key="term.id" :value="term.id">{{ term.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !addCourse.term_id">Term is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Duration</label>
-                    <input type="text" v-model="addCourse.duration" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Duration (Ex: 45 hours)"
-                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !addCourse.duration }">
-                    <small class="p-error " v-if="submitted && !addCourse.duration">Duration is required</small>
+                    <small class="p-error " v-if="submitted && !addGroup.gen_id">Generation is required</small>
                 </div>
                 <div class="flex justify-between mt-6">
                     <button v-on:click="closeDialog" class="w-32 bg-red-500 mr-2 text-white border-2  hover:bg-red-700" >Cancel</button>
@@ -121,67 +91,41 @@
         </div>
         <template #header>
             <div class="text-center border-b border-gray-300 w-full pb-4">
-               <h2 class="text-lg font-bold">Add Course</h2>
+               <h2 class="text-lg font-bold">Add Student Group</h2>
             </div>
         </template>
     </Dialog>
     <!-- Edit  -->
     <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="w-full flex justify-center items-center">
-             <form action="" @submit.prevent="editCourse(course.id)">
+             <form action="" @submit.prevent="editGroup(group.id)">
                 <div class="lg:justify-between items-center mb-4">
                     <label for="name" class="text-lg mr-2 mb-2">Name</label>
-                    <input type="text" v-model.trim="course.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of Course"
+                    <input type="text" v-model.trim="group.group_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 "
                      :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !course.name }" />
-                    <small class="p-error" v-if="submitted && !course.name">Course is required</small>
+                     : submitted && !group.group_name }" />
+                    <small class="p-error" v-if="submitted && !group.group_name">Group is required</small>
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
-                    <select v-model.trim="course.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.teacher_id }">
-                        <option value="" disabled >Choose Teacher  </option>
-                        <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !course.teacher_id">Teacher is required</small>
-                </div>
+
                 <div class="lg:justify-between items-center mb-4">
                     <label class="text-lg mr-2 mb-2" for="major">Major</label>
-                    <select v-model.trim="course.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                    <select v-model.trim="group.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
                         :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.major_id }">
+                        : submitted && !group.major_id }">
                         <option value="" disabled>Choose Major</option>
                         <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
                     </select>
-                    <small class="p-error " v-if="submitted && !course.major_id">Major is required</small>
+                    <small class="p-error " v-if="submitted && !group.major_id">Major is required</small>
                 </div>
                 <div class="lg:justify-between items-center mb-4">
                     <label for="name" class="text-lg mr-2 mb-2">Generation</label>
-                    <select v-model.trim="course.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                    <select v-model.trim="group.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
                         :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.gen_id }">
+                        : submitted && !group.gen_id }">
                         <option value="" disabled >Choose Generation</option>
                         <option  v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
                     </select>
-                    <small class="p-error " v-if="submitted && !course.gen_id">Generation is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Term</label>
-                    <select v-model.trim="course.term_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.term_id }">
-                        <option value="" disabled >Choose Term</option>
-                        <option  v-for="term in terms" :key="term.id" :value="term.id">{{ term.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !course.term_id">Term is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Duration</label>
-                    <input type="text" v-model.trim="course.duration" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Duration (Ex: 45 hours)"
-                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.duration }">
-                    <small class="p-error " v-if="submitted && !course.duration">Duration is required</small>
+                    <small class="p-error " v-if="submitted && !group.gen_id">Generation is required</small>
                 </div>
                 <div class="flex justify-between mt-6">
                     <button @click="closeEditDialog" class="w-32 bg-red-500 mr-2 text-white border-2  hover:bg-red-700" >Cancel</button>
@@ -209,11 +153,9 @@ import 'sweetalert2/dist/sweetalert2.min.css'
 export default{
     data(){
         return{
-            courses: [],
+            groups: [],
             majors: [],
             generations: [],
-            teachers: [],
-            terms: [],
             majorTabs: [
                 { label: 'All Group', icon: 'pi pi-book', major: null },
             ],
@@ -222,15 +164,12 @@ export default{
             tableData: [],
             totalRecords: 0,
             visible: false,
-            addCourse:{
-                name: '',
-                teacher_id: '',
-                term_id: '',
+            addGroup:{
+                group_name: '',
                 gen_id: '',
                 major_id: '',
-                duration: ''
             },
-            course: [],
+            group: [],
             deleteDialog: false,
             visibleEdit: false,
             submitted: false,
@@ -243,15 +182,13 @@ export default{
         this.getMajorName();
         this.getGroup();
         this.getGeneration();
-        this.getTeachers();
-        this.getTerms();
 
     },
     methods:{
         async getGroup() {
             try {
                 const response = await axios.get('groups');
-                const groupWithGen = response.data.map((group) => {
+                const groupWithGen = response.data.data.map((group) => {
                 const majorName= group.major?.name;
                 const genName = group.generation?.gen;
                 return {
@@ -273,30 +210,7 @@ export default{
 
             )
         },
-        async getTeachers(){
-            axios.get('teachers').then(
-                res=>{
-                    // this.teachers = res.data
-                    this.teachers = res.data.map((teacher) => {
-                        const l_name = teacher?.l_name;
-                        const f_name = teacher?.f_name;
-                        const name = f_name + ' ' + l_name;
-                        const teacherID = teacher?.id;
-                        return {
-                            name,
-                            teacherID
-                        };
-                    })
-                }
-            )
-        },
-        async getTerms(){
-            axios.get('terms').then(
-                res=>{
-                    this.terms = res.data
-                }
-            )
-        },
+
         async getMajorName(){
             try {
                 const response = await axios.get('majors');
@@ -316,20 +230,20 @@ export default{
             this.selectedTabId = newTab.index;
             this.tableData = [];
             try {
-                const response = await axios.get(this.selectedTabId != 0 ? `groups/${this.selectedTabId}` : `groups`); // Adjust for your API endpoint
-                // this.tableData = response.data.data;
-                this.tableData = response.data.map((group) => {
+                const response = await axios.get(this.selectedTabId != 0 ? `groupsByMajor/${this.selectedTabId}` : `groups`);
+                const groupWithGen = response.data.data.map((group) => {
                 const majorName = group.major?.name;
                 const genName = group.generation?.gen;
                 return {
                     ...group,
                     majorName,
                     genName
+
                 };
                 });
-                this.tableData = coursesWithTermNames;
+                this.tableData = groupWithGen;
 
-                this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
+                this.totalRecords = response.headers['x-total-count'];
             } catch (error) {
                 console.error('Error fetching courses:', error);
             } finally {
@@ -337,25 +251,32 @@ export default{
             }
 
         },
-        addNewCourse(){
+        addNewGroup(){
+            // console.log(this.groups)
+            // if(this.addGroup.group_name == this.groups.group_name && this.addGroup.gen_id == this.groups.gen_id && this.addGroup.major_id== this.groups.major_id){
+            //         console.log('this course is duplicated')
+            // }else{
+            //     console.log('It okay')
+            // }
             this.submitted= true
-            axios.post('courses', this.addCourse).then(
+            axios.post('groups', this.addGroup).then(
                 res=>{
                     console.log('success??');
-                    this.getCourse();
+                    this.getGroup();
                     this.visible = false
                     this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
                 }
             ).catch(er=>{
                 console.error(er)
+                
             })
 
         },
-        editCourse(id){
+        editGroup(id){
             this.submitted= true
-            axios.put(`courses/${id}`, this.course).then(
+            axios.put(`groups/${id}`, this.group).then(
                 res=>{
-                    this.getCourse();
+                    this.getGroup();
                     this.visibleEdit = false
                     this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
                 }
@@ -370,7 +291,7 @@ export default{
         confirmDelete(prod){
             Swal.fire({
             title: 'Are you sure?',
-            text: `${prod.name} will remove from your system`,
+            text: `${prod.group_name} will remove from your system`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -378,9 +299,9 @@ export default{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.deleteCourse(prod.id);
+                this.deleteGroup(prod.id);
                 this.deleteDialog = false;
-                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Course deleted Successfully', life: 3000 });
+                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Group deleted Successfully', life: 3000 });
             }
             else {
                 console.log('Deletion canceled');
@@ -388,29 +309,22 @@ export default{
             }
         });
         },
-        deleteCourse(id){
-            axios.delete(`courses/${id}`).then(
+        deleteGroup(id){
+            axios.delete(`groups/${id}`).then(
                 res=>{
-                    this.getCourse();
+                    this.getGroup();
                 }
             ).catch(er=>{
                 console.error(er)
             })
         },
         openEdit(prod){
-            console.log(prod.id)
-            const id = prod.id
-            this.course = prod
-            // axios.get(`courses/${prod.id}`)
-            console.log('my id: ', id)
+            this.group = prod
             this.visibleEdit = true
-            return{
-                id
-            }
         },
         closeEditDialog(){
             this.visibleEdit= false
-            this.course = null
+            this.group = null
         }
 
 
