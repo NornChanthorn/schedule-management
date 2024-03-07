@@ -16,10 +16,11 @@
                   <!-- Modal or dropdown content -->
                   <transition name="fade" appear>
                     <div v-if="isDialogVisible" class="absolute bg-white mt-2 w-32 border-blue-500 border text-blue-500 modal-content">
+                      <p @click="goToCourse" class="modal-item-list hover:bg-blue-100">Course</p>
                       <p @click="goToAnotherPages" class="modal-item-list hover:bg-blue-100">Teacher</p>
                       <p @click="goToAnotherPage" class="modal-item-list hover:bg-blue-100">Student</p>
                       <p @click="goToAnotherPagesroom" class="modal-item-list hover:bg-blue-100">Room</p>
-                      <p @click="goToCourse" class="modal-item-list hover:bg-blue-100">Course</p>
+                      <p @click="goToGroup" class="modal-item-list hover:bg-blue-100">Group</p>
                     </div>
                   </transition>
             </div>
@@ -169,6 +170,10 @@ export default{
         },
         goToCourse(){
             this.$router.push({path: '/courses'})
+            this.isDialogVisible = false;
+        },
+        goToGroup(){
+            this.$router.push({path: '/groups'})
             this.isDialogVisible = false;
         },
 

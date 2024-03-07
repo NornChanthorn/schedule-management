@@ -44,6 +44,7 @@ Route::apiResource('class-types', ClassTypeController::class);
 Route::apiResource('days-of-week', DayOfWeekController::class);
 Route::apiResource('groups', GroupController::class);
 Route::get('/groups/{gen_id}/{major_id}', [GroupController::class, 'getGroupByMG']);
+Route::get('/groups/{major_id}', [GroupController::class, 'getByMajor']);
 Route::apiResource('teachers', TeacherController::class);
 Route::get('/notifications/{user_id}', [NotificationController::class, 'index']);
 

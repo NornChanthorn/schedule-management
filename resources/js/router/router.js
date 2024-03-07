@@ -18,6 +18,7 @@ import Course from '../components/admin/Course.vue'
 import TeacherDashboard from '../components/teacher/MainPage.vue'
 import listCourse from '../components/teacher/CoursePage.vue'
 import Schedules from '../components/schedule.vue'
+import Group from '../components/admin/Group.vue'
 
 
 const routes=[
@@ -113,6 +114,11 @@ const routes=[
                 path: '/courses',
                 component: Course,
                 name: 'Course'
+            },
+            {
+                path: '/groups',
+                component: Group,
+                name: 'Group'
             }
 
         ]

@@ -78,4 +78,11 @@ class GroupController extends Controller
         ]);
 
     }
+    public function getByMajor($major_id){
+        $data = Group::where('major_id', $major_id)->with('generation', 'major')->get();
+        return response()->json([
+            'message' => 'get successfully',
+            'data' => $data
+        ]);
+    }
 }
