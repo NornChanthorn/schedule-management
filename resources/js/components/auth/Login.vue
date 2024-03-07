@@ -73,7 +73,19 @@ mounted(){
 methods: {
   checkRoute(){
       if(localStorage.getItem('authToken')!==null){
-      this.$router.push({path: '/'})
+    //   this.$router.push({path: '/'})
+          axios.get('user').then(
+            res=>{
+                const userRole = res.data.role;
+                if(userRole=='admin'){
+                    this.$router.push({name: 'Main'})
+                }else{
+                    this.$router.push({name: 'TeacherPage'})
+                }
+
+
+            }
+          )
       }else{
           console.log('Not loggin yet')
       }
