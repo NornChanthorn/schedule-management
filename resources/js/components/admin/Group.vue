@@ -29,7 +29,7 @@
             <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'center' }"></Column>
             <Column field="name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="teacherName" header="TEACHER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
-            <Column field="termName" header="TERM" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
+            <Column field="majorName" header="TERM" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
                 <template #body="slotProps">
@@ -241,7 +241,7 @@ export default{
     },
     mounted(){
         this.getMajorName();
-        this.getCourse();
+        this.getGroup();
         this.getGeneration();
         this.getTeachers();
         this.getTerms();
@@ -301,11 +301,13 @@ export default{
             try {
                 const response = await axios.get('majors');
                 this.majors = response.data;
+                console.log(this.majors)
                 this.majorTabs.push(...this.majors.map((major) => ({
                 label: major.name,
                 icon: 'pi pi-book',
                 major,
                 })));
+                console.log(this.majorTabs)
             } catch (error) {
                 console.error('Error fetching majors:', error);
             }
@@ -314,18 +316,14 @@ export default{
             this.selectedTabId = newTab.index;
             this.tableData = [];
             try {
-                const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${this.selectedTabId}` : `courses`); // Adjust for your API endpoint
+                const response = await axios.get(this.selectedTabId != 0 ? `groups/${this.selectedTabId}` : `groups`); // Adjust for your API endpoint
                 // this.tableData = response.data.data;
-                this.tableData = response.data.data.map((course) => {
-                const termName = course.term?.name;
-                const teacherFName = course.teacher?.f_name;
-                const teacherLName = course.teacher?.l_name;
-                const teacherName = teacherFName +' '+ teacherLName;
-                const genName = course.generation?.gen;
+                this.tableData = response.data.map((group) => {
+                const majorName = group.major?.name;
+                const genName = group.generation?.gen;
                 return {
-                    ...course,
-                    termName,
-                    teacherName,
+                    ...group,
+                    majorName,
                     genName
                 };
                 });
