@@ -34,6 +34,8 @@
   </template>
   
   <script>
+  import axios from 'axios';
+import { ref } from 'vue';
   export default {
     props: {
       email: {
@@ -54,7 +56,7 @@
     methods: {
       resetPassword() {
         // Send a request to the backend to reset the password
-        axios.post('/api/password/reset', {
+        axios.post('/password/reset', {
           email: this.email,
           token: this.token,
           password: this.password,

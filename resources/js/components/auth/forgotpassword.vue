@@ -27,6 +27,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { ref } from 'vue';
+
 export default {
   data() {
     return {
@@ -37,7 +40,7 @@ export default {
   methods: {
     submitForm() {
       // Send the email to the Laravel backend
-      axios.post('/api/password/email', { email: this.email })
+      axios.post('/password/email', { email: this.email })
         .then(response => {
           // Handle the response
           if (response.status === 200) {
