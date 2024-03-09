@@ -16,7 +16,8 @@ use App\Http\Controllers\Api\ClassTypeController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\NotificationController;
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -28,9 +29,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // });
 
 
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('password/reset', [ResetPasswordController::class, 'reset']);
+
 
 // routes/api.php
 

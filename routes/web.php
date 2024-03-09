@@ -20,3 +20,7 @@ Route::get('/{any}', function () {
 // Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('password/reset', function () {
+    return view('auth.passwords.reset');
+})->name('password.reset');

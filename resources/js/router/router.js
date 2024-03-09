@@ -19,6 +19,7 @@ import TeacherDashboard from '../components/teacher/MainPage.vue'
 import listCourse from '../components/teacher/CoursePage.vue'
 import Schedules from '../components/schedule.vue'
 import Group from '../components/admin/Group.vue'
+import ResetPassword from '../components/auth/ResetPassword.vue'
 
 
 const routes=[
@@ -34,6 +35,13 @@ const routes=[
       component: forgotpassword
 
     },
+    {
+        path: '/password/reset',
+        name: 'reset-password',
+        component: ResetPassword,
+        props: (route) => ({ token: route.query.token, email: route.query.email }),
+    },
+
     {
         path: '/teacher',
         name: 'TeacherPage',
