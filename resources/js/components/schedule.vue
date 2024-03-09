@@ -1,8 +1,10 @@
 <template>
-    <Toast/>
+  <Toast />
+
   <div class="flex items-center mb-4 ml-4">
-    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName }}, Generation {{ GenName }}, Term {{
-    termName }}</h1>
+    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName?.name }}, Generation {{ GenName }},
+      Term {{
+      termName }}</h1>
   </div>
   <div class="schedule-container p-4">
     <div class="schedule">
@@ -51,20 +53,29 @@
                                       @click="showEditPopup(schedule)">
                                       <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
                                     </div>
-                                    <div v-if="schedule.course.teacher.id == courseteacher.teacher.id" class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
-                                      <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                    <div v-if="user.role === 'admin'">
+                                      <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                      </div>
+                                    </div>
+                                    <div v-else>
+                                      <div v-if="schedule.course.teacher.id == courseteacher.teacher.id"
+                                        class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </transition>
-                              <p class="theory">{{ schedule.room.type }}</p>
+                              <!-- <p class="theory">{{ schedule.room.type }}</p> -->
+                              <p class="theory">{{ schedule.room?.type }}</p>
                             </div>
                             <p class="text-sm">{{ schedule.course.name }}</p>
                             <p class="text-sm">{{ schedule.course.teacher.title }}. {{ schedule.course.teacher.f_name }}
                               {{ schedule.course.teacher.l_name
                               }}
                             </p>
-                            <p class="room"> {{ schedule.room.name }}</p>
+                            <p class="room"> {{ schedule.room?.name }}</p>
                           </div>
                         </template>
                       </div>
@@ -122,16 +133,19 @@
                 class="mt-1 p-2 border rounded-md w-full">
             </div>
           </div>
-          <div  v-if="user.role === 'admin'" class="mb-4">
-            <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
-            <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
-            <input type="text" id="course_id" v-model="courseteacher.name" disabled
-                class="mt-1 p-2 border rounded-md w-full">
+          <div>
+            <div v-if="user.role === 'admin'" class="mb-4">
+              <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
+              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
+                <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
+              </select>
+            </div>
+            <div v-else class="mb-4">
+              <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
+              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
+                <option v-for="course in courseteachers" :value="course.id">{{ course.name }}</option>
+              </select>
+            </div>
           </div>
           <div v-if="user.role === 'admin'" class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
@@ -243,6 +257,7 @@ export default {
       selectedTimeEnd: null,
       user: [],
       courseteacher: [],
+      courseteachers: [],
       teacher: {},
     }
   },
@@ -250,22 +265,22 @@ export default {
     this.termID = this.$route.params.termId;
     this.genID = this.$route.params.genid;
     this.majorID = this.$route.params.majorId;
-    this.majorName = this.$route.params.name;
-    this.majorName = "Computer Science";
+    // this.majorName = this.$route.params.name;
     this.getTermID(this.termID);
+    this.getMajorID();
     this.getGenerationID(this.genID);
     this.getDaysOfWeek(); // Fetch days of the week
-    this.getGroups(); // Fetch groups
+    this.getGroups(this.majorID, this.termID); // Fetch groups
     this.getSchedulesByTerm(this.termID, this.genID, this.majorID); // Fetch schedules
     this.getCourses(this.termID, this.genID, this.majorID);
     this.getRooms();
     this.userInfo();
     this.CourseTeacherInfo();
+
     this.fetchTeacherInfo();
   },
   created() {
     this.getDaysOfWeek(); // Fetch days of the week
-    this.getGroups(); // Fetch groups
   },
   methods: {
     getSchedulesByTerm(termId, genId, majorId) {
@@ -294,17 +309,19 @@ export default {
       this.newSchedule.group_id = this.selectedGroupId;
       this.newSchedule.time_start = this.selectedTimeStart;
       this.newSchedule.time_end = this.selectedTimeEnd;
-      this.newSchedule.course_id = this.courseteacher.name;
+
       axios.post('schedule', this.newSchedule)
         .then(response => {
           console.log(response.data);
           this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
+          this.popupTriggers.buttonTrigger = false;
           this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
         })
         .catch(error => {
           console.error(error);
         });
     },
+
 
     showEditPopup(schedule) {
       this.editschedule.id = schedule.id;
@@ -337,6 +354,8 @@ export default {
         .then(response => {
           console.log(response.data);
           this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
+          this.popupTriggers.editschedule = false;
+          this.popupTriggers.buttonTrigger = false;
           this.getSchedulesByTerm(this.termID, this.genID, this.majorID);
         })
         .catch(error => {
@@ -423,6 +442,14 @@ export default {
         }
       )
     },
+    getMajorID() {
+      axios.get(`http://139.59.224.162/api/majors/1`).then(
+        res => {
+          this.majorName = res.data.data[0];
+        }
+      )
+    },
+
     getDaysOfWeek() {
       axios.get('days-of-week').then(
         response => {
@@ -433,10 +460,10 @@ export default {
         console.error(err);
       });
     },
-    getGroups() {
-      axios.get('groups').then(
+    getGroups(majorID, termID) {
+      axios.get(`groups/${majorID}/${termID}`).then(
         response => {
-          this.groups = response.data;
+          this.groups = response.data.data;
           // this.group = response.data;
         }
       ).catch(err => {
@@ -479,24 +506,24 @@ export default {
           }
         });
     },
-    CourseTeacherInfo() {
-      if (this.teacher && this.teacher.id) {
-        axios.get(`http://139.59.224.162/api/course_teacher/${this.teacher.id}`)
-          .then(response => {
-            this.courseteacher = response.data.data[0]; // Update the property with the API response
-          })
-          .catch(error => {
-            console.error('Error fetching course teacher information:', error);
-          });
-      }
-
+    CourseTeacherInfo(teacherId, majorId, genId, termId) {
+      axios.get(`http://139.59.224.162/api/course/${teacherId}/${majorId}/${genId}/${termId}`)
+        .then(response => {
+          this.courseteacher = response.data.data[0];
+          this.courseteachers = response.data.data;
+        })
+        .catch(error => {
+          console.error('Error fetching course teacher information:', error);
+        });
     },
+
+
     fetchTeacherInfo() {
       if (this.user && this.user.id) {
         axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
           .then(response => {
-            this.teacher = response.data.data[0]; // Update the teacher data with the API response4
-            this.CourseTeacherInfo();
+            this.teacher = response.data.data[0]; // Update the teacher data with the API response
+            this.CourseTeacherInfo(this.teacher.id, this.majorID, this.genID, this.termID);
           })
           .catch(error => {
             console.error('Error fetching teacher information:', error);
