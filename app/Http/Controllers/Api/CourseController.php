@@ -160,4 +160,19 @@ class CourseController extends Controller
             'data' => $data
         ]);
     }
+
+    public function getCourseByTMGT($teacher_id,$major_id, $gen_id, $term_id)
+    {
+        $course = Course::where('major_id', $major_id)
+            ->where('gen_id', $gen_id)
+            ->where('term_id', $term_id)
+            ->where('teacher_id', $teacher_id)
+            ->with('term', 'generation', 'major', 'teacher')
+            ->get();
+
+        return response()->json([
+            'message' => 'Get Successfully',
+            'data' => $course
+        ]);
+    }
 }
