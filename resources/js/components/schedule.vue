@@ -270,7 +270,7 @@ export default {
     this.getMajorID();
     this.getGenerationID(this.genID);
     this.getDaysOfWeek(); // Fetch days of the week
-    this.getGroups(this.majorID, this.termID); // Fetch groups
+    this.getGroups(this.majorID, this.genID); // Fetch groups
     this.getSchedulesByTerm(this.termID, this.genID, this.majorID); // Fetch schedules
     this.getCourses(this.termID, this.genID, this.majorID);
     this.getRooms();
@@ -460,8 +460,8 @@ export default {
         console.error(err);
       });
     },
-    getGroups(majorID, termID) {
-      axios.get(`groups/${majorID}/${termID}`).then(
+    getGroups(majorID, genID) {
+      axios.get(`groups/${genID}/${majorID}`).then(
         response => {
           this.groups = response.data.data;
           // this.group = response.data;
