@@ -163,9 +163,9 @@ export default{
         },
         goToAnotherPages() {
           // Define the path for the page you want to navigate to
-          const newPath = '/teacher';
+          const namePath = 'Teacher';
           // Navigate to the new path
-          this.$router.push(newPath);
+          this.$router.push({name: 'Teacher'});
           this.isDialogVisible = false;
         },
         goToCourse(){

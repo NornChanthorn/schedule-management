@@ -268,7 +268,7 @@ export default{
                 }
             ).catch(er=>{
                 console.error(er)
-                
+
             })
 
         },
@@ -334,9 +334,11 @@ export default{
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         });
 
-    }
+    },
+
 
 }
+
 
 </script>
 <style>

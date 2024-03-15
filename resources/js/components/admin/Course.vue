@@ -59,50 +59,56 @@
     <Dialog v-model:visible="visible" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="w-full flex justify-center items-center">
             <form action="" @submit.prevent="addNewCourse">
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Name</label>
-                    <input type="text" v-model="addCourse.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of course"
-                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !addCourse.name }">
-                     <small class="p-error " v-if="submitted && !addCourse.name">Course is required</small>
+                <div class="flex justify-between gap-4">
+                    <div class="lg:justify-between items-center mb-4 w-[50%]">
+                        <label for="name" class="text-lg mr-2 mb-2">Name</label>
+                        <input type="text" v-model="addCourse.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2   leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of course"
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : submitted && !addCourse.name }">
+                        <small class="p-error " v-if="submitted && !addCourse.name">Course is required</small>
+                    </div>
+                    <div class="lg:justify-between items-center mb-4   w-[50%]">
+                        <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
+                        <select v-model="addCourse.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : submitted && !addCourse.teacher_id }">
+                            <option value="" disabled >Choose Teacher  </option>
+                            <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
+                        </select>
+                        <small class="p-error" v-if="submitted && !addCourse.teacher_id">Teacher is required</small>
+                    </div>
+
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
-                    <select v-model="addCourse.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                    :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.teacher_id }">
-                        <option value="" disabled >Choose Teacher  </option>
-                        <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
-                    </select>
-                    <small class="p-error" v-if="submitted && !addCourse.teacher_id">Teacher is required</small>
+                <div class="flex justify-between gap-4">
+                    <div class="lg:justify-between items-center mb-4 ">
+                        <label class="text-lg mr-2 mb-2" for="major">Major</label>
+                        <select v-model="addCourse.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : submitted && !addCourse.major_id }">
+                            <option value="" disabled>Choose Major</option>
+                            <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
+                        </select>
+                        <small class="p-error " v-if="submitted && !addCourse.major_id">Major is required</small>
+                    </div>
+                    <div class="lg:justify-between items-center mb-4 ">
+                        <label for="name" class="text-lg mr-2 mb-2">Generation</label>
+                        <select v-model="addCourse.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : submitted && !addCourse.gen_id }">
+                            <option value="" disabled >Choose Generation</option>
+                            <option  v-for="gen in generations" :key="gen.id" :value="gen.id">Generation {{ gen.gen }}</option>
+                        </select>
+                        <small class="p-error " v-if="submitted && !addCourse.gen_id">Generation is required</small>
+                    </div>
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label class="text-lg mr-2 mb-2" for="major">Major</label>
-                    <select v-model="addCourse.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                    :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.major_id }">
-                        <option value="" disabled>Choose Major</option>
-                        <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !addCourse.major_id">Major is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Generation</label>
-                    <select v-model="addCourse.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                    :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                    : submitted && !addCourse.gen_id }">
-                        <option value="" disabled >Choose Generation</option>
-                        <option  v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !addCourse.gen_id">Generation is required</small>
-                </div>
+
                 <div class="lg:justify-between items-center mb-4">
                     <label for="name" class="text-lg mr-2 mb-2">Term</label>
                     <select v-model="addCourse.term_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
                      :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
                      : submitted && !addCourse.term_id }">
                         <option value="" disabled >Choose Term</option>
-                        <option  v-for="term in terms" :key="term.id" :value="term.id">{{ term.name }}</option>
+                        <option  v-for="term in terms" :key="term.id" :value="term.id">Term {{ term.name }}</option>
                     </select>
                     <small class="p-error " v-if="submitted && !addCourse.term_id">Term is required</small>
                 </div>
@@ -129,43 +135,49 @@
     <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="w-full flex justify-center items-center">
              <form action="" @submit.prevent="editCourse(course.id)">
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Name</label>
-                    <input type="text" v-model.trim="course.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of Course"
-                     :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                     : submitted && !course.name }" />
-                    <small class="p-error" v-if="submitted && !course.name">Course is required</small>
-                </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
-                    <select v-model.trim="course.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                <div class="flex justify-between gap-4">
+                    <div class="lg:justify-between items-center mb-4">
+                        <label for="name" class="text-lg mr-2 mb-2">Name</label>
+                        <input type="text" v-model.trim="course.name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Name of Course"
                         :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.teacher_id }">
-                        <option value="" disabled >Choose Teacher  </option>
-                        <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !course.teacher_id">Teacher is required</small>
+                        : submitted && !course.name }" />
+                        <small class="p-error" v-if="submitted && !course.name">Course is required</small>
+                    </div>
+                    <div class="lg:justify-between items-center mb-4">
+                        <label for="name" class="text-lg mr-2 mb-2">Teacher</label>
+                        <select v-model.trim="course.teacher_id" class="  mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                            :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                            : submitted && !course.teacher_id }">
+                            <option value="" disabled >Choose Teacher  </option>
+                            <option  v-for="teacher in teachers" :key="teacher.id" :value="teacher.teacherID">{{ teacher.name }}</option>
+                        </select>
+                        <small class="p-error " v-if="submitted && !course.teacher_id">Teacher is required</small>
+                    </div>
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label class="text-lg mr-2 mb-2" for="major">Major</label>
-                    <select v-model.trim="course.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.major_id }">
-                        <option value="" disabled>Choose Major</option>
-                        <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !course.major_id">Major is required</small>
+                <div class=" flex justify-center gap-4">
+                    <div class="lg:justify-between items-center mb-4">
+                        <label class="text-lg mr-2 mb-2" for="major">Major</label>
+                        <select v-model.trim="course.major_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                            :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                            : submitted && !course.major_id }">
+                            <option value="" disabled>Choose Major</option>
+                            <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
+                        </select>
+                        <small class="p-error " v-if="submitted && !course.major_id">Major is required</small>
+                    </div>
+                    <div class="lg:justify-between items-center mb-4">
+                        <label for="name" class="text-lg mr-2 mb-2">Generation</label>
+                        <select v-model.trim="course.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                            :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                            : submitted && !course.gen_id }">
+                            <option value="" disabled >Choose Generation</option>
+                            <option  v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
+                        </select>
+                        <small class="p-error " v-if="submitted && !course.gen_id">Generation is required</small>
+                    </div>
                 </div>
-                <div class="lg:justify-between items-center mb-4">
-                    <label for="name" class="text-lg mr-2 mb-2">Generation</label>
-                    <select v-model.trim="course.gen_id" class="mt-1 p-2 w-full border rounded   outline  outline-slate-200 py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
-                        : submitted && !course.gen_id }">
-                        <option value="" disabled >Choose Generation</option>
-                        <option  v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
-                    </select>
-                    <small class="p-error " v-if="submitted && !course.gen_id">Generation is required</small>
-                </div>
+
+
                 <div class="lg:justify-between items-center mb-4">
                     <label for="name" class="text-lg mr-2 mb-2">Term</label>
                     <select v-model.trim="course.term_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
@@ -372,6 +384,8 @@ export default{
             this.visible = true;
         },
         closeDialog(){
+            // this.addCourse = null
+            this.submitted= false
             this.visible= false;
         },
         confirmDelete(prod){
