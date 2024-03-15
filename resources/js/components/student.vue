@@ -9,7 +9,7 @@
                 <svg class="w-5 h-5   text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path></svg>
             </button>
         </div>
-        <button class=" hidden mr-2 bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 " label="Add New" severity="secondary" @click="showModal = true">
+        <button class=" mr-2 bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 " label="Add New" severity="secondary" @click="showModal = true">
             <span class="flex items-center">
             <i class="fa-solid fa-circle-plus mr-2"></i>
                 Add Student
@@ -17,7 +17,7 @@
         </button>
         <button
            @click="handleFileUpload"
-            class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+            class=" hidden cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
         >
             <span class="flex items-center">
             <i class="fa-solid fa-upload mr-2"></i>
@@ -131,7 +131,7 @@
                                 <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
                                 <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
                                     <option value="" disabled>Select Group</option>
-                                    <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.group_name }}</option>
+                                    <option v-for="group in groups" :key="group.id" :value="group.id"> {{ group.group_name }}</option>
                                 </select>
                             </div>
                             <div class="w-[48%]">
@@ -351,7 +351,8 @@ export default {
     getGroups(){
         axios.get('groups').then(
             res=>{
-                this.groups = res.data
+                this.groups = res.data.data
+
             }
         )
 

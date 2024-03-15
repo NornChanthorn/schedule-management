@@ -37,9 +37,9 @@
                 </div>
 
                 <!-- Email -->
-                <div class="mb-4" v-if="teacher.user">
+                <div class="mb-4" >
                     <label for="email" class="block text-m font-medium text-gray-700">Email</label>
-                    <input type="email" v-model="teacher.user.email" id="email" class="mt-1 p-2 w-full border rounded outline-none focus:outline-blue-200">
+                    <input type="email" v-model="user.email" id="email" class="mt-1 p-2 w-full border rounded outline-none focus:outline-blue-200">
                 </div>
 
                 <!-- Address -->
