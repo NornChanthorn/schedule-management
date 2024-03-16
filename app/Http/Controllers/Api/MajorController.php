@@ -90,9 +90,10 @@ class MajorController extends Controller
             $courses = Course::where('major_id', $id)->get();
             $students = Student::where('major_id', $id)->get();
             $groups = Group::where('major_id', $id)->get();
+            $schedulee = Schedule::where('major_id', $id)->get();
             if($courses!=null){
                 foreach ($courses as $course){
-                    $schedules = Schedule::where('major_id', $course->id)->get();
+                    $schedules = Schedule::where('course_id', $course->id)->get();
                     if($schedules !=null){
                         foreach($schedules as $schedule){
                             $schedule->delete();
@@ -110,6 +111,11 @@ class MajorController extends Controller
             if($groups!=null){
                 foreach($groups as $group){
                     $group->delete();
+                }
+            }
+            if($schedulee!=null){
+                foreach($schedulee as $scheduleee){
+                    $scheduleee->delete();
                 }
             }
             $major->delete();
