@@ -6,6 +6,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Major;
+use App\Models\Course;
+use App\Models\Student;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
 class MajorController extends Controller
@@ -79,11 +82,45 @@ class MajorController extends Controller
      * @param  \App\Models\Major  $major
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Major $major)
+    public function destroy($id)
     {
-        $major->delete();
+        try{
+            $major = Major::findOrFail($id);
+            $courses = Course::where('major_id', $id)->get();
+            $students = Student::where('major_id', $id)->get();
+            $groups = Group::where('major_id', $id)->get();
+            if($courses!=null){
+                foreach ($courses as $course){
+                    $schedules = Schedule::where('major_id', $course->id)->get();
+                    if($schedules !=null){
+                        foreach($schedules as $schedule){
+                            $schedule->delete();
+                        }
 
-        return response()->json(null, 204);
+                    }
+                    $course->delete();
+                }
+            }
+            if($students!=null){
+                foreach($students as $student){
+                    $student->delete();
+                }
+            }
+            if($groups!=null){
+                foreach($groups as $group){
+                    $group->delete();
+                }
+            }
+            $major->delete();
+            return response()->json([
+                'message'=> 'delete successfully'
+            ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
 
