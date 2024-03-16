@@ -6,23 +6,32 @@
       Term {{
       termName }}</h1>
   </div>
+
   <TabMenu :model="groupTabs" @tabChange="handleTabChange" />
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
         <table>
           <thead>
-            <tr>
+            <tr v-if="selectedTabId===null">
               <th class="time-header">Time</th>
               <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day.day }}</th>
             </tr>
+            <tr v-else>
+              <th class="time-header">Time</th>
+              <th v-for="day in days" colspan="1" class="day-header" :key="day">{{ day.day }}</th>
+            </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr v-if="selectedTabId===null">
               <td>8:15</td>
               <th :colspan="groups.length * days.length * 2" class="h-16 text-3xl">National Anthem</th>
             </tr>
-            <tr>
+            <tr v-else>
+              <td>8:15</td>
+              <th :colspan="days.length" class="h-16 text-3xl">National Anthem</th>
+            </tr>
+            <tr v-if="selectedTabId===null">
               <th rowspan="1" class="bg-green-200"></th>
               <template v-for="day in days" :key="day.id">
                 <template v-for="group in groups" :key="group.id">
@@ -31,9 +40,18 @@
                 </template>
               </template>
             </tr>
+            <tr v-else>
+              <th rowspan="1" class="bg-green-200"></th>
+              <template v-for="day in days" :key="day.id">
+                <!-- <template > -->
+                  <td class="bg-green-200">{{ groups.group_name }}
+                  </td>
+                <!-- </template> -->
+              </template>
+            </tr>
 
             <template v-for="(timeSlot, index) in timeSlots_start" :key="index">
-              <tr>
+              <tr v-if="selectedTabId===null">
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
                 <template v-for="day in days" :key="day.id">
                   <template v-for="group in groups" :key="group.id">
@@ -89,22 +107,86 @@
                   </template>
                 </template>
               </tr>
+              <tr v-else>
+                <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
+                <template v-for="day in days" :key="day.id">
+                    <td class="group-cell relative" >
+                      <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)">
+                        <template
+                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)" :key="schedule.id">
+                          <div class="schedule-info">
+                            <div class="flex">
+                              <button @click="showPopup(schedule)"
+                                class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
+                                <i class="fa-solid fa-ellipsis text-sm"></i>
+                              </button>
+                              <transition name="slide" appear>
+                                <div class="point" v-if="schedule.showPopup">
+                                  <div>
+                                    <div v-if="user.role === 'admin'" class="point-item bg-blue flex text-sm"
+                                      @click="showEditPopup(schedule)">
+                                      <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
+                                    </div>
+                                    <div v-if="user.role === 'admin'">
+                                      <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                      </div>
+                                    </div>
+                                    <div v-else>
+                                      <div v-if="schedule.course.teacher.id == courseteacher.teacher.id"
+                                        class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </transition>
+                              <!-- <p class="theory">{{ schedule.room.type }}</p> -->
+                              <p class="theory">{{ schedule.room?.type }}</p>
+                            </div>
+                            <p class="text-sm">{{ schedule.course.name }}</p>
+                            <p class="text-sm">{{ schedule.course.teacher.title }}. {{ schedule.course.teacher.f_name }}
+                              {{ schedule.course.teacher.l_name
+                              }}
+                            </p>
+                            <p class="room"> {{ schedule.room?.name }}</p>
+                          </div>
+                        </template>
+                      </div>
+                      <div v-else @click="popupforadd(day.id, groups.id, timeSlot.start, timeSlot.end)">
+                        <button class="button">
+                          <i class="fa-solid fa-circle-plus mr-2"></i>Add
+                        </button>
+                      </div>
+                    </td>
+
+                </template>
+              </tr>
 
               <template v-if="index == 0">
-                <tr>
+                <tr v-if="selectedTabId===null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
+                </tr>
+                <tr v-else>
+                  <td :colspan="days.length + 1" class="break-row">Break 15min</td>
                 </tr>
               </template>
 
               <template v-if="index == 1">
-                <tr>
+                <tr v-if="selectedTabId===null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Lunch Break 1h 15mns</td>
+                </tr>
+                <tr v-else>
+                  <td :colspan="days.length +1" class="break-row">Lunch Break 1h 15mns</td>
                 </tr>
               </template>
 
               <template v-if="index == 2">
-                <tr>
+                <tr v-if="selectedTabId===null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
+                </tr>
+                <tr v-else>
+                  <td :colspan="days.length +1" class="break-row">Break 15min</td>
                 </tr>
               </template>
             </template>
@@ -116,6 +198,8 @@
   <transition name="fade" appear>
     <div class="modal-overlay" v-if="popupTriggers.buttonTrigger"></div>
   </transition>
+
+
   <div>
     <!-- Add -->
     <transition name="slide" appear>
@@ -256,7 +340,8 @@ export default {
       rooms: [],
       selectedScheduleId: null,
       selectedDayId: null,
-      selectedGroupId: null,
+      selectedGroupId: 0,
+      groupSelected: [],
       selectedTimeStart: null,
       selectedTimeEnd: null,
       user: [],
@@ -264,8 +349,10 @@ export default {
       courseteachers: [],
       teacher: {},
       groupTabs:[
-                { label: 'All Group', icon: 'pi pi-book', group: null },
+                { label: 'All Group', icon: 'pi pi-book', groupID: null, group: null },
       ],
+      selectedTabId: null,
+
     }
   },
   mounted() {
@@ -308,6 +395,7 @@ export default {
                 this.groupTabs.push(...groups.map((group) => ({
                 label: group.group_name,
                 icon: 'pi pi-book',
+                groupID: group.id,
                 group,
                 })));
             }
@@ -342,6 +430,43 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    },
+    async handleTabChange(newTab){
+        const groupDataTab =  this.groupTabs[newTab.index]
+        this.selectedTabId= groupDataTab.groupID;
+        if(groupDataTab.groupID==null){
+            console.log('Çlicked All group')
+            this.groupSelected = null
+            console.log(this.groupSelected)
+            axios.get('groups').then(
+                res=>{
+                    this.groups = res.data.data
+                }
+            )
+
+        }else{
+            this.groupSelected = groupDataTab.group
+            this.groups = this.groupSelected
+
+
+        }
+
+
+        console.log('group after select', this.groups)
+        console.log('here is group id', this.selectedTabId);
+        this.schedules =[];
+        try{
+            const endpoint = this.selectedTabId === null
+            ? `schedule/${this.majorID}/${this.genID}/${this.termID}` // All schedules
+            : `schedule_group/${this.majorID}/${this.genID}/${this.termID}/${this.selectedTabId}`; // Schedules for selected group
+
+            const response = await axios.get(endpoint);
+            this.schedules = response.data.data;
+
+        }catch(error){
+            console.error(error)
+
+        }
     },
 
 
