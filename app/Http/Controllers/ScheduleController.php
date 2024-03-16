@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Validator;
@@ -48,6 +47,19 @@ class ScheduleController extends Controller
         $schedules = Schedule::where('major_id', $major_id)
             ->where('gen_id', $gen_id)
             ->where('term_id', $term_id)
+            ->with('term', 'day', 'course.teacher', 'group', 'room', 'generation', 'major')
+            ->get();
+
+        return response()->json([
+            'message' => 'Get Successfully',
+            'data' => $schedules
+        ]);
+    }
+    public function getSchedule_MGTG($major_id, $gen_id, $term_id, $group_id){
+        $schedules = Schedule::where('major_id', $major_id)
+            ->where('gen_id', $gen_id)
+            ->where('term_id', $term_id)
+            ->where('group_id', $group_id)
             ->with('term', 'day', 'course.teacher', 'group', 'room', 'generation', 'major')
             ->get();
 

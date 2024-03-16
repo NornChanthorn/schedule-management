@@ -227,7 +227,7 @@ export default{
             teachers: [],
             terms: [],
             majorTabs: [
-                { label: 'All Courses', icon: 'pi pi-book', major: null },
+                { label: 'All Courses', icon: 'pi pi-book',majorId:null,  major: null },
             ],
             selectedMajor: null,
             filteredCourses: [],
@@ -287,7 +287,6 @@ export default{
                 res=>{
                     this.generations = res.data
                 }
-
             )
         },
         async getTeachers(){
@@ -321,6 +320,7 @@ export default{
                 this.majorTabs.push(...this.majors.map((major) => ({
                 label: major.name,
                 icon: 'pi pi-book',
+                majorId: major.id,
                 major,
                 })));
             } catch (error) {
@@ -329,6 +329,7 @@ export default{
         },
         async handleTabChange(newTab) {
             this.selectedTabId = newTab.index;
+            console.log(newTab);
             this.tableData = [];
             try {
                 const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${this.selectedTabId}` : `courses`); // Adjust for your API endpoint
@@ -346,7 +347,7 @@ export default{
                     genName
                 };
                 });
-                this.tableData = coursesWithTermNames;
+                // this.tableData = coursesWithTermNames;
 
                 this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
             } catch (error) {

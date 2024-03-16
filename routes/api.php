@@ -56,6 +56,7 @@ Route::get('/schedules', [ScheduleController::class, 'get']);
 Route::get('/schedule/{term_id}', [ScheduleController::class, 'getScheduleByTermId']);
 Route::get('/teacher_schedule/{teacher_id}', [ScheduleController::class, 'getSchedule_Teacher']);
 Route::get('/schedule/{major}/{gen}/{term}', [ScheduleController::class, 'getSchedule_MGT']);
+Route::get('/schedule_group/{major}/{gen}/{term}/{group}', [ScheduleController::class, 'getSchedule_MGTG']);
 Route::post('/schedule',[ScheduleController::class, 'store'] );
 Route::put('/schedule/{id}',[ScheduleController::class, 'update'] );
 Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );

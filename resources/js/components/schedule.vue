@@ -6,6 +6,7 @@
       Term {{
       termName }}</h1>
   </div>
+  <TabMenu :model="groupTabs" @tabChange="handleTabChange" />
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
@@ -23,8 +24,8 @@
             </tr>
             <tr>
               <th rowspan="1" class="bg-green-200"></th>
-              <template v-for="day in days">
-                <template v-for="group in groups">
+              <template v-for="day in days" :key="day.id">
+                <template v-for="group in groups" :key="group.id">
                   <td class="bg-green-200">{{ group.group_name }}
                   </td>
                 </template>
@@ -34,12 +35,12 @@
             <template v-for="(timeSlot, index) in timeSlots_start" :key="index">
               <tr>
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
-                <template v-for="day in days">
-                  <template v-for="group in groups">
-                    <td class="group-cell relative">
+                <template v-for="day in days" :key="day.id">
+                  <template v-for="group in groups" :key="group.id">
+                    <td class="group-cell relative" >
                       <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                         <template
-                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
+                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)" :key="schedule.id">
                           <div class="schedule-info">
                             <div class="flex">
                               <button @click="showPopup(schedule)"
@@ -135,22 +136,24 @@
           </div>
           <div>
             <div v-if="user.role === 'admin'" class="mb-4">
-              <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
-              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
-                <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
+              <label for="course_id" class="block text-sm font-medium text-gray-600">Choose Course</label>
+              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full outline-none focus:outline-blue-300"  placeholder="Choose course">
+                <option value="" disabled >Choose Course  </option>
+                <option v-for="course in courses" :key="course.id" :value="course.id">{{ course.name }}</option>
               </select>
             </div>
             <div v-else class="mb-4">
               <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
-              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full">
-                <option v-for="course in courseteachers" :value="course.id">{{ course.name }}</option>
+              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300" >
+                <option v-for="course in courseteachers" :value="course.id" :key="course.id">{{ course.name }}</option>
               </select>
             </div>
           </div>
           <div v-if="user.role === 'admin'" class="mb-4">
-            <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
-            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
+            <label for="room_id" class="block text-sm font-medium text-gray-600">Choose Room</label>
+            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
+                <option value="" disabled >Choose Room  </option>
+              <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
             </select>
           </div>
           <div class="flex justify-end">
@@ -182,13 +185,13 @@
           <div class="mb-4">
             <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
             <select v-model="editschedule.course_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="course in courses" :value="course.id">{{ course.name }}</option>
+              <option v-for="course in courses" :value="course.id" :key="course.id">{{ course.name }}</option>
             </select>
           </div>
           <div class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
             <select v-model="editschedule.room_id" class="mt-1 p-2 border rounded-md w-full">
-              <option v-for="room in rooms" :value="room.id">{{ room.name }}</option>
+              <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
             </select>
           </div>
           <div class="flex justify-end">
@@ -205,6 +208,7 @@
 <script>
 import { ref } from 'vue';
 import axios from 'axios';
+import room from './room.vue';
 
 export default {
   data() {
@@ -259,6 +263,9 @@ export default {
       courseteacher: [],
       courseteachers: [],
       teacher: {},
+      groupTabs:[
+                { label: 'All Group', icon: 'pi pi-book', group: null },
+      ],
     }
   },
   mounted() {
@@ -276,8 +283,8 @@ export default {
     this.getRooms();
     this.userInfo();
     this.CourseTeacherInfo();
-
     this.fetchTeacherInfo();
+    this.getGroupName();
   },
   created() {
     this.getDaysOfWeek(); // Fetch days of the week
@@ -293,7 +300,22 @@ export default {
           console.error(error);
         });
     },
+    getGroupName(){
+        axios.get('groups').then(
+            res=>{
+                const groups = res.data.data
+                console.log(groups)
+                this.groupTabs.push(...groups.map((group) => ({
+                label: group.group_name,
+                icon: 'pi pi-book',
+                group,
+                })));
+            }
+        ).catch(e=>{
+            console.error(e);
+        })
 
+    },
     popupforadd(dayID, groupID, time_start, time_end) {
       this.selectedDayId = dayID;
       this.selectedGroupId = groupID;
@@ -364,18 +386,14 @@ export default {
     },
 
     showPopup(schedule) {
-      // Toggle the showPopup property of the clicked schedule
       schedule.showPopup = !schedule.showPopup;
-
-      // Close other popups
       this.schedules.forEach(s => {
         if (s.id !== schedule.id) {
           s.showPopup = false;
         }
       });
     },
-
-    deleteSchedule(scheduleId) {
+    deleteSchedule(scheduleId){
       if (scheduleId !== null) {
         axios.delete(`schedule/${scheduleId}`)
           .then(response => {
