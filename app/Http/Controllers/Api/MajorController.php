@@ -9,6 +9,7 @@ use App\Models\Major;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\Group;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class MajorController extends Controller
