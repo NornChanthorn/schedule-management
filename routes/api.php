@@ -61,7 +61,7 @@ Route::put('/schedule/{id}',[ScheduleController::class, 'update'] );
 Route::delete('/schedule/{id}',[ScheduleController::class, 'delete'] );
 Route::get('/courses/{courseId}/schedules', [CourseController::class, 'getSchedulesByCourse']);
 Route::get('/course/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByMGT']);
-Route::get('courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor']);
+Route::get('/courseMajor/{majorId}', [CourseController::class, 'getCourseByMajor']);
 Route::get('course_teacher/{id}', [CourseController::class, 'getCourse_Teacher']);
 Route::get('teacher_user/{id}', [TeacherController::class, 'getteacherbyuserid']);
 Route::get('/course/{teacherid}/{majorId}/{genId}/{termId}', [CourseController::class, 'getCourseByTMGT']);

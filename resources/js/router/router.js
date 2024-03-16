@@ -104,7 +104,7 @@ const routes=[
                 name: 'student'
             },
             {
-                path: '/teacher',
+                path: '/teachers',
                 component: Teacher,
                 name: 'Teacher'
             },
