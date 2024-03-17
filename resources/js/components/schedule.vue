@@ -2,12 +2,15 @@
   <Toast />
 
   <div class="flex items-center mb-4 ml-4">
-    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName?.name }}, Generation {{ GenName }},
+    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ MajorName}}, Generation {{ GenName }},
       Term {{
       termName }}</h1>
   </div>
+  <div >
+       <!-- <p>{{  filteredAvailableRooms}}</p> -->
+  </div>
 
-  <TabMenu :model="groupTabs" @tabChange="handleTabChange" />
+  <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" ml-4"/>
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
@@ -235,9 +238,13 @@
           </div>
           <div v-if="user.role === 'admin'" class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose Room</label>
-            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
+            <select v-model="newSchedule.room_id" @change="checkAvailability" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
                 <option value="" disabled >Choose Room  </option>
-              <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
+              <!-- <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option> -->
+                <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }} ({{ room.type }})</option>
+                <template v-if="isRoomUnavailable">
+      <p class="text-red-500">Selected room is unavailable for this time and day.</p>
+    </template>
             </select>
           </div>
           <div class="flex justify-end">
@@ -352,6 +359,7 @@ export default {
                 { label: 'All Group', icon: 'pi pi-book', groupID: null, group: null },
       ],
       selectedTabId: null,
+      allSchedule: []
 
     }
   },
@@ -359,7 +367,7 @@ export default {
     this.termID = this.$route.params.termId;
     this.genID = this.$route.params.genid;
     this.majorID = this.$route.params.majorId;
-    // this.majorName = this.$route.params.name;
+    this.MajorName = this.$route.params.name;
     this.getTermID(this.termID);
     this.getMajorID();
     this.getGenerationID(this.genID);
@@ -372,6 +380,30 @@ export default {
     this.CourseTeacherInfo();
     this.fetchTeacherInfo();
     this.getGroupName();
+    this.getAllSchedule();
+  },
+  computed: {
+    // filteredAvailableRooms() {
+    //     console.log('selectedDayId:', this.selectedDayId); // Log for debugging
+    //     console.log('selectedTimeStart:', this.selectedTimeStart);
+    //     if (!this.selectedDayId || !this.selectedTimeStart) return this.rooms; // Return all rooms initially or if data is missing
+    //     return this.rooms.filter(room => {
+    //     return !this.allSchedule.some(schedule => {
+    //         return schedule.day_id === this.selectedDayId &&
+    //             schedule.time_start === this.selectedTimeStart &&
+    //             schedule.room_id === room.id;
+    //     });
+    //     });
+    // },
+    isRoomUnavailable() {
+    if (!this.newSchedule.room_id || !this.selectedDayId || !this.selectedTimeStart) return false; // Handle cases where data is missing
+        return this.allSchedule.some(schedule => {
+        return schedule.day_id === this.selectedDayId &&
+                schedule.time_start === this.selectedTimeStart &&
+                schedule.room_id === this.newSchedule.room_id;
+        });
+    }
+
   },
   created() {
     this.getDaysOfWeek(); // Fetch days of the week
@@ -388,7 +420,7 @@ export default {
         });
     },
     getGroupName(){
-        axios.get('groups').then(
+        axios.get(`groups/${this.genID}/${this.majorID}`).then(
             res=>{
                 const groups = res.data.data
                 console.log(groups)
@@ -402,6 +434,15 @@ export default {
         ).catch(e=>{
             console.error(e);
         })
+
+    },
+    getAllSchedule(){
+      axios.get('schedules').then(
+        res=>{
+          this.allSchedule = res.data.data
+          console.log(this.allSchedule);
+        }
+      )
 
     },
     popupforadd(dayID, groupID, time_start, time_end) {
@@ -420,6 +461,16 @@ export default {
       this.newSchedule.time_start = this.selectedTimeStart;
       this.newSchedule.time_end = this.selectedTimeEnd;
 
+      if (this.isRoomUnavailable) {
+            // Handle conflict: Display a warning message or other appropriate action
+            this.$toast.add({
+            severity: 'error',
+            summary: 'Conflict',
+            detail: 'Selected room is unavailable for the chosen time and day.',
+            life: 3000
+            });
+            return; // Prevent scheduling a conflicting event
+        }
       axios.post('schedule', this.newSchedule)
         .then(response => {
           console.log(response.data);
@@ -443,15 +494,10 @@ export default {
                     this.groups = res.data.data
                 }
             )
-
         }else{
             this.groupSelected = groupDataTab.group
             this.groups = this.groupSelected
-
-
         }
-
-
         console.log('group after select', this.groups)
         console.log('here is group id', this.selectedTabId);
         this.schedules =[];
