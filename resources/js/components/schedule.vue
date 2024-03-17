@@ -8,12 +8,15 @@
   </div>
 
   <TabMenu :model="groupTabs" @tabChange="handleTabChange" />
+  <div>
+    <button @click="printPDF">Print PDF</button>
+  </div>
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
         <table>
           <thead>
-            <tr v-if="selectedTabId===null">
+            <tr v-if="selectedTabId === null">
               <th class="time-header">Time</th>
               <th v-for="day in days" :colspan="groups.length" class="day-header" :key="day">{{ day.day }}</th>
             </tr>
@@ -23,7 +26,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="selectedTabId===null">
+            <tr v-if="selectedTabId === null">
               <td>8:15</td>
               <th :colspan="groups.length * days.length * 2" class="h-16 text-3xl">National Anthem</th>
             </tr>
@@ -31,7 +34,7 @@
               <td>8:15</td>
               <th :colspan="days.length" class="h-16 text-3xl">National Anthem</th>
             </tr>
-            <tr v-if="selectedTabId===null">
+            <tr v-if="selectedTabId === null">
               <th rowspan="1" class="bg-green-200"></th>
               <template v-for="day in days" :key="day.id">
                 <template v-for="group in groups" :key="group.id">
@@ -44,21 +47,22 @@
               <th rowspan="1" class="bg-green-200"></th>
               <template v-for="day in days" :key="day.id">
                 <!-- <template > -->
-                  <td class="bg-green-200">{{ groups.group_name }}
-                  </td>
+                <td class="bg-green-200">{{ groups.group_name }}
+                </td>
                 <!-- </template> -->
               </template>
             </tr>
 
             <template v-for="(timeSlot, index) in timeSlots_start" :key="index">
-              <tr v-if="selectedTabId===null">
+              <tr v-if="selectedTabId === null">
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
                 <template v-for="day in days" :key="day.id">
                   <template v-for="group in groups" :key="group.id">
-                    <td class="group-cell relative" >
+                    <td class="group-cell relative">
                       <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)">
                         <template
-                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)" :key="schedule.id">
+                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, group.group_name)"
+                          :key="schedule.id">
                           <div class="schedule-info">
                             <div class="flex">
                               <button @click="showPopup(schedule)"
@@ -110,61 +114,62 @@
               <tr v-else>
                 <td style="width: 120px">{{ timeSlot.start }} - {{ timeSlot.end }}</td>
                 <template v-for="day in days" :key="day.id">
-                    <td class="group-cell relative" >
-                      <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)">
-                        <template
-                          v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)" :key="schedule.id">
-                          <div class="schedule-info">
-                            <div class="flex">
-                              <button @click="showPopup(schedule)"
-                                class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
-                                <i class="fa-solid fa-ellipsis text-sm"></i>
-                              </button>
-                              <transition name="slide" appear>
-                                <div class="point" v-if="schedule.showPopup">
-                                  <div>
-                                    <div v-if="user.role === 'admin'" class="point-item bg-blue flex text-sm"
-                                      @click="showEditPopup(schedule)">
-                                      <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
+                  <td class="group-cell relative">
+                    <div v-if="hasMatchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)">
+                      <template
+                        v-for="schedule in matchingSchedules(timeSlot.start, timeSlot.end, day.day, groups.group_name)"
+                        :key="schedule.id">
+                        <div class="schedule-info">
+                          <div class="flex">
+                            <button @click="showPopup(schedule)"
+                              class="button_point relative rounded-full hover:bg-gray-200 transition-all duration-300 focus:outline-none w-6 h-6">
+                              <i class="fa-solid fa-ellipsis text-sm"></i>
+                            </button>
+                            <transition name="slide" appear>
+                              <div class="point" v-if="schedule.showPopup">
+                                <div>
+                                  <div v-if="user.role === 'admin'" class="point-item bg-blue flex text-sm"
+                                    @click="showEditPopup(schedule)">
+                                    <i class="fas fa-edit text-white text-sm mr-2"></i> Edit
+                                  </div>
+                                  <div v-if="user.role === 'admin'">
+                                    <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                      <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
                                     </div>
-                                    <div v-if="user.role === 'admin'">
-                                      <div class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
-                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
-                                      </div>
-                                    </div>
-                                    <div v-else>
-                                      <div v-if="schedule.course.teacher.id == courseteacher.teacher.id"
-                                        class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
-                                        <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
-                                      </div>
+                                  </div>
+                                  <div v-else>
+                                    <div v-if="schedule.course.teacher.id == courseteacher.teacher.id"
+                                      class="point-item bg-red flex text-sm" @click="deleteSchedule(schedule.id)">
+                                      <i class="fas fa-trash-alt text-white text-sm mr-2"></i> Remove
                                     </div>
                                   </div>
                                 </div>
-                              </transition>
-                              <!-- <p class="theory">{{ schedule.room.type }}</p> -->
-                              <p class="theory">{{ schedule.room?.type }}</p>
-                            </div>
-                            <p class="text-sm">{{ schedule.course.name }}</p>
-                            <p class="text-sm">{{ schedule.course.teacher.title }}. {{ schedule.course.teacher.f_name }}
-                              {{ schedule.course.teacher.l_name
-                              }}
-                            </p>
-                            <p class="room"> {{ schedule.room?.name }}</p>
+                              </div>
+                            </transition>
+                            <!-- <p class="theory">{{ schedule.room.type }}</p> -->
+                            <p class="theory">{{ schedule.room?.type }}</p>
                           </div>
-                        </template>
-                      </div>
-                      <div v-else @click="popupforadd(day.id, groups.id, timeSlot.start, timeSlot.end)">
-                        <button class="button">
-                          <i class="fa-solid fa-circle-plus mr-2"></i>Add
-                        </button>
-                      </div>
-                    </td>
+                          <p class="text-sm">{{ schedule.course.name }}</p>
+                          <p class="text-sm">{{ schedule.course.teacher.title }}. {{ schedule.course.teacher.f_name }}
+                            {{ schedule.course.teacher.l_name
+                            }}
+                          </p>
+                          <p class="room"> {{ schedule.room?.name }}</p>
+                        </div>
+                      </template>
+                    </div>
+                    <div v-else @click="popupforadd(day.id, groups.id, timeSlot.start, timeSlot.end)">
+                      <button class="button">
+                        <i class="fa-solid fa-circle-plus mr-2"></i>Add
+                      </button>
+                    </div>
+                  </td>
 
                 </template>
               </tr>
 
               <template v-if="index == 0">
-                <tr v-if="selectedTabId===null">
+                <tr v-if="selectedTabId === null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
                 </tr>
                 <tr v-else>
@@ -173,20 +178,20 @@
               </template>
 
               <template v-if="index == 1">
-                <tr v-if="selectedTabId===null">
+                <tr v-if="selectedTabId === null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Lunch Break 1h 15mns</td>
                 </tr>
                 <tr v-else>
-                  <td :colspan="days.length +1" class="break-row">Lunch Break 1h 15mns</td>
+                  <td :colspan="days.length + 1" class="break-row">Lunch Break 1h 15mns</td>
                 </tr>
               </template>
 
               <template v-if="index == 2">
-                <tr v-if="selectedTabId===null">
+                <tr v-if="selectedTabId === null">
                   <td :colspan="groups.length * days.length * 2" class="break-row">Break 15min</td>
                 </tr>
                 <tr v-else>
-                  <td :colspan="days.length +1" class="break-row">Break 15min</td>
+                  <td :colspan="days.length + 1" class="break-row">Break 15min</td>
                 </tr>
               </template>
             </template>
@@ -221,22 +226,26 @@
           <div>
             <div v-if="user.role === 'admin'" class="mb-4">
               <label for="course_id" class="block text-sm font-medium text-gray-600">Choose Course</label>
-              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full outline-none focus:outline-blue-300"  placeholder="Choose course">
-                <option value="" disabled >Choose Course  </option>
+              <select v-model="newSchedule.course_id"
+                class="mt-1 p-2 border rounded-md w-full outline-none focus:outline-blue-300"
+                placeholder="Choose course">
+                <option value="" disabled>Choose Course </option>
                 <option v-for="course in courses" :key="course.id" :value="course.id">{{ course.name }}</option>
               </select>
             </div>
             <div v-else class="mb-4">
               <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
-              <select v-model="newSchedule.course_id" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300" >
+              <select v-model="newSchedule.course_id"
+                class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
                 <option v-for="course in courseteachers" :value="course.id" :key="course.id">{{ course.name }}</option>
               </select>
             </div>
           </div>
           <div v-if="user.role === 'admin'" class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose Room</label>
-            <select v-model="newSchedule.room_id" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
-                <option value="" disabled >Choose Room  </option>
+            <select v-model="newSchedule.room_id"
+              class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
+              <option value="" disabled>Choose Room </option>
               <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
             </select>
           </div>
@@ -293,8 +302,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import room from './room.vue';
+import jsPDF from 'jspdf'
 
 export default {
+  name: 'PdfComponent',
   data() {
     return {
       timeSlots_start: [
@@ -348,8 +359,8 @@ export default {
       courseteacher: [],
       courseteachers: [],
       teacher: {},
-      groupTabs:[
-                { label: 'All Group', icon: 'pi pi-book', groupID: null, group: null },
+      groupTabs: [
+        { label: 'All Group', icon: 'pi pi-book', groupID: null, group: null },
       ],
       selectedTabId: null,
 
@@ -377,6 +388,94 @@ export default {
     this.getDaysOfWeek(); // Fetch days of the week
   },
   methods: {
+    printPDF() {
+      let content = `
+    <div class="schedule-container p-4" style="width: 100%">
+      <div class="schedule">
+        <div class="table-container">
+          <table style="border-collapse: collapse; width: 100%;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" class="time-header">Time</th>
+                ${this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="${this.groups.length}" :key="day.id" class="day-header">${day.day}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="time-slot">8:15</td>
+                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;"colspan="${this.groups.length * this.days.length * 2}" class="h-16 text-3xl">National Anthem</th>
+              </tr>
+              <tr>
+                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" rowspan="1" class="bg-green-200"></th>
+                ${this.days.map(day => `
+                  ${this.groups.map(group => `
+                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="bg-green-200">${group.group_name}</td>
+                  `).join('')}
+                `).join('')}
+              </tr>
+              ${this.timeSlots_start.map((timeSlot, index) => `
+                <tr>
+                  <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
+                  ${this.days.map(day => `
+                    ${this.groups.map(group => `
+                      <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 250px; height: 80px;" class="group-cell relative">
+                        ${this.schedules.filter(schedule =>
+                            schedule.time_start <= timeSlot.end &&
+                            schedule.time_end >= timeSlot.start &&
+                            schedule.day.day === day.day &&
+                            schedule.group.group_name === group.group_name
+                          ).map(schedule => `
+                          <div class="schedule-info" style="display: flex; flex-direction: column">
+                            <div class="flex">
+                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room.type}</p>
+                            </div>
+                            <p class="text-sm">${schedule.course.name}</p>
+                            <p class="text-sm">${schedule.course.teacher.title}. ${schedule.course.teacher.f_name} ${schedule.course.teacher.l_name}</p>
+                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room.name}</p>
+                          </div>
+                        `).join('')}
+                      </td>
+                    `).join('')}
+                  `).join('')}
+                </tr>
+                ${index === 0 ? `
+                  <tr>
+                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>
+                  </tr>
+                ` : ''}
+                ${index === 1 ? `
+                  <tr>
+                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Lunch Break 1h 15mns</td>
+                  </tr>
+                ` : ''}
+                ${index === 2 ? `
+                  <tr>
+                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>
+                  </tr>
+                ` : ''}
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+      // Calculate the width of the table in pixels
+      const tempContainer = document.createElement('div');
+      tempContainer.innerHTML = content;
+      document.body.appendChild(tempContainer);
+      const tableWidth = tempContainer.querySelector('table').offsetWidth;
+      document.body.removeChild(tempContainer);
+
+      // Set the A1 paper size based on the table width
+      const pdf = new jsPDF('l', 'pt', [841, tableWidth]);
+      pdf.html(content, {
+        callback: function () {
+          pdf.save('schedule.pdf');
+        }
+      });
+    },
     getSchedulesByTerm(termId, genId, majorId) {
       axios.get(`schedule/${majorId}/${genId}/${termId}`)
         .then(response => {
@@ -387,21 +486,21 @@ export default {
           console.error(error);
         });
     },
-    getGroupName(){
-        axios.get('groups').then(
-            res=>{
-                const groups = res.data.data
-                console.log(groups)
-                this.groupTabs.push(...groups.map((group) => ({
-                label: group.group_name,
-                icon: 'pi pi-book',
-                groupID: group.id,
-                group,
-                })));
-            }
-        ).catch(e=>{
-            console.error(e);
-        })
+    getGroupName() {
+      axios.get('groups').then(
+        res => {
+          const groups = res.data.data
+          console.log(groups)
+          this.groupTabs.push(...groups.map((group) => ({
+            label: group.group_name,
+            icon: 'pi pi-book',
+            groupID: group.id,
+            group,
+          })));
+        }
+      ).catch(e => {
+        console.error(e);
+      })
 
     },
     popupforadd(dayID, groupID, time_start, time_end) {
@@ -431,42 +530,42 @@ export default {
           console.error(error);
         });
     },
-    async handleTabChange(newTab){
-        const groupDataTab =  this.groupTabs[newTab.index]
-        this.selectedTabId= groupDataTab.groupID;
-        if(groupDataTab.groupID==null){
-            console.log('Çlicked All group')
-            this.groupSelected = null
-            console.log(this.groupSelected)
-            axios.get('groups').then(
-                res=>{
-                    this.groups = res.data.data
-                }
-            )
+    async handleTabChange(newTab) {
+      const groupDataTab = this.groupTabs[newTab.index]
+      this.selectedTabId = groupDataTab.groupID;
+      if (groupDataTab.groupID == null) {
+        console.log('Çlicked All group')
+        this.groupSelected = null
+        console.log(this.groupSelected)
+        axios.get('groups').then(
+          res => {
+            this.groups = res.data.data
+          }
+        )
 
-        }else{
-            this.groupSelected = groupDataTab.group
-            this.groups = this.groupSelected
-
-
-        }
+      } else {
+        this.groupSelected = groupDataTab.group
+        this.groups = this.groupSelected
 
 
-        console.log('group after select', this.groups)
-        console.log('here is group id', this.selectedTabId);
-        this.schedules =[];
-        try{
-            const endpoint = this.selectedTabId === null
-            ? `schedule/${this.majorID}/${this.genID}/${this.termID}` // All schedules
-            : `schedule_group/${this.majorID}/${this.genID}/${this.termID}/${this.selectedTabId}`; // Schedules for selected group
+      }
 
-            const response = await axios.get(endpoint);
-            this.schedules = response.data.data;
 
-        }catch(error){
-            console.error(error)
+      console.log('group after select', this.groups)
+      console.log('here is group id', this.selectedTabId);
+      this.schedules = [];
+      try {
+        const endpoint = this.selectedTabId === null
+          ? `schedule/${this.majorID}/${this.genID}/${this.termID}` // All schedules
+          : `schedule_group/${this.majorID}/${this.genID}/${this.termID}/${this.selectedTabId}`; // Schedules for selected group
 
-        }
+        const response = await axios.get(endpoint);
+        this.schedules = response.data.data;
+
+      } catch (error) {
+        console.error(error)
+
+      }
     },
 
 
@@ -518,7 +617,7 @@ export default {
         }
       });
     },
-    deleteSchedule(scheduleId){
+    deleteSchedule(scheduleId) {
       if (scheduleId !== null) {
         axios.delete(`schedule/${scheduleId}`)
           .then(response => {
