@@ -113,6 +113,9 @@
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                             <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Enter Email">
                         </div>
+                        <div v-if="error" class=" text-red-500 text-sm">
+                            {{ error }}
+                        </div>
                         <div class="flex justify-between mb-2 ">
                             <div class="w-[48%]">
                               <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
@@ -220,6 +223,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="flex items-center justify-end mt-4 gap-x-2">
                             <button @click="editModal = false" type="button"
                                 class="w-32 py-2  bg-gray-500 text-white border-2 hover:bg-gray-600">Cancel</button>
@@ -288,6 +292,7 @@ export default {
         isLoading: false,
         errorMessage: null,
         studentData: [],
+        error: null
     };
   },
   mounted() {
@@ -405,7 +410,13 @@ export default {
             this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
         })
         .catch(error => {
-          console.error('Error creating post:', error);
+            if (error.response && error.response.status === 422) {
+                console.log('Error:', error.response.data.message);
+                this.error = error.response.data.errors.email[0]
+                // Handle specific validation errors if present (optional)
+            } else {
+                console.log('Unexpected error:', error);
+            }
           // Handle error, maybe show an error message
         });
     },
@@ -431,7 +442,12 @@ export default {
           this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
         })
         .catch(error => {
-          console.error('Error updating post:', error);
+            if (error.response && error.response.status === 422) {
+                console.log('Error:', error.response.data.message);
+                // Handle specific validation errors if present (optional)
+            } else {
+                console.log('Unexpected error:', error);
+            }
         });
     },
     confirmDelete(prod){
