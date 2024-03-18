@@ -23,13 +23,13 @@ class TeacherController extends Controller
 
     public function getteacherbyuserid($user_id)
     {
-        $data = Teacher::whereHas('user', function($query) use ($user_id){
+        $data = Teacher::whereHas('user', function ($query) use ($user_id) {
             $query->where('id', $user_id);
         })->with('user')->get();
 
         return response()->json([
             'message' => 'Successfull',
-            'data'=> $data
+            'data' => $data
         ]);
     }
 
@@ -80,29 +80,33 @@ class TeacherController extends Controller
             'gender' => 'required',
             'dob' => 'required',
             'phone_num' => 'required',
-            'email' => 'nullable|email|unique:users,email,'.$teacher->user->id, // Optional with unique validation
+            'email' => 'required|email|unique:users,email,' . $teacher->user->id,
         ]);
 
         // Update teacher data
         $teacher->update($validatedData);
 
-        // Update user name (if f_name or l_name is changed)
+        // Update user email and name (if f_name, l_name, or email is changed)
         $teacher->user->update([
             'name' => $validatedData['f_name'] . ' ' . $validatedData['l_name'],
+            'email' => $validatedData['email'],
         ]);
 
-        return response()->json(['message' => 'Teacher and user updated successfully.', 'teacher' => $teacher->fresh()]); // Return updated teacher data (optional)
+        return response()->json(['message' => 'Teacher and user updated successfully.', 'teacher' => $teacher->fresh()]);
     }
+
 
     public function destroy($id)
     {
         try {
             $teacher = Teacher::findOrFail($id);
+            $user_id = $teacher->user_id;
+
             $courses = Course::where('teacher_id', $id)->get();
-            if($courses!=null){
-                foreach ($courses as $course){
+            if ($courses != null) {
+                foreach ($courses as $course) {
                     $schedules = Schedule::where('course_id', $course->id)->get();
-                    if($schedules!=null){
+                    if ($schedules != null) {
                         foreach ($schedules as $schedule) {
                             $schedule->delete();
                         }
@@ -110,7 +114,12 @@ class TeacherController extends Controller
                     $course->delete();
                 }
             }
+
             $teacher->delete();
+
+            // Delete the associated user
+            User::destroy($user_id);
+
             return response()->json([
                 'message' => 'delete success'
             ]);

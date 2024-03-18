@@ -57,42 +57,53 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $student = Student::find($id);
-
+    
         if (!$student) {
             return response()->json(['message' => 'Student not found'], 404);
         }
-
+    
         $validator = Validator::make($request->all(), [
             'f_name' => 'required',
             'l_name' => 'required',
             'student_id' => 'required',
             'gender' => 'required',
             'dob' => 'required',
-            'user_id' => 'required',
             'generation_id' => 'required',
             'group_id' => 'required',
-            'major_id' => 'required'
+            'major_id' => 'required',
+            'email' => 'required|email|unique:users,email,'.$student->user->id,
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
         $student->update($validator->validated());
+    
+        // Update user email and name (if f_name, l_name, or email is changed)
+        $student->user->update([
+            'name' => $request->f_name . ' ' . $request->l_name,
+            'email' => $request->email,
+        ]);
+    
         return response()->json(['message' => 'Updated successfully', 'data' => $student]);
     }
-
+    
     public function destroy($id)
     {
         $student = Student::find($id);
-
+    
         if (!$student) {
             return response()->json(['message' => 'Student not found'], 404);
         }
-
+    
+        $user = $student->user;
         $student->delete();
+        $user->delete();
+    
         return response()->json(['message' => 'Deleted successfully']);
     }
+    
     public function getStudentByMajor($majorId){
         $data = Student::where('major_id', $majorId)->with('major', 'generation', 'group')->get();
         return response()->json($data);
