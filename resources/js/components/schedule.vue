@@ -2,7 +2,7 @@
   <Toast />
 
   <div class="flex items-center mb-4 ml-4">
-    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ MajorName}}, Generation {{ GenName }},
+    <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName.name}}, Generation {{ GenName }},
       Term {{
       termName }}</h1>
   </div>
@@ -332,7 +332,7 @@ export default {
       majorID: null,
       termName: null,
       GenName: null,
-      majorName: null,
+      majorName: [],
       newSchedule: {
         time_start: '',
         time_end: '',
@@ -380,9 +380,9 @@ export default {
     this.termID = this.$route.params.termId;
     this.genID = this.$route.params.genid;
     this.majorID = this.$route.params.majorId;
-    this.MajorName = this.$route.params.name;
+    // this.MajorName = this.$route.params.name;
     this.getTermID(this.termID);
-    this.getMajorID();
+    this.getMajorID(this.majorID);
     this.getGenerationID(this.genID);
     this.getDaysOfWeek(); // Fetch days of the week
     this.getGroups(this.majorID, this.genID); // Fetch groups
@@ -431,25 +431,39 @@ export default {
             <thead>
               <tr>
                 <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" class="time-header">Time</th>
-                ${this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="${this.groups.length}" :key="day.id" class="day-header">${day.day}</th>`).join('')}
+                ${this.selectedTabId === null
+                ? this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="${this.groups.length}" :key="day.id" class="day-header">${day.day}</th>`).join('')
+                : this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="1" class="day-header" :key="day.id">${day.day}</th>`).join('')
+                }
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="time-slot">8:15</td>
-                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;"colspan="${this.groups.length * this.days.length * 2}" class="h-16 text-3xl">National Anthem</th>
+                ${this.selectedTabId === null
+                ? `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;" colspan="${this.groups.length * this.days.length * 2}" class="h-16 text-3xl">National Anthem</th>`
+                : `<th tyle="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;" colspan="${this.days.length}" class="h-16 text-3xl">National Anthem</th>`
+                }
               </tr>
               <tr>
-                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" rowspan="1" class="bg-green-200"></th>
+                ${this.selectedTabId === null
+                ? `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" rowspan="1" class="bg-green-200"></th>
                 ${this.days.map(day => `
                   ${this.groups.map(group => `
                     <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="bg-green-200">${group.group_name}</td>
                   `).join('')}
-                `).join('')}
+                `).join('')}`
+                : `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" rowspan="1" class="bg-green-200"></th>
+                ${this.days.map(day => `
+                  <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="bg-green-200">${ this.groups.group_name }
+                  </td>
+                `).join('')}`
+                }
               </tr>
               ${this.timeSlots_start.map((timeSlot, index) => `
                 <tr>
-                  <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
+                  ${this.selectedTabId === null
+                  ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
                   ${this.days.map(day => `
                     ${this.groups.map(group => `
                       <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 250px; height: 80px;" class="group-cell relative">
@@ -470,21 +484,51 @@ export default {
                         `).join('')}
                       </td>
                     `).join('')}
-                  `).join('')}
+                  `).join('')}`
+                  : `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
+                  ${this.days.map(day => `
+                      <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 250px; height: 80px;" class="group-cell relative">
+                        ${this.schedules.filter(schedule =>
+                            schedule.time_start <= timeSlot.end &&
+                            schedule.time_end >= timeSlot.start &&
+                            schedule.day.day === day.day &&
+                            schedule.group.group_name === this.groups.group_name
+                          ).map(schedule => `
+                          <div class="schedule-info" style="display: flex; flex-direction: column">
+                            <div class="flex">
+                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room.type}</p>
+                            </div>
+                            <p class="text-sm">${schedule.course.name}</p>
+                            <p class="text-sm">${schedule.course.teacher.title}. ${schedule.course.teacher.f_name} ${schedule.course.teacher.l_name}</p>
+                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room.name}</p>
+                          </div>
+                        `).join('')}
+                      </td>
+                  `).join('')}`
+                  }
                 </tr>
                 ${index === 0 ? `
                   <tr>
-                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>
+                    ${this.selectedTabId === null
+                    ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>`
+                    : `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.days.length + 1}" class="break-row">Break 15min</td>`
+                    }
                   </tr>
                 ` : ''}
                 ${index === 1 ? `
                   <tr>
-                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Lunch Break 1h 15mns</td>
+                    ${this.selectedTabId === null
+                    ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Lunch Break 1h 15mns</td>`
+                    : `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.days.length + 1}" class="break-row">Lunch Break 1h 15mns</td>`
+                    }
                   </tr>
                 ` : ''}
                 ${index === 2 ? `
                   <tr>
-                    <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>
+                    ${this.selectedTabId === null
+                    ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.groups.length * this.days.length * 2}" class="break-row">Break 15min</td>`
+                    : `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; height:10px; background:#FFA500; color:white;" colspan="${this.days.length + 1}" class="break-row">Break 15min</td>`
+                    }
                   </tr>
                 ` : ''}
               `).join('')}
@@ -503,7 +547,7 @@ export default {
       document.body.removeChild(tempContainer);
 
       // Set the A1 paper size based on the table width
-      const pdf = new jsPDF('l', 'pt', [841, tableWidth]);
+      const pdf = new jsPDF('l', 'pt', [1000, tableWidth+35]);
       pdf.html(content, {
         callback: function () {
           pdf.save('schedule.pdf');
@@ -732,8 +776,8 @@ export default {
         }
       )
     },
-    getMajorID() {
-      axios.get(`http://139.59.224.162/api/majors/1`).then(
+    getMajorID(id) {
+      axios.get(`http://139.59.224.162/api/majors/${id}`).then(
         res => {
           this.majorName = res.data.data[0];
         }
