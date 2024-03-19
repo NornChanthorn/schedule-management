@@ -626,7 +626,7 @@ export default {
     formData.append('file', file);
 
     // Make a POST request to the backend endpoint
-    const response = await axios.post('teachers/import', formData, {
+    const response = await axios.post('teachers_import', formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Ensure proper content type for file uploads
       },
