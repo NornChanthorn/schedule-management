@@ -13,7 +13,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::with(['generation', 'group', 'major'])->get();
+        $students = Student::with(['generation', 'group', 'major','user'])->get();
         return response()->json($students);
     }
 
