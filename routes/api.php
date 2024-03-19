@@ -72,5 +72,4 @@ Route::post('students/import', [StudentController::class, 'importStudents']);
 
 
 Route::post('send-email-notification', [CourseController::class, 'sendEmailNotification']);
-
-
+Route::post('/teachers/import-csv', [TeacherController::class, 'importTeachersFromCSV']);

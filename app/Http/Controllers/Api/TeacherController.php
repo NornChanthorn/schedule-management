@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Course;
+use App\Models\Teacher;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Course;
-use App\Models\Schedule;
+use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
 {
@@ -37,7 +38,7 @@ class TeacherController extends Controller
     {
         $userData = $request->validate([
             // 'name' => 'string',
-            'email' => 'required',
+            'email' => 'required|email',
             // 'password' => 'required',
             // 'role' => 'string',
         ]);
@@ -67,7 +68,7 @@ class TeacherController extends Controller
         // Create a new teacher
         $teacher = Teacher::create($teacherData);
 
-        return response()->json(['user' => $user, 'teacher' => $teacher]);
+        return response()->json(['user' => $user, 'teacher' => $teacher],201);
     }
 
 
@@ -124,4 +125,278 @@ class TeacherController extends Controller
     // $teacher = Teacher::findOrFail($id);
     // $teacher->delete();
     // return response()->json(['message' => 'Teacher deleted successfully']);
+
+    // public function import(Request $request)
+    // {
+    //     // Validate the request
+    //     $validator = Validator::make($request->all(), [
+    //         'file' => 'required|file|mimes:csv,txt',
+    //     ]);
+
+    //     // Return error response if validation fails
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
+
+    //     // Get the uploaded file
+    //     $file = $request->file('file');
+
+    //     // Parse the CSV file and create teachers
+    //     try {
+    //         $handle = fopen($file, 'r');
+
+    //         // Skip the header row
+    //         fgetcsv($handle);
+
+    //         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+    //             // Extract data from the CSV row
+    //             $id=$row[0];
+    //             $title = $row[0];
+    //             $f_name = $row[1];
+    //             $l_name = $row[2];
+    //             $gender = $row[3];
+    //             $dob = $row[4];
+    //             $phone_num = $row[5];
+    //             $email = $row[6]; // Assuming email is in the 7th column
+
+    //             // Create user
+    //             $user = User::create([
+    //                 'name' => $f_name . ' ' . $l_name,
+    //                 'email' => $email,
+    //                 'password' => bcrypt($f_name . $l_name), // You might want to generate a random password here
+    //                 'role' => 'teacher',
+    //             ]);
+
+    //             // Create teacher
+    //             Teacher::create([
+    //                 'title' => $title,
+    //                 'f_name' => $f_name,
+    //                 'l_name' => $l_name,
+    //                 'gender' => $gender,
+    //                 'dob' => $dob,
+    //                 'phone_num' => $phone_num,
+    //                 'user_id' => $user->id,
+    //             ]);
+    //         }
+
+    //         fclose($handle);
+
+    //         return response()->json(['message' => 'Teachers imported successfully'], 200);
+    //     } catch (\Exception $e) {
+    //         // Handle any exceptions
+    //         return response()->json(['message' => 'Failed to import teachers'], 500);
+    //     }
+    // }
+
+    
+    // public function import(Request $request)
+    // {
+    //     $request->validate([
+    //         'file' => 'required|file|mimes:csv,xlsx', // Validate file type
+    //     ]);
+
+    //     $file = $request->file('file');
+
+    //     // Read CSV file and process data
+    //     $data = array_map('str_getcsv', file($file));
+    //     $headers = array_shift($data); // Assuming the first row contains headers
+
+    //     $createdTeachers = [];
+    //     foreach ($data as $row) {
+    //         $teacherData = [
+    //             'title' => $row[0], // Adjust column index based on your CSV structure
+    //             'f_name' => $row[1],
+    //             'l_name' => $row[2],
+    //             'gender' => $row[3],
+    //             'dob' => $row[4],
+    //             'phone_num' => $row[5],
+    //             // You can add more fields as needed
+    //         ];
+
+    //         // Create a new user for each teacher
+    //         $user = User::create([
+    //             'name' => $teacherData['f_name'] . ' ' . $teacherData['l_name'],
+    //             'email' => '', // You can leave email blank or handle it differently
+    //             'password' => '', // You can generate a random password if needed
+    //             'role' => 'teacher',
+    //         ]);
+
+    //         // Add the user_id to the teacherData array
+    //         $teacherData['user_id'] = $user->id;
+
+    //         // Create the teacher
+    //         $teacher = Teacher::create($teacherData);
+
+    //         $createdTeachers[] = $teacher;
+    //     }
+    //     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $createdTeachers]);
+    //     // return response()->json(['user' => $user, 'teacher' => $teacher]);
+    // }
+
+    // public function import(Request $request)
+    // {
+    //     // Assuming CSV file upload, adjust this based on your actual data format
+    //     $request->validate([
+    //         'file' => 'required|file|mimes:csv,txt', // Validate file type
+    //     ]);
+
+    //     $file = $request->file('file');
+
+    //     // Read CSV file and process data
+    //     $data = array_map('str_getcsv', file($file));
+    //     $headers = array_shift($data); // Assuming the first row contains headers
+
+    //     // Iterate over rows and create teachers
+    //     $createdTeachers = [];
+    //     foreach ($data as $row) {
+    //         $teacherData = [
+    //             'id' =>$row['NO'] ?? '',
+    //             'title' => $row['Title'] ?? '', // Add default value if column is empty
+    //             'f_name' => $row['FirstName'] ?? '',
+    //             'l_name' => $row['LastName'] ?? '',
+    //             'gender' => $row['Gender'] ?? '',
+    //             'dob' => $row['DateOfBith'] ?? '', // Fix typo in column name
+    //             'phone_num' => $row['Phone_Number'] ?? '',
+    //         ];
+    //         $userData = $request->validate([
+    //             // 'name' => 'string',
+    //             'email' => 'required',
+    //             // 'password' => 'required',
+    //             // 'role' => 'string',
+    //         ]);
+    
+    //         $name = $teacherData['f_name'] . ' ' . $teacherData['l_name'];
+    //         // Create a new user for each teacher
+    //         $user = User::create([
+    //             'name' => $name,
+    //             'email' => $row['Email'] ?? '', // Add default value if column is empty
+    //             'password' => bcrypt($name), // You can generate a random password if needed
+    //             'role' => 'teacher',
+    //         ]);
+
+    //         // Add the user_id to the teacherData array
+    //         $teacherData['user_id'] = $user->id;
+
+    //         // Create the teacher
+    //         $teacher = Teacher::create($teacherData);
+
+    //         $createdTeachers[] = $teacher;
+    //     }
+
+    //     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $createdTeachers]);
+    // }
+
+//     public function import(Request $request)
+// {
+//     // Validate the uploaded file
+//      // Validate the request
+//      $validator = Validator::make($request->all(), [
+//         'file' => 'required|file|mimes:csv,txt',
+//     ]);
+    
+//      // Return error response if validation fails
+//      if ($validator->fails()) {
+//         return response()->json(['errors' => $validator->errors()], 422);
+//     }
+
+//     // Retrieve the uploaded file
+//     $file = $request->file('file');
+
+//     // Read CSV file and process data
+//     $data = array_map('str_getcsv', file($file));
+//     $headers = array_shift($data); // Assuming the first row contains headers
+
+//     // Array to store the created teachers
+//     $createdTeachers = [];
+
+//     // Iterate over rows and create teachers
+//     foreach ($data as $row) {
+//         $teacherData = [
+//             'title' => $row['Title'] ?? '', // Add default value if column is empty
+//             'f_name' => $row['FirstName'] ?? '',
+//             'l_name' => $row['LastName'] ?? '',
+//             'gender' => $row['Gender'] ?? '',
+//             'dob' => $row['DateOfBith'] ?? '', // Fix typo in column name
+//             'phone_num' => $row['Phone_Number'] ?? '',
+//         ];
+
+//         // Validate email (optional)
+//         $userData = $request->validate([
+//             'email' => 'required|email',
+//         ]);
+
+//         $name = $teacherData['f_name'] . ' ' . $teacherData['l_name'];
+
+//         // Create a new user for each teacher
+//         $user = User::create([
+//             'name' => $name,
+//             'email' => $userData['email'], // Use the provided email
+//             'password' => bcrypt($name), // You can generate a random password if needed
+//             'role' => 'teacher',
+//         ]);
+
+//         // Add the user_id to the teacherData array
+//         $teacherData['user_id'] = $user->id;
+
+//         // Create the teacher
+//         $teacher = Teacher::create($teacherData);
+
+//         $createdTeachers[] = $teacher;
+//     }
+
+//     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $createdTeachers]);
+// }
+public function import(Request $request)
+{
+    // Validate the request
+    $request->validate([
+        'file' => 'required|file|mimes:csv',
+    ]);
+
+    // Retrieve the uploaded file
+    $file = $request->file('file');
+
+    // Read CSV file and process data
+    $data = array_map('str_getcsv', file($file));
+    $headers = array_shift($data); // Assuming the first row contains headers
+
+    // Array to store the created teachers
+    $importedTeachers = [];
+
+    // Iterate over rows and create teachers
+    foreach ($data as $row) {
+        // Extract user data from CSV row
+        $userData = [
+            'name' => $row['FirstName'] . ' ' . $row['LastName'],
+            'email' => $row['Email'], // Assuming Email column is present
+            'password' => bcrypt($row['FirstName'] . $row['LastName']), // You can generate a random password if needed
+            'role' => 'teacher',
+        ];
+
+        // Create the user
+        $user = User::create($userData);
+
+        // Extract teacher data from CSV row
+        $teacherData = [
+            'title' => $row['Title'],
+            'f_name' => $row['FirstName'],
+            'l_name' => $row['LastName'],
+            'gender' => $row['Gender'],
+            'dob' => $row['DateOfBith'], // Fix typo in column name
+            'phone_num' => $row['Phone_Number'],
+            'user_id' => $user->id,
+        ];
+
+        // Create the teacher
+        $teacher = Teacher::create($teacherData);
+
+        // Add the created teacher to the array
+        $importedTeachers[] = $teacher;
+    }
+
+    // Return response with imported teachers
+    return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers], 201);
+}
+
+
 }
