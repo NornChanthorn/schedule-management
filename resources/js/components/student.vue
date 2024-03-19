@@ -425,7 +425,7 @@ export default {
       this.editedPost.l_name = post.l_name;
       this.editedPost.gender = post.gender;
       this.editedPost.dob = post.dob;
-      this.editedPost.email = post.email;
+      this.editedPost.email = post.user.email;
       this.editedPost.user_id = post.user_id;
       this.editedPost.student_id = post.student_id;
       this.editedPost.generation_id = post.generation_id;

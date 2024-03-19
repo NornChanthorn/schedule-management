@@ -513,6 +513,7 @@ export default {
       this.editPost.f_name = post.f_name;
       this.editedPost.l_name = post.l_name;
       this.editedPost.gender = post.gender;
+      this.editedPost.email = post.user.email;
       this.editedPost.dob = post.dob;
       this.editedPost.phone_num = post.phone_num;
       this.editedPost.user_id = post.user_id;
