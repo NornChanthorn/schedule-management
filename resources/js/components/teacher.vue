@@ -614,7 +614,6 @@ export default {
         // Iterate over parsed data and create teachers
         for (let row of parsedData) {
           try {
-            // Prepare teacher data
             const teacherData = {
               title: row.Title,
               f_name: row.FirstName,
@@ -623,13 +622,15 @@ export default {
               dob: row.DateOfBith, // Corrected typo here
               phone_num: row.Phone_Number,
               user: {
-                // Include user data within teacherData
+                name: `${row.FirstName} ${row.LastName}`, // Concatenate first name and last name
                 email: row.Email,
+                role: "teacher",
               },
             };
 
             // Call createTeacher method to create the teacher along with the user
             await this.createTeacher(teacherData);
+            // await axios.post("teachers", teacherData);
           } catch (error) {
             console.error("Error creating teacher:", error);
             // You can handle individual teacher creation errors here if needed
@@ -668,23 +669,6 @@ export default {
         // Handle errors, display error message, etc.
         console.error("Error creating teacher:", error);
         throw error; // Rethrow the error to propagate it upwards if needed
-      }
-    },
-
-    async createTeacher(teacherData) {
-      try {
-        // Make a POST request to create the teacher
-        const teacherResponse = await axios.post(
-          "teachers/import",
-          teacherData
-        );
-
-        // Optionally, handle successful creation response
-        console.log("Teacher created:", teacherResponse.data);
-      } catch (error) {
-        // Handle errors, display error message, etc.
-        console.error("Error creating teacher:", error);
-        throw err; // Rethrow the error to propagate it upwards if needed
       }
     },
 

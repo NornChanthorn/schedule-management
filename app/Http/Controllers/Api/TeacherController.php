@@ -431,7 +431,7 @@ public function import(Request $request)
 
     // Array to store the imported teachers
     $importedTeachers = [];
-    $importUsers=[];
+ 
     // Iterate over rows and create teachers
     foreach ($data as $row) {
         // Create a new user
@@ -443,23 +443,26 @@ public function import(Request $request)
         ]);
        
         // Create a new teacher and associate with the user
-        $teacher = new Teacher();
-        $teacher->title = $row['Title'];
-        $teacher->f_name = $row['FirstName'];
-        $teacher->l_name = $row['LastName'];
-        $teacher->gender = $row['Gender'];
-        $teacher->dob = $row['DateOfBith']; // Fix typo here
-        $teacher->phone_num = $row['Phone_Number'];
-        $teacher->user_id = $user->id; // Associate teacher with user
-        $teacher->save();
+        $teacherData = [
+            'title' => $row['Title'],
+            'f_name' => $row['FirstName'],
+            'l_name' => $row['LastName'],
+            'gender' => $row['Gender'],
+            'dob' => $row['DateOfBith'], // Fix typo in column name
+            'phone_num' => $row['Phone_Number'],
+            'user_id' => $user->id,
+        ];
+       // Create the teacher
+        $teacher = Teacher::create($teacherData);
+      
 
         // Add the created teacher to the array
         $importedTeachers[] = $teacher;
-        $importUsers[]=$user;
+       
     }
 
     // Return response with imported teachers
-    return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers,'users'=>$importUsers]);
+    return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers]);
 }
 
 
