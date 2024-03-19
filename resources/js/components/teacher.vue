@@ -671,22 +671,22 @@ export default {
       }
     },
 
-    async createTeacher(teacherData) {
-      try {
-        // Make a POST request to create the teacher
-        const teacherResponse = await axios.post(
-          "teachers/import",
-          teacherData
-        );
+    // async createTeacher(teacherData) {
+    //   try {
+    //     // Make a POST request to create the teacher
+    //     const teacherResponse = await axios.post(
+    //       "teachers/import",
+    //       teacherData
+    //     );
 
-        // Optionally, handle successful creation response
-        console.log("Teacher created:", teacherResponse.data);
-      } catch (error) {
-        // Handle errors, display error message, etc.
-        console.error("Error creating teacher:", error);
-        throw err; // Rethrow the error to propagate it upwards if needed
-      }
-    },
+    //     // Optionally, handle successful creation response
+    //     console.log("Teacher created:", teacherResponse.data);
+    //   } catch (error) {
+    //     // Handle errors, display error message, etc.
+    //     console.error("Error creating teacher:", error);
+    //     throw err; // Rethrow the error to propagate it upwards if needed
+    //   }
+    // },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
