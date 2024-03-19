@@ -186,13 +186,17 @@ class TeacherController extends Controller
 
     public function import_teacher(Request $request){
        // Validate the uploaded file
-       $validator = Validator::make($request->all(), [
-            'file' => 'required|file|mimetypes:csv'
-        ]);
+    //    $validator = Validator::make($request->all(), [
+    //         'file' => 'required|file|mimetypes:csv'
+    //     ]);
+    //     $validator = Validator::make($request->all(), [
+    //         'file' => 'required|file|mimetypes:application/vnd.ms-excel',
+    //     ]);
 
-    if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 400);
-    }
+
+    // if ($validator->fails()) {
+    //     return response()->json(['error' => $validator->errors()], 400);
+    // }
 
     // Retrieve the uploaded file
     $file = $request->file('file');
