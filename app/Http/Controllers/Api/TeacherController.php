@@ -134,57 +134,54 @@ class TeacherController extends Controller
 
     public function import(Request $request)
     {
-        return response()->json([
-            'message'=> 'route post accepted'
-        ]);
 
         // Validate the uploaded file
-        // $validator = Validator::make($request->all(), [
-        //     'file' => 'required|file|mimes:csv',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|mimes:csv',
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json(['error' => $validator->errors()], 400);
-        // }
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
 
         // Retrieve the uploaded file
-        // $file = $request->file('file');
+        $file = $request->file('file');
 
         // Read CSV file and process data
-        // $data = array_map('str_getcsv', file($file));
-        // $headers = array_shift($data); // Assuming the first row contains headers
+        $data = array_map('str_getcsv', file($file));
+        $headers = array_shift($data); // Assuming the first row contains headers
 
         // Array to store the imported teachers
-        // $importedTeachers = [];
-        // $importUsers=[];
+        $importedTeachers = [];
+        $importUsers=[];
         // Iterate over rows and create teachers
-        // foreach ($data as $row) {
-        //     // Create a new user
-        //     $user = User::create([
-        //         'name' => $row['FirstName'] . ' ' . $row['LastName'],
-        //         'email' => $row['Email'], // Assuming Email column is present
-        //         'password' => bcrypt($row['FirstName'] . $row['LastName']), // You can generate a random password if needed
-        //         'role' => 'teacher',
-        //     ]);
+        foreach ($data as $row) {
+            // Create a new user
+            $user = User::create([
+                'name' => $row['FirstName'] . ' ' . $row['LastName'],
+                'email' => $row['Email'], // Assuming Email column is present
+                'password' => bcrypt($row['FirstName'] . $row['LastName']), // You can generate a random password if needed
+                'role' => 'teacher',
+            ]);
 
-        //     // Create a new teacher and associate with the user
-        //     $teacher = new Teacher();
-        //     $teacher->title = $row['Title'];
-        //     $teacher->f_name = $row['FirstName'];
-        //     $teacher->l_name = $row['LastName'];
-        //     $teacher->gender = $row['Gender'];
-        //     $teacher->dob = $row['DateOfBith']; // Fix typo here
-        //     $teacher->phone_num = $row['Phone_Number'];
-        //     $teacher->user_id = $user->id; // Associate teacher with user
-        //     $teacher->save();
+            // Create a new teacher and associate with the user
+            $teacher = new Teacher();
+            $teacher->title = $row['Title'];
+            $teacher->f_name = $row['FirstName'];
+            $teacher->l_name = $row['LastName'];
+            $teacher->gender = $row['Gender'];
+            $teacher->dob = $row['DateOfBith']; // Fix typo here
+            $teacher->phone_num = $row['Phone_Number'];
+            $teacher->user_id = $user->id; // Associate teacher with user
+            $teacher->save();
 
-        //     // Add the created teacher to the array
-        //     $importedTeachers[] = $teacher;
-        //     $importUsers[]=$user;
-        // }
+            // Add the created teacher to the array
+            $importedTeachers[] = $teacher;
+            $importUsers[]=$user;
+        }
 
         // Return response with imported teachers
-        // return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers,'users'=>$importUsers]);
+        return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers,'users'=>$importUsers]);
     }
 
 
