@@ -21,7 +21,7 @@ class SendEmailNotification extends Notification
         return (new MailMessage)
                     ->greeting('Greeting Teacher!')
                     ->line('This the nofication for alert you to fill the schedule.')
-                    ->action('Click here for fill the schedule', 'http://127.0.0.1:8000/')
+                    ->action('Click here for fill the schedule', 'http://139.59.224.162/')
                     ->line('Thank you.');
     }
 

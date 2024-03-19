@@ -41,6 +41,12 @@ const routes=[
         component: ResetPassword,
         props: (route) => ({ token: route.query.token, email: route.query.email }),
     },
+    {
+        path: '/test/password/reset',
+        name: 'reset-password',
+        component: ResetPassword,
+
+    },
 
     {
         path: '/teacher',

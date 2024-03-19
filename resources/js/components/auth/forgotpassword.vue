@@ -5,11 +5,11 @@
       <form @submit.prevent="submitForm" class="bg-white px-8 pt-6 pb-8">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            v-model="email" 
-            placeholder="Enter your email" 
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="Enter your email"
             class="appearance-none border w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             required
           />
@@ -18,10 +18,13 @@
         <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 focus:outline-none focus:shadow-outline">
           Submit
         </button>
-      </form>
-      <div v-if="emailSent" class="text-green-500 text-center">
+        <div v-if="emailSent" class="text-green-500 text-center">
         Password reset email sent successfully! Check your email.
       </div>
+      </form>
+      <!-- <div v-if="emailSent" class="text-green-500 text-center">
+        Password reset email sent successfully! Check your email.
+      </div> -->
     </div>
   </div>
 </template>
