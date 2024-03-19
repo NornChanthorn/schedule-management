@@ -43,7 +43,6 @@ class ClassTypeController extends Controller
     {
         $classType = ClassType::findOrFail($id);
         $classType->delete();
-
         return response()->json(['message' => 'ClassType deleted successfully']);
     }
 }

@@ -18,10 +18,13 @@
         <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 focus:outline-none focus:shadow-outline">
           Submit
         </button>
-      </form>
-      <div v-if="emailSent" class="text-green-500 text-center">
+        <div v-if="emailSent" class="text-green-500 text-center">
         Password reset email sent successfully! Check your email.
       </div>
+      </form>
+      <!-- <div v-if="emailSent" class="text-green-500 text-center">
+        Password reset email sent successfully! Check your email.
+      </div> -->
     </div>
   </div>
 </template>
