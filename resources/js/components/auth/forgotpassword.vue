@@ -5,11 +5,11 @@
       <form @submit.prevent="submitForm" class="bg-white px-8 pt-6 pb-8">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            v-model="email" 
-            placeholder="Enter your email" 
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="Enter your email"
             class="appearance-none border w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             required
           />
@@ -40,7 +40,7 @@ export default {
   methods: {
     submitForm() {
       // Send the email to the Laravel backend
-      axios.post('/password/email', { email: this.email })
+      axios.post('password/email', { email: this.email })
         .then(response => {
           // Handle the response
           if (response.status === 200) {
