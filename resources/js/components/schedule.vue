@@ -778,7 +778,7 @@ export default {
       )
     },
     getMajorID(id) {
-      axios.get(`http://139.59.224.162/api/majors/${id}`).then(
+      axios.get(`majors/${id}`).then(
         res => {
           this.majorName = res.data.data[0];
         }
@@ -842,7 +842,7 @@ export default {
         });
     },
     CourseTeacherInfo(teacherId, majorId, genId, termId) {
-      axios.get(`http://139.59.224.162/api/course/${teacherId}/${majorId}/${genId}/${termId}`)
+      axios.get(`course/${teacherId}/${majorId}/${genId}/${termId}`)
         .then(response => {
           this.courseteacher = response.data.data[0];
           this.courseteachers = response.data.data;
@@ -855,7 +855,7 @@ export default {
 
     fetchTeacherInfo() {
       if (this.user && this.user.id) {
-        axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
+        axios.get(`teacher_user/${this.user.id}`)
           .then(response => {
             this.teacher = response.data.data[0]; // Update the teacher data with the API response
             this.CourseTeacherInfo(this.teacher.id, this.majorID, this.genID, this.termID);

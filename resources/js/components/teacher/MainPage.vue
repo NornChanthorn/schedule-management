@@ -116,7 +116,7 @@
           major.showDetails = !major.showDetails;
         },
         // CourseTeacherInfo(teacherId) {
-        //   axios.get(`http://139.59.224.162/api/course_teacher/${teacherId}`)
+        //   axios.get(`course_teacher/${teacherId}`)
         //     .then(response => {
         //       this.courseteacher = response.data.data; // Update the property with the API response
         //     })
@@ -170,7 +170,7 @@
             },
             fetchTeacherInfo() {
                 if (this.user && this.user.id) {
-                    axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
+                    axios.get(`teacher_user/${this.user.id}`)
                     .then(response => {
                         this.teacher = response.data.data[0]; // Update the teacher data with the API response4
                         // this.CourseTeacherInfo(this.teacher.id); // Call CourseTeacherInfo with user ID
@@ -182,7 +182,7 @@
             },
             async fetchNotifications() {
                 try {
-                    const response = await axios.get('http://139.59.224.162/api/notifications/79');
+                    const response = await axios.get('notifications/79');
                     this.notifications = response.data.map(notification => notification.message);
                 } catch (error) {
                     console.error('Error fetching notifications:', error);

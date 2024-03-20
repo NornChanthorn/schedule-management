@@ -55,7 +55,7 @@
       },
       CourseTeacherInfo() {
         if (this.teacher && this.teacher.id) {
-          axios.get(`http://139.59.224.162/api/course_teacher/${this.teacher.id}`)
+          axios.get(`course_teacher/${this.teacher.id}`)
             .then(response => {
               const courses = response.data.data;
               const groupedCourses = {};
@@ -94,7 +94,7 @@
       },
       fetchTeacherInfo() {
         if (this.user && this.user.id) {
-          axios.get(`http://139.59.224.162/api/teacher_user/${this.user.id}`)
+          axios.get(`teacher_user/${this.user.id}`)
             .then(response => {
               this.teacher = response.data.data[0];
               this.CourseTeacherInfo();

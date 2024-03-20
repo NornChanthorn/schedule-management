@@ -189,7 +189,7 @@ export default {
     },
     methods: {
         fetchPosts() {
-            axios.get('http://139.59.224.162/api/teachers')
+            axios.get('teachers')
                 .then(response => {
                     this.posts = response.data;
                 })
@@ -222,7 +222,7 @@ export default {
             this.editModal = true;
         },
         updatePost() {
-            axios.put(`http://139.59.224.162/api/teachers/${this.editedPost.id}`, this.editedPost)
+            axios.put(`teachers/${this.editedPost.id}`, this.editedPost)
                 .then(response => {
                     console.log('Post updated:', response.data);
                     this.editModal = false;
@@ -233,7 +233,7 @@ export default {
                 });
         },
         deletePost(postId) {
-            axios.delete(`http://139.59.224.162/api/teachers/${postId}`)
+            axios.delete(`teachers/${postId}`)
                 .then(response => {
                     // Handle success, maybe show a success message or update the post list
                     console.log('Post deleted:', response.data);
