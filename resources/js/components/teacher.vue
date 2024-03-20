@@ -632,7 +632,7 @@ export default {
         'Content-Type': 'multipart/form-data', // Ensure proper content type for file uploads
       },
     });
-
+    this.fetchPosts()
     // Handle successful response
     console.log("Import response:", response.data);
 
