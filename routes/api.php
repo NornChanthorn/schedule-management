@@ -73,5 +73,5 @@ Route::post('students/import', [StudentController::class, 'importStudents']);
 
 
 Route::post('send-email-notification', [CourseController::class, 'sendEmailNotification']);
-Route::post('teachers/import', [TeacherController::class, 'import']);
+// Route::post('teachers/import', [TeacherController::class, 'import']);
 Route::post('teachers_import', [TeacherController::class, 'import_teacher']);

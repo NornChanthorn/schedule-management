@@ -208,8 +208,8 @@ class TeacherController extends Controller
         'LastName' => 'l_name',
         'Email' => 'email',
         'Title' => 'title',
+        'DateOfBirth' => 'dob', 
         'Gender' => 'gender',
-        'DateOfBirth' => 'dob', // Corrected typo here
         'Phone_Number' => 'phone_num',
         // Add more mappings for other columns as needed
     ];
