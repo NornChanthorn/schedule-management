@@ -442,7 +442,8 @@ export default {
                 <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px;" class="time-slot">8:15</td>
                 ${this.selectedTabId === null
                 ? `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;" colspan="${this.groups.length * this.days.length * 2}" class="h-16 text-3xl">National Anthem</th>`
-                : `<th tyle="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;" colspan="${this.days.length}" class="h-16 text-3xl">National Anthem</th>`
+                : `<th tyle="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold;" colspan="${this.days.length}" class="h-16 text-3xl">National Anthem
+                </th>`
                 }
               </tr>
               <tr>
