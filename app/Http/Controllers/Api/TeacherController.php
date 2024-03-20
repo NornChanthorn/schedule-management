@@ -217,31 +217,34 @@ class TeacherController extends Controller
     // Iterate over rows and create teachers
     foreach ($data as $row) {
         // Map CSV headers to database column names
+        if (!empty($row)) {
+            // ... your existing logic to map data and create teachers ...
 
-        $teacherData = [];
-        foreach ($headers as $index => $header) {
-            if (isset($columnMapping[$header])) {
-                $teacherData[$columnMapping[$header]] = $row[$index] -1;
+            $teacherData = [];
+            foreach ($headers as $index => $header) {
+                if (isset($columnMapping[$header])) {
+                    $teacherData[$columnMapping[$header]] = $row[$index];
+                }
             }
+
+            // Create a new user
+            $user = User::create([
+                'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
+                'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
+                'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
+                'role' => 'teacher',
+            ]);
+
+            // Create a new teacher and associate with the user
+            $teacher = new Teacher();
+            $teacher->fill($teacherData);
+            $teacher->user_id = $user->id; // Associate teacher with user
+            $teacher->save();
+
+            // Add the created teacher to the array
+            $importedTeachers[] = $teacher;
+            $importUsers[] = $user;
         }
-
-        // Create a new user
-        $user = User::create([
-            'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
-            'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
-            'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
-            'role' => 'teacher',
-        ]);
-
-        // Create a new teacher and associate with the user
-        $teacher = new Teacher();
-        $teacher->fill($teacherData);
-        $teacher->user_id = $user->id; // Associate teacher with user
-        $teacher->save();
-
-        // Add the created teacher to the array
-        $importedTeachers[] = $teacher;
-        $importUsers[] = $user;
     }
 
     // Return response with imported teachers
