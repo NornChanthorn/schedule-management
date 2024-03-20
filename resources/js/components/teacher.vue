@@ -42,11 +42,11 @@
       </button>
       <div>
         <input
-        type="file"
-        ref="fileInput"
-        style="display: none"
-        @change="importTeachersFromCSV"
-        accept=".csv"
+          type="file"
+          ref="fileInput"
+          style="display: none"
+          @change="importTeachersFromCSV"
+          accept=".csv"
         />
         <button
           @click="importCSV"
@@ -582,17 +582,18 @@ export default {
     },
     exportCSV() {
       const teacherData = this.posts.map((teacher) => ({
-        NO: teacher.id,
-        Title: teacher.title,
+        // NO: teacher.id,
         FirstName: teacher.f_name,
         LastName: teacher.l_name,
+        Title: teacher.title,
+        Email: teacher.user.email,
         Gender: teacher.gender,
-        DateOfBith: teacher.dob,
+        DateOfBirth: teacher.dob,
         Phone_Number: teacher.phone_num,
       }));
       this.posts = teacherData;
       const csv = Papa.unparse(this.posts);
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([csv], { type: "xlsx/csv;charset=utf-8;" });
       // Create a download link and trigger a click
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
@@ -608,87 +609,54 @@ export default {
     },
 
     async importTeachersFromCSV() {
-  try {
-    // Access the file input element using refs
-    const fileInput = this.$refs.fileInput;
+      try {
+        // Access the file input element using refs
+        const fileInput = this.$refs.fileInput;
 
-    // Check if a file is selected
-    if (!fileInput.files.length) {
-      // Handle case where no file is selected
-      console.error("No file selected");
-      return;
-    }
+        // Check if a file is selected
+        if (!fileInput.files.length) {
+          // Handle case where no file is selected
+          console.error("No file selected");
+          return;
+        }
 
-    // Get the first selected file
-    const file = fileInput.files[0];
+        // Get the first selected file
+        const file = fileInput.files[0];
 
-    // Create a FormData object to send the file
-    const formData = new FormData();
-    formData.append('file', file);
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append("file", file);
 
-    // Make a POST request to the backend endpoint
-    const response = await axios.post('teachers_import', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Ensure proper content type for file uploads
-      },
-    });
+        // Make a POST request to the backend endpoint
+        const response = await axios.post("teachers_import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
+          },
+        });
 
-    // Handle successful response
-    console.log("Import response:", response.data);
+        // Handle successful response
+        console.log("Import response:", response.data);
 
-    // Show success message
-    this.$toast.add({
-      severity: "success",
-      summary: "Import Successful",
-      detail: "Teachers imported successfully",
-      life: 3000,
-    });
-  } catch (error) {
-    // Handle errors, display error message, etc.
-    console.error("Error importing CSV:", error);
+        // Show success message
+        this.$toast.add({
+          severity: "success",
+          summary: "Import Successful",
+          detail: "Teachers imported successfully",
+          life: 3000,
+        });
+      } catch (error) {
+        // Handle errors, display error message, etc.
+        console.error("Error importing CSV:", error);
 
-    // Show error message
-    this.$toast.add({
-      severity: "error",
-      summary: "Import Failed",
-      detail: "Failed to import teachers",
-      life: 3000,
-    });
-  }
-},
-
-
-    // async importTeachersFromCSV(event) {
-    //   const file = event.target.files[0];
-    //   if (!file) {
-    //     this.$toast.add({
-    //       severity: 'error',
-    //       summary: 'Error',
-    //       detail: 'Please select a CSV file to import.',
-    //       life: 3000,
-    //     });
-    //     return;
-    //   }
-
-    //   try {
-    //     const parsedData = await this.parseCSV(file);
-    //     await this.createTeachers(parsedData);
-    //     this.$toast.add({
-    //       severity: 'success',
-    //       summary: 'Import Successful',
-    //       detail: 'Teachers imported successfully.',
-    //       life: 3000,
-    //     });
-    //   } catch (error) {
-    //     console.error('Error importing CSV:', error);
-    //     this.$toast.add({
-    //       severity: 'error',
-    //       summary: 'Import Failed',
-    //       detail: 'Failed to import teachers.',
-    //       life: 3000,
-    //     });
-    //   }
-    // },
+        // Show error message
+        this.$toast.add({
+          severity: "error",
+          summary: "Import Failed",
+          detail: "Failed to import teachers",
+          life: 3000,
+        });
+      }
+    },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
@@ -703,76 +671,37 @@ export default {
       for (const row of data) {
         try {
           const teacherData = {
-            title: row.Title,
             f_name: row.FirstName,
             l_name: row.LastName,
+            title: row.Title,
             gender: row.Gender,
-            dob: row.DateOfBith, // Corrected typo
+            dob: row.DateOfBirth, // Corrected typo
             phone_num: row.Phone_Number,
             user: {
               email: row.Email,
             },
           };
 
-          await this.$axios.post('teachers/import', teacherData); // Use Axios for HTTP request
+          await this.$axios.post("teachers/import", teacherData); // Use Axios for HTTP request
         } catch (error) {
-          console.error('Error creating teacher:', error);
+          console.error("Error creating teacher:", error);
           // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
         }
       }
     },
-
-
-
-
-
-    // async createTeacher(teacherData) {
-    //   try {
-    //     // Make a POST request to create the teacher
-    //     const teacherResponse = await axios.post(
-    //       "teachers/import",
-    //       teacherData
-    //     );
-
-    //     // Optionally, handle successful creation response
-    //     console.log("Teacher created:", teacherResponse.data);
-    //   } catch (error) {
-    //     // Handle errors, display error message, etc.
-    //     console.error("Error creating teacher:", error);
-    //     throw error; // Rethrow the error to propagate it upwards if needed
-    //   }
+    // async parseCSV(file) {
+    //   return new Promise((resolve, reject) => {
+    //     Papa.parse(file, {
+    //       header: true,
+    //       complete: (results) => {
+    //         resolve(results.data);
+    //       },
+    //       error: (error) => {
+    //         reject(error);
+    //       },
+    //     });
+    //   });
     // },
-
-    // async createTeacher(teacherData) {
-    //   try {
-    //     // Make a POST request to create the teacher
-    //     const teacherResponse = await axios.post(
-    //       "teachers/import",
-    //       teacherData
-    //     );
-
-    //     // Optionally, handle successful creation response
-    //     console.log("Teacher created:", teacherResponse.data);
-    //   } catch (error) {
-    //     // Handle errors, display error message, etc.
-    //     console.error("Error creating teacher:", error);
-    //     throw err; // Rethrow the error to propagate it upwards if needed
-    //   }
-    // },
-
-    async parseCSV(file) {
-      return new Promise((resolve, reject) => {
-        Papa.parse(file, {
-          header: true,
-          complete: (results) => {
-            resolve(results.data);
-          },
-          error: (error) => {
-            reject(error);
-          },
-        });
-      });
-    },
   },
 };
 </script>
