@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use App\Models\Course;
-use App\Models\Teacher;
-use App\Models\Schedule;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Course;
+use App\Models\Schedule;
+use App\Models\Teacher;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
@@ -30,7 +29,7 @@ class TeacherController extends Controller
 
         return response()->json([
             'message' => 'Successfull',
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -68,9 +67,8 @@ class TeacherController extends Controller
         // Create a new teacher
         $teacher = Teacher::create($teacherData);
 
-        return response()->json(['user' => $user, 'teacher' => $teacher],201);
+        return response()->json(['user' => $user, 'teacher' => $teacher], 201);
     }
-
 
     public function update(Request $request, Teacher $teacher)
     {
@@ -95,7 +93,6 @@ class TeacherController extends Controller
 
         return response()->json(['message' => 'Teacher and user updated successfully.', 'teacher' => $teacher->fresh()]);
     }
-
 
     public function destroy($id)
     {
@@ -122,15 +119,14 @@ class TeacherController extends Controller
             User::destroy($user_id);
 
             return response()->json([
-                'message' => 'delete success'
+                'message' => 'delete success',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
-
 
     // public function import_teacher(Request $request)
     // {
@@ -184,76 +180,76 @@ class TeacherController extends Controller
     //     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers,'users'=>$importUsers]);
     // }
 
-    public function import_teacher(Request $request){
+    public function import_teacher(Request $request)
+    {
 
-    // Retrieve the uploaded file
-    $file = $request->file('file');
+        // Retrieve the uploaded file
+        $file = $request->file('file');
 
-    // Check if file is uploaded successfully
-    if (!$file) {
-        return response()->json(['error' => 'File not uploaded.'], 400);
-    }
-
-    // Read CSV file and process data
-    $data = array_map('str_getcsv', file($file));
-    $headers = array_shift($data);
-
-    // Array to store the imported teachers
-    $importedTeachers = [];
-    $importUsers = [];
-
-    // Define a mapping between CSV headers and database column names
-    $columnMapping = [
-        'FirstName' => 'f_name',
-        'LastName' => 'l_name',
-        'Email' => 'email',
-        'Title' => 'title',
-        'Gender' => 'gender',
-        'DateOfBirth' => 'dob', // Corrected typo here
-        'Phone_Number' => 'phone_num',
-        // Add more mappings for other columns as needed
-    ];
-
-    // Iterate over rows and create teachers
-    foreach ($data as $row) {
-        // Map CSV headers to database column names
-        if (!empty($row)) {
-            // ... your existing logic to map data and create teachers ...
-
-            $teacherData = [];
-            foreach ($headers as $index => $header) {
-                if (isset($columnMapping[$header])) {
-                    $teacherData[$columnMapping[$header]] = $row[$index];
-                }
-            }
-
-            // Create a new user
-            $user = User::create([
-                'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
-                'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
-                'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
-                'role' => 'teacher',
-            ]);
-
-            // Create a new teacher and associate with the user
-            $teacher = new Teacher();
-            $teacher->fill($teacherData);
-            $teacher->user_id = $user->id; // Associate teacher with user
-            $teacher->save();
-
-            // Add the created teacher to the array
-            $importedTeachers[] = $teacher;
-            $importUsers[] = $user;
+        // Check if file is uploaded successfully
+        if (!$file) {
+            return response()->json(['error' => 'File not uploaded.'], 400);
         }
+
+        // Read CSV file and process data
+        $data = array_map('str_getcsv', file($file));
+        $headers = array_shift($data);
+        $dataToImport = array_slice($data, 0, count($data) - 1);
+
+        // Array to store the imported teachers
+        $importedTeachers = [];
+        $importUsers = [];
+
+        // Define a mapping between CSV headers and database column names
+        $columnMapping = [
+            'FirstName' => 'f_name',
+            'LastName' => 'l_name',
+            'Email' => 'email',
+            'Title' => 'title',
+            'Gender' => 'gender',
+            'DateOfBirth' => 'dob', // Corrected typo here
+            'Phone_Number' => 'phone_num',
+            // Add more mappings for other columns as needed
+        ];
+
+        // Iterate over rows and create teachers
+        foreach ($dataToImport as $row) {
+            // Map CSV headers to database column names
+            if (!empty($row)) {
+                // ... your existing logic to map data and create teachers ...
+
+                $teacherData = [];
+                foreach ($headers as $index => $header) {
+                    if (isset($columnMapping[$header])) {
+                        $teacherData[$columnMapping[$header]] = $row[$index];
+                    }
+                }
+
+                // Create a new user
+                $user = User::create([
+                    'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
+                    'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
+                    'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
+                    'role' => 'teacher',
+                ]);
+
+                // Create a new teacher and associate with the user
+                $teacher = new Teacher();
+                $teacher->fill($teacherData);
+                $teacher->user_id = $user->id; // Associate teacher with user
+                $teacher->save();
+
+                // Add the created teacher to the array
+                $importedTeachers[] = $teacher;
+                $importUsers[] = $user;
+            }
+        }
+
+        // Return response with imported teachers
+        return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers, 'users' => $importUsers]);
+
+        // Test
+
     }
-
-    // Return response with imported teachers
-    return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers, 'users' => $importUsers]);
-
-
-    // Test
-
-    }
-
 
 }
