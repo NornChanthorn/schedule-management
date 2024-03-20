@@ -220,7 +220,7 @@ class TeacherController extends Controller
         $teacherData = [];
         foreach ($headers as $index => $header) {
             if (isset($columnMapping[$header])) {
-                $teacherData[$columnMapping[$header]] = $row[$index];
+                $teacherData[$columnMapping[$header]] = $row[$index-1];
             }
         }
 
