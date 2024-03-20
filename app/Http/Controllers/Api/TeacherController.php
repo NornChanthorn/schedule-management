@@ -217,11 +217,11 @@ class TeacherController extends Controller
     // Iterate over rows and create teachers
     foreach ($data as $row) {
         // Map CSV headers to database column names
-    
+
         $teacherData = [];
         foreach ($headers as $index => $header) {
             if (isset($columnMapping[$header])) {
-                $teacherData[$columnMapping[$header]] = $row[$index];
+                $teacherData[$columnMapping[$header]] = $row[$index] -1;
             }
         }
 
