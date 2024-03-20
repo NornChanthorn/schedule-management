@@ -132,7 +132,7 @@ class TeacherController extends Controller
     }
 
 
-    public function import(Request $request)
+    public function import_teacher(Request $request)
     {
 
     //     // Validate the uploaded file
