@@ -1,298 +1,593 @@
 <template>
-    <Toast></Toast>
-    <div class="lg:flex lg:justify-between mb-4 ml-4 md:inline sm:inline ">
-      <h1 class="text-custom-color-small font-istok text-4xl font-bold">Student List</h1>
-      <div class="flex justify-between items-center   w-auto">
-        <div class="relative flex items-center mr-2">
-            <input type="text" v-model="filters['global'].value" class="border border-blue-300  rounded-lg px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full" placeholder="Search ">
-                <button type="button" class="absolute right-3 top-3 disabled ">
-                <svg class="w-5 h-5   text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path></svg>
-            </button>
-        </div>
-        <button class=" mr-2 bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 " label="Add New" severity="secondary" @click="showModal = true">
-            <span class="flex items-center">
-            <i class="fa-solid fa-circle-plus mr-2"></i>
-                Add Student
-            </span>
-        </button>
-        <button
-           @click="handleFileUpload"
-            class=" hidden cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
-        >
-            <span class="flex items-center">
-            <i class="fa-solid fa-upload mr-2"></i>
-            Import
-            </span>
-        </button>
-        <div>
-            <h1>Import Students</h1>
-            <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload1">
-            <button v-if="isLoading" disabled>Importing...</button>
-            <div v-if="errorMessage">{{ errorMessage }}</div>
-        </div>
-
-        <button
-            @click="exportCSV"
-            class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
-        >
-            <span class="flex items-center">
-            <i class="fa-solid fa-file-export mr-2"></i>
-            Export
-            </span>
+  <Toast></Toast>
+  <div class="lg:flex lg:justify-between mb-4 ml-4 md:inline sm:inline">
+    <h1 class="text-custom-color-small font-istok text-4xl font-bold">
+      Student List
+    </h1>
+    <div class="flex justify-between items-center w-auto">
+      <div class="relative flex items-center mr-2">
+        <input
+          type="text"
+          v-model="filters['global'].value"
+          class="border border-blue-300 rounded-lg px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full"
+          placeholder="Search "
+        />
+        <button type="button" class="absolute right-3 top-3 disabled">
+          <svg
+            class="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"
+            ></path>
+          </svg>
         </button>
       </div>
+      <button
+        class="mr-2 bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        label="Add New"
+        severity="secondary"
+        @click="showModal = true"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-circle-plus mr-2"></i>
+          Add Student
+        </span>
+      </button>
+      <div>
+        <input
+          type="file"
+          ref="fileInput"
+          style="display: none"
+          @change="importStudentsFromCSV"
+          accept=".csv"
+        />
+        <button
+          @click="importCSV"
+          class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+        >
+          <span class="flex items-center">
+            <i class="fa-solid fa-upload mr-2"></i>
+            Import
+          </span>
+        </button>
+      </div>
+      <button
+        @click="exportCSV"
+        class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-file-export mr-2"></i>
+          Export
+        </span>
+      </button>
     </div>
-    <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline "/>
-    <DataTable :value="tableData" v-if="tableData"  :filters="filters"
-            dataKey="id" :resizableColumns="true" columnResizeMode="expand"  :paginator="true" :rows="10" class="text-center"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
-        <Column field="student_id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" ></Column>
-        <Column field="fullName" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
-        <Column field="gender" header="GENDER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
-        <Column field="group_name" header="GROUP" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
-        <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
-        <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
-                <template #body="slotProps">
-                    <div class="flex justify-between items-start w-[60%]">
-                        <button @click="editPost(slotProps.data)" class="text-green-600 hover:text-green-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                        <button @click="confirmDelete(slotProps.data)" class="text-red-600 hover:text-red-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </template>
-            </Column>
-    </DataTable>
-    <p v-if="tableData==null">Loading...</p>
+  </div>
+  <TabMenu :model="majorTabs" @tabChange="handleTabChange" class="inline" />
+  <DataTable
+    :value="tableData"
+    v-if="tableData"
+    :filters="filters"
+    dataKey="id"
+    :resizableColumns="true"
+    columnResizeMode="expand"
+    :paginator="true"
+    :rows="10"
+    class="text-center"
+    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+    :rowsPerPageOptions="[5, 10, 25, 50, 100]"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses"
+    responsiveLayout="scroll"
+  >
+    <Column
+      field="student_id"
+      header="ID"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+    ></Column>
+    <Column
+      field="fullName"
+      header="NAME"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+    ></Column>
+    <Column
+      field="gender"
+      header="GENDER"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+    ></Column>
+    <Column
+      field="group_name"
+      header="GROUP"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+    ></Column>
+    <Column
+      field="genName"
+      header="GENERATION"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+    ></Column>
+    <Column
+      style="width: 15%; min-width: 8rem"
+      header="ACTION"
+      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
+      :bodyStyle="{ 'text-align': 'start' }"
+    >
+      <template #body="slotProps">
+        <div class="flex justify-between items-start w-[60%]">
+          <button
+            @click="editPost(slotProps.data)"
+            class="text-green-600 hover:text-green-800"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
+          </button>
+          <button
+            @click="confirmDelete(slotProps.data)"
+            class="text-red-600 hover:text-red-800"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
+        </div>
+      </template>
+    </Column>
+  </DataTable>
+  <p v-if="tableData == null">Loading...</p>
 
-    <!-- Modal for creating a new post -->
-    <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6  border-2">
-                    <div class="mb-4 text-center">
-                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Student Information</h1>
-                    </div>
-                    <form @submit.prevent="createPost">
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" v-model="newPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User first name">
-                            </div>
-
-                            <div class="w-1/2 ml-2">
-                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" v-model="newPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User last name">
-                            </div>
-                        </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="newPost.gender" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
-                                    <option value="" disabled>Select gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
-                                <input v-model="newPost.dob" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="date" name="dob" placeholder="Enter dob" />
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="newPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Enter Email">
-                        </div>
-                        <div v-if="error" class=" text-red-500 text-sm">
-                            {{ error }}
-                        </div>
-                        <div class="flex justify-between mb-2 ">
-                            <div class="w-[48%]">
-                              <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
-                              <input v-model="newPost.student_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="text" name="student_id" placeholder="Example B20210021" />
-                            </div>
-                            <div class="w-[48%] ">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
-                                <select v-model="newPost.generation_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
-                                    <option value="" disabled>Select Generation</option>
-                                    <option v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex justify-between mb-2 ">
-                            <div class="w-[48%]">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
-                                <select v-model="newPost.group_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
-                                    <option value="" disabled>Select Group</option>
-                                    <option v-for="group in groups" :key="group.id" :value="group.id"> {{ group.group_name }}</option>
-                                </select>
-                            </div>
-                            <div class="w-[48%]">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
-                                <select v-model="newPost.major_id" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " >
-                                    <option value="" disabled>Select Major</option>
-                                    <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex justify-end items-center mt-4 gap-x-2">
-                            <button @click="showModal = false" type="button"
-                                class="w-32 py-2  bg-gray-500 text-white border-2 hover:bg-gray-600">Cancel</button>
-                            <button type="submit"
-                                class="w-32 py-2 bg-blue-500 mr-2 text-white border-2 hover:bg-blue-600">Save</button>
-                        </div>
-                    </form>
-                </div>
+  <!-- Modal for creating a new post -->
+  <div
+    v-if="showModal"
+    class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50"
+  >
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg p-6 border-2">
+        <div class="mb-4 text-center">
+          <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">
+            Student Information
+          </h1>
+        </div>
+        <form @submit.prevent="createPost">
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                for="firstName"
+                class="block text-sm font-medium text-gray-700"
+                >First Name</label
+              >
+              <input
+                type="text"
+                v-model="newPost.f_name"
+                name="f_name"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                placeholder="User first name"
+              />
             </div>
-    </div>
 
-    <!-- Modal for editing a post -->
-    <div v-if="editModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white w-full max-w-lg p-6 border border-2">
-                    <div class="mb-4 text-center">
-                        <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">Edit Student Information</h1>
-                    </div>
-                    <form @submit.prevent="updatePost">
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
-                                <input type="text" v-model="editedPost.f_name" name="f_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User first name">
-                            </div>
-
-                            <div class="w-1/2 ml-2">
-                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                                <input type="text" v-model="editedPost.l_name"  name="l_name" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="User last name">
-                            </div>
-                        </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
-                                <select v-model="editedPost.gender" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 ">
-                                    <option value="" disabled>Select gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <div class="w-1/2 ml-2">
-                                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
-                                <input v-model="editedPost.dob" class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " type="date" name="dob" placeholder="Enter dob" />
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" v-model="editedPost.email" name="email"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200   py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200 " placeholder="Enter Email">
-                        </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                              <label class="block text-sm font-medium text-gray-700" for="student_id">Student ID</label>
-                              <input v-model="editedPost.student_id" class="mt-1 p-2 w-full border rounded" type="text" name="student_id" placeholder="Enter student_id" />
-                            </div>
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Generation</label>
-                                <select v-model="editedPost.generation_id" class="mt-1 p-2 w-full border rounded">
-                                    <option value="" disabled>Select Generation</option>
-                                    <option v-for="gen in generations" :key="gen.id" :value="gen.id">{{ gen.gen }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex mb-2">
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Group</label>
-                                <select v-model="editedPost.group_id" class="mt-1 p-2 w-full border rounded">
-                                    <option value="" disabled>Select Group</option>
-                                    <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.group_name }}</option>
-                                </select>
-                            </div>
-                            <div class="w-1/2 mr-2">
-                                <label class="block text-sm font-medium text-gray-700" for="gender">Major</label>
-                                <select v-model="editedPost.major_id" class="mt-1 p-2 w-full border rounded">
-                                    <option value="" disabled>Select Major</option>
-                                    <option v-for="major in majors" :key="major.id" :value="major.id">{{ major.name }}</option>
-                                    <!-- <option value="2">Ecommerce</option> -->
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-end mt-4 gap-x-2">
-                            <button @click="editModal = false" type="button"
-                                class="w-32 py-2  bg-gray-500 text-white border-2 hover:bg-gray-600">Cancel</button>
-                            <button type="submit"
-                                class="w-32 py-2 bg-blue-500 mr-2 text-white  border-2 hover:bg-blue-600">Save</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="w-1/2 ml-2">
+              <label
+                for="lastName"
+                class="block text-sm font-medium text-gray-700"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                v-model="newPost.l_name"
+                name="l_name"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                placeholder="User last name"
+              />
             </div>
+          </div>
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Gender</label
+              >
+              <select
+                v-model="newPost.gender"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              >
+                <option value="" disabled>Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="w-1/2 ml-2">
+              <label class="block text-sm font-medium text-gray-700" for="dob"
+                >Date of Birth</label
+              >
+              <input
+                v-model="newPost.dob"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                type="date"
+                name="dob"
+                placeholder="Enter dob"
+              />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              v-model="newPost.email"
+              name="email"
+              class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              placeholder="Enter Email"
+            />
+          </div>
+          <div v-if="error" class="text-red-500 text-sm">
+            {{ error }}
+          </div>
+          <div class="flex justify-between mb-2">
+            <div class="w-[48%]">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="student_id"
+                >Student ID</label
+              >
+              <input
+                v-model="newPost.student_id"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                type="text"
+                name="student_id"
+                placeholder="Example B20210021"
+              />
+            </div>
+            <div class="w-[48%]">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Generation</label
+              >
+              <select
+                v-model="newPost.generation_id"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              >
+                <option value="" disabled>Select Generation</option>
+                <option
+                  v-for="gen in generations"
+                  :key="gen.id"
+                  :value="gen.id"
+                >
+                  {{ gen.gen }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-between mb-2">
+            <div class="w-[48%]">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Group</label
+              >
+              <select
+                v-model="newPost.group_id"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              >
+                <option value="" disabled>Select Group</option>
+                <option
+                  v-for="group in groups"
+                  :key="group.id"
+                  :value="group.id"
+                >
+                  {{ group.group_name }}
+                </option>
+              </select>
+            </div>
+            <div class="w-[48%]">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Major</label
+              >
+              <select
+                v-model="newPost.major_id"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              >
+                <option value="" disabled>Select Major</option>
+                <option
+                  v-for="major in majors"
+                  :key="major.id"
+                  :value="major.id"
+                >
+                  {{ major.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-end items-center mt-4 gap-x-2">
+            <button
+              @click="showModal = false"
+              type="button"
+              class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="w-32 py-2 bg-blue-500 mr-2 text-white border-2 hover:bg-blue-600"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 
+  <!-- Modal for editing a post -->
+  <div
+    v-if="editModal"
+    class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50"
+  >
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg p-6 border border-2">
+        <div class="mb-4 text-center">
+          <h1 class="text-2xl font-bold decoration-gray-400 border-b-2 pb-2">
+            Edit Student Information
+          </h1>
+        </div>
+        <form @submit.prevent="updatePost">
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                for="firstName"
+                class="block text-sm font-medium text-gray-700"
+                >First Name</label
+              >
+              <input
+                type="text"
+                v-model="editedPost.f_name"
+                name="f_name"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                placeholder="User first name"
+              />
+            </div>
+
+            <div class="w-1/2 ml-2">
+              <label
+                for="lastName"
+                class="block text-sm font-medium text-gray-700"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                v-model="editedPost.l_name"
+                name="l_name"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                placeholder="User last name"
+              />
+            </div>
+          </div>
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Gender</label
+              >
+              <select
+                v-model="editedPost.gender"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              >
+                <option value="" disabled>Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="w-1/2 ml-2">
+              <label class="block text-sm font-medium text-gray-700" for="dob"
+                >Date of Birth</label
+              >
+              <input
+                v-model="editedPost.dob"
+                class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                type="date"
+                name="dob"
+                placeholder="Enter dob"
+              />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              v-model="editedPost.email"
+              name="email"
+              class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+              placeholder="Enter Email"
+            />
+          </div>
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="student_id"
+                >Student ID</label
+              >
+              <input
+                v-model="editedPost.student_id"
+                class="mt-1 p-2 w-full border rounded"
+                type="text"
+                name="student_id"
+                placeholder="Enter student_id"
+              />
+            </div>
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Generation</label
+              >
+              <select
+                v-model="editedPost.generation_id"
+                class="mt-1 p-2 w-full border rounded"
+              >
+                <option value="" disabled>Select Generation</option>
+                <option
+                  v-for="gen in generations"
+                  :key="gen.id"
+                  :value="gen.id"
+                >
+                  {{ gen.gen }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="flex mb-2">
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Group</label
+              >
+              <select
+                v-model="editedPost.group_id"
+                class="mt-1 p-2 w-full border rounded"
+              >
+                <option value="" disabled>Select Group</option>
+                <option
+                  v-for="group in groups"
+                  :key="group.id"
+                  :value="group.id"
+                >
+                  {{ group.group_name }}
+                </option>
+              </select>
+            </div>
+            <div class="w-1/2 mr-2">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="gender"
+                >Major</label
+              >
+              <select
+                v-model="editedPost.major_id"
+                class="mt-1 p-2 w-full border rounded"
+              >
+                <option value="" disabled>Select Major</option>
+                <option
+                  v-for="major in majors"
+                  :key="major.id"
+                  :value="major.id"
+                >
+                  {{ major.name }}
+                </option>
+                <!-- <option value="2">Ecommerce</option> -->
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end mt-4 gap-x-2">
+            <button
+              @click="editModal = false"
+              type="button"
+              class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="w-32 py-2 bg-blue-500 mr-2 text-white border-2 hover:bg-blue-600"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import Papa from "papaparse";
 import { FilterMatchMode } from "primevue/api";
 import { ref } from "vue";
-import Swal from 'sweetalert2'
-import 'sweetalert2/dist/sweetalert2.min.css'
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 export default {
   data() {
     return {
-        showModal: false,
-        newPost: {
-            f_name: '',
-            l_name: '',
-            email: '',
-            gender: '',
-            dob: '',
-            student_id: '',
-            generation_id: '',
-            group_id: '',
-            major_id: '',
-        },
-        editModal: false,
-        majors: [],
-        generations: [],
-        groups: [],
-        editedPost: {
-            id: null,
-            f_name: '',
-            l_name: '',
-            gender: '',
-            dob: '',
-            student_id: '',
-            generation_id: '',
-            group_id: '',
-            major_id: '',
-            user_id: '',
-        },
-        students: [],
-        student: [],
-        selectedTabId: 0,
-        tableData: [],
-        totalRecords: 0,
-        selectedMajor: null,
-        majorTabs: [
-            { label: 'All Student', icon: 'pi pi-book', major: null },
-        ],
-        filters: {
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS }
-        },
-        // upload csv
-        fileInput: null,
-        isLoading: false,
-        errorMessage: null,
-        studentData: [],
-        error: null
+      showModal: false,
+      newPost: {
+        f_name: "",
+        l_name: "",
+        email: "",
+        gender: "",
+        dob: "",
+        student_id: "",
+        generation_id: "",
+        group_id: "",
+        major_id: "",
+      },
+      editModal: false,
+      majors: [],
+      generations: [],
+      groups: [],
+      editedPost: {
+        id: null,
+        f_name: "",
+        l_name: "",
+        gender: "",
+        dob: "",
+        student_id: "",
+        generation_id: "",
+        group_id: "",
+        major_id: "",
+        user_id: "",
+      },
+      students: [],
+      student: [],
+      selectedTabId: 0,
+      tableData: [],
+      totalRecords: 0,
+      selectedMajor: null,
+      majorTabs: [{ label: "All Student", icon: "pi pi-book", major: null }],
+      filters: {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      },
+      // upload csv
+      fileInput: null,
+      isLoading: false,
+      errorMessage: null,
+      studentData: [],
+      error: null,
     };
   },
   mounted() {
@@ -304,119 +599,120 @@ export default {
   },
   methods: {
     fetchPosts() {
-      axios.get('students')
-        .then(response => {
-               const students = response.data.map((student) => {
-                const genName = student.generation.gen;
-                const group_name = student.group.group_name;
-                const fullName = student.f_name + ' '+ student.l_name;
-                const Major = student.major.name;
-                return {
-                    ...student,
-                    genName,
-                    group_name,
-                    Major,
-                    fullName // Add termName property to each course object
-                };
-                });
-                this.tableData = students;
+      axios
+        .get("students")
+        .then((response) => {
+          const students = response.data.map((student) => {
+            const genName = student.generation.gen;
+            const group_name = student.group.group_name;
+            const fullName = student.f_name + " " + student.l_name;
+            const Major = student.major.name;
+            return {
+              ...student,
+              genName,
+              group_name,
+              Major,
+              fullName, // Add termName property to each course object
+            };
+          });
+          this.tableData = students;
         })
-        .catch(error => {
-          console.error('Error fetching posts:', error);
+        .catch((error) => {
+          console.error("Error fetching posts:", error);
         });
     },
-    getMajor(){
-        axios.get('majors').then(
-            res=>{
-                this.majors = res.data
-            }
-        )
+    getMajor() {
+      axios.get("majors").then((res) => {
+        this.majors = res.data;
+      });
     },
-    async getMajorName(){
-            try {
-                const response = await axios.get('majors');
-                this.majors = response.data;
-                this.majorTabs.push(...this.majors.map((major) => ({
-                label: major.name,
-                icon: 'pi pi-book',
-                major,
-                })));
-            } catch (error) {
-                console.error('Error fetching majors:', error);
-            }
+    async getMajorName() {
+      try {
+        const response = await axios.get("majors");
+        this.majors = response.data;
+        this.majorTabs.push(
+          ...this.majors.map((major) => ({
+            label: major.name,
+            icon: "pi pi-book",
+            major,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+      }
     },
-    getGeneration(){
-        axios.get('generations').then(
-            res=>{
-                this.generations = res.data
-            }
-        )
-
+    getGeneration() {
+      axios.get("generations").then((res) => {
+        this.generations = res.data;
+      });
     },
-    getGroups(){
-        axios.get('groups').then(
-            res=>{
-                this.groups = res.data.data
-
-            }
-        )
-
+    getGroups() {
+      axios.get("groups").then((res) => {
+        this.groups = res.data.data;
+      });
     },
     async handleTabChange(newTab) {
-            this.selectedTabId = newTab.index;
-            this.tableData = [];
-            try {
-                const response = await axios.get(this.selectedTabId != 0 ? `student/${this.selectedTabId}` : `students`); // Adjust for your API endpoint
-                // this.tableData = response.data;
-                const coursesWithTermNames = response.data.map((student) => {
-                const genName = student.generation?.gen;
-                const group_name = student.group?.group_name;
-                const Major = student.major.name;
-                const fullName = student.f_name + ' '+ student.l_name;
-                return {
-                    ...student,
-                    group_name,
-                    genName,
-                    Major,
-                    fullName // Add termName property to each course object
-                };
-                });
-                this.tableData = coursesWithTermNames;
-                this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
-            } catch (error) {
-                console.error('Error fetching courses:', error);
-            } finally {
-                this.loading = false;
-            }
-
+      this.selectedTabId = newTab.index;
+      this.tableData = [];
+      try {
+        const response = await axios.get(
+          this.selectedTabId != 0 ? `student/${this.selectedTabId}` : `students`
+        ); // Adjust for your API endpoint
+        // this.tableData = response.data;
+        const coursesWithTermNames = response.data.map((student) => {
+          const genName = student.generation?.gen;
+          const group_name = student.group?.group_name;
+          const Major = student.major.name;
+          const fullName = student.f_name + " " + student.l_name;
+          return {
+            ...student,
+            group_name,
+            genName,
+            Major,
+            fullName, // Add termName property to each course object
+          };
+        });
+        this.tableData = coursesWithTermNames;
+        this.totalRecords = response.headers["x-total-count"]; // Assume API provides total count
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        this.loading = false;
+      }
     },
 
     createPost() {
-      axios.post('students', this.newPost)
-        .then(response => {
+      axios
+        .post("students", this.newPost)
+        .then((response) => {
           // Handle success, maybe show a success message or update the post list
-          console.log('Post created:', response.data);
+          console.log("Post created:", response.data);
           this.showModal = false;
-          this.newPost.f_name = '';
-          this.newPost.l_name = '';
-          this.newPost.email = '';
-          this.newPost.gender = '';
-          this.newPost.dob = '';
-          this.newPost.generation_id = '',
-            this.newPost.group_id = '',
-            this.newPost.major_id = '',
-            this.newPost.student_id = '',
+          this.newPost.f_name = "";
+          this.newPost.l_name = "";
+          this.newPost.email = "";
+          this.newPost.gender = "";
+          this.newPost.dob = "";
+          (this.newPost.generation_id = ""),
+            (this.newPost.group_id = ""),
+            (this.newPost.major_id = ""),
+            (this.newPost.student_id = ""),
             this.fetchPosts(); // Refresh posts after creating a new one
-            this.$toast.add({ severity: 'success', summary: 'Add Successfully', detail: 'Add Successfully', life: 3000 });
+          this.$toast.add({
+            severity: "success",
+            summary: "Add Successfully",
+            detail: "Add Successfully",
+            life: 3000,
+          });
         })
-        .catch(error => {
-            if (error.response && error.response.status === 422) {
-                console.log('Error:', error.response.data.message);
-                this.error = error.response.data.errors.email[0]
-                // Handle specific validation errors if present (optional)
-            } else {
-                console.log('Unexpected error:', error);
-            }
+        .catch((error) => {
+          if (error.response && error.response.status === 422) {
+            console.log("Error:", error.response.data.message);
+            this.error = error.response.data.errors.email[0];
+            // Handle specific validation errors if present (optional)
+          } else {
+            console.log("Unexpected error:", error);
+          }
           // Handle error, maybe show an error message
         });
     },
@@ -435,62 +731,74 @@ export default {
       this.editModal = true;
     },
     updatePost() {
-      axios.put(`students/${this.editedPost.id}`, this.editedPost)
-        .then(response => {
-          console.log('Post updated:', response.data);
+      axios
+        .put(`students/${this.editedPost.id}`, this.editedPost)
+        .then((response) => {
+          console.log("Post updated:", response.data);
           this.editModal = false;
           this.fetchPosts(); // Refresh posts after updating one
-          this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Edit Successfully', life: 3000 });
+          this.$toast.add({
+            severity: "success",
+            summary: "Edit Successfully",
+            detail: "Edit Successfully",
+            life: 3000,
+          });
         })
-        .catch(error => {
-            if (error.response && error.response.status === 422) {
-                console.log('Error:', error.response.data.message);
-                // Handle specific validation errors if present (optional)
-            } else {
-                console.log('Unexpected error:', error);
-            }
+        .catch((error) => {
+          if (error.response && error.response.status === 422) {
+            console.log("Error:", error.response.data.message);
+            // Handle specific validation errors if present (optional)
+          } else {
+            console.log("Unexpected error:", error);
+          }
         });
     },
-    confirmDelete(prod){
-            Swal.fire({
-            title: 'Are you sure?',
-            text: `${prod.fullName} will remove from your system`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.deletePost(prod.id);
-                this.deleteDialog = false;
-                this.$toast.add({ severity: 'success', summary: 'Delete Successfully', detail: 'Course deleted Successfully', life: 3000 });
-            }
-            else {
-                console.log('Deletion canceled');
-                // this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Faileddd', life: 3000 });
-            }
-        });
+    confirmDelete(prod) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: `${prod.fullName} will remove from your system`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletePost(prod.id);
+          this.deleteDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Delete Successfully",
+            detail: "Course deleted Successfully",
+            life: 3000,
+          });
+        } else {
+          console.log("Deletion canceled");
+          // this.$toast.add({ severity: 'error', summary: 'Fail delete', detail: 'Faileddd', life: 3000 });
+        }
+      });
     },
     deletePost(postId) {
-      axios.delete(`students/${postId}`)
-        .then(response => {
+      axios
+        .delete(`students/${postId}`)
+        .then((response) => {
           this.fetchPosts();
         })
-        .catch(error => {
-          console.error('Error deleting post:', error);
+        .catch((error) => {
+          console.error("Error deleting post:", error);
         });
     },
-    exportCSV(){
-      const studentData = this.tableData.map(student => ({
-          FullName: student.fullName,
-          ID: student.student_id,
-          Gender: student.gender,
-          DateOfBith: student.dob,
-          GroupName: student.group_name,
-          Major: student.Major,
-          Generation: student.genName
-
+    exportCSV() {
+      const studentData = this.tableData.map((student) => ({
+        ID: student.student_id,
+        FirstName: student.f_name,
+        LastName: student.l_name,
+        Gender: student.gender,
+        DateOfBirth: student.dob,
+        Group: student.group.group_name,
+        Major: student.major.name,
+        Generation: student.generation.gen,
+        Email: student.user.email,
       }));
       this.tableData = studentData;
       const csv = Papa.unparse(this.tableData);
@@ -501,96 +809,273 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      this.fetchPosts()
+      this.fetchPosts();
     },
-    handleFileUpload() {
-        this.$nextTick(() => {
-            const file = this.fileInput.files[0];
-            if (!file) {
-            this.errorMessage = 'Please select a CSV file.';
-            return;
-            }
+    // importCSV() {
+    //   // Trigger the file input click event
+    //   this.$refs.fileInput.click();
+    // },
 
-            this.isLoading = true;
-            this.errorMessage = null;
+    // async importStudentsFromCSV() {
+    //   try {
+    //     // Access the file input element using refs
+    //     const fileInput = this.$refs.fileInput;
 
-            Papa.parseFile(file.path, {
-            header: true,
-            complete: (results) => {
-                const studentData = results.data;
-                this.importStudents(studentData);
-            },
-            error: (error) => {
-                this.isLoading = false;
-                this.errorMessage = `Error parsing CSV: ${error.message}`;
-            },
-            });
-        });
+    //     // Check if a file is selected
+    //     if (!fileInput.files.length) {
+    //       // Handle case where no file is selected
+    //       console.error("No file selected");
+    //       return;
+    //     }
+
+    //     // Get the first selected file
+    //     const file = fileInput.files[0];
+
+    //     // Create a FormData object to send the file
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+
+    //     // Make a POST request to the backend endpoint
+    //     const response = await axios.post("students_import", formData, {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
+    //       },
+    //     });
+    //     this.fetchPosts();
+    //     // Handle successful response
+    //     console.log("Import response:", response.data);
+
+    //     // Show success message
+    //     this.$toast.add({
+    //       severity: "success",
+    //       summary: "Import Successful",
+    //       detail: "Students imported successfully",
+    //       life: 3000,
+    //     });
+    //   } catch (error) {
+    //     // Handle errors, display error message, etc.
+    //     console.error("Error importing CSV:", error);
+
+    //     // Show error message
+    //     this.$toast.add({
+    //       severity: "error",
+    //       summary: "Import Failed",
+    //       detail: "Failed to import teachers",
+    //       life: 3000,
+    //     });
+    //   }
+    // },
+
+    // async parseCSV(file) {
+    //   return new Promise((resolve, reject) => {
+    //     Papa.parse(file, {
+    //       complete: (results) => resolve(results.data),
+    //       error: (error) => reject(error),
+    //     });
+    //   });
+    // },
+
+    // async createStudents(data) {
+    //   for (const row of data) {
+    //     try {
+    //       const studentData = {
+    //         student_id: row.ID,
+    //         f_name: row.FirstName,
+    //         l_name: row.LastName,
+    //         gender: row.Gender,
+    //         dob: row.DateOfBirth, // Corrected typo
+    //         user: {
+    //           email: row.Email,
+    //         },
+    //         generation: {
+    //           gen: row.Generation,
+    //         },
+    //         major: {
+    //           name: row.Major,
+    //         },
+    //         group: {
+    //           group_name: row.Group,
+    //         },
+    //       };
+
+    //       await this.$axios.post("students/import", studentData); // Use Axios for HTTP request
+    //     } catch (error) {
+    //       console.error("Error creating students:", error);
+    //       // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
+    //     }
+    //   }
+    // },
+    async importCSV() {
+      // Trigger the file input click event
+      this.$refs.fileInput.click();
     },
-    async importStudents(studentData) {
+    async importStudentsFromCSV() {
       try {
-        // Validate student data here (optional)
-        const response = await axios.post('students', studentData);
-        if (response.status === 200) {
-          console.log('Students imported successfully!');
-        } else {
-          this.errorMessage = 'Error importing students. Check server response.';
-        }
-      } catch (error) {
-        this.errorMessage = `Error importing students: ${error.message}`;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async handleFileUpload1() {
-      this.$nextTick(async () => {
-        const file = this.fileInput.files[0];
-        if (!file) {
-          this.errorMessage = 'Please select a CSV file.';
+        // Access the file input element using refs
+        const fileInput = this.$refs.fileInput;
+
+        // Check if a file is selected
+        if (!fileInput.files.length) {
+          // Handle case where no file is selected
+          console.error("No file selected");
           return;
         }
 
-        this.isLoading = true;
-        this.errorMessage = null;
+        // Get the first selected file
+        const file = fileInput.files[0];
 
-        try {
-          const formData = new FormData();
-          formData.append('studentCsv', file);
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append("file", file);
 
-          const response = await axios.post('students/import', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
+        // Make a POST request to the backend endpoint
+        const response = await axios.post("students_import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
+          },
+        });
+        this.fetchPosts();
+        // Handle successful response
+        console.log("Import response:", response.data);
 
-          if (response.status === 200) {
-            console.log('Students imported successfully!');
-          } else {
-            this.errorMessage = 'Error importing students. Check server response.';
-          }
-        } catch (error) {
-          console.error(error);
-          this.errorMessage = `Error importing students: ${error.message}`;
-        } finally {
-          this.isLoading = false;
-        }
+        // Show success message
+        this.$toast.add({
+          severity: "success",
+          summary: "Import Successful",
+          detail: "Teachers imported successfully",
+          life: 3000,
+        });
+      } catch (error) {
+        // Handle errors, display error message, etc.
+        console.error("Error importing CSV:", error);
+
+        // Show error message
+        this.$toast.add({
+          severity: "error",
+          summary: "Import Failed",
+          detail: "Failed to import teachers",
+          life: 3000,
+        });
+      }
+    },
+
+    // async importStudentsFromCSV() {
+    //   try {
+    //     // Access the file input element using refs
+    //     const fileInput = this.$refs.fileInput;
+
+    //     // Check if a file is selected
+    //     if (!fileInput.files.length) {
+    //       // Handle case where no file is selected
+    //       console.error("No file selected");
+    //       return;
+    //     }
+
+    //     // Get the first selected file
+    //     const file = fileInput.files[0];
+
+    //     // Read file content using FileReader
+    //     const reader = new FileReader();
+    //     reader.readAsText(file, "UTF-8");
+    //     reader.onload = async (event) => {
+    //       try {
+    //         // Parse CSV data
+    //         const csvData = await this.parseCSV(event.target.result);
+
+    //         // Create students from parsed CSV data
+    //         await this.createStudents(csvData);
+
+    //         // Show success message
+    //         this.$toast.add({
+    //           severity: "success",
+    //           summary: "Import Successful",
+    //           detail: "Students imported successfully",
+    //           life: 3000,
+    //         });
+
+    //         // Optionally, fetch and update student data if needed
+    //         // this.fetchStudents();
+    //       } catch (error) {
+    //         console.error("Error importing CSV:", error);
+
+    //         // Show error message
+    //         this.$toast.add({
+    //           severity: "error",
+    //           summary: "Import Failed",
+    //           detail: "Failed to import students",
+    //           life: 3000,
+    //         });
+    //       }
+    //     };
+    //   } catch (error) {
+    //     console.error("Error importing CSV:", error);
+    //   }
+    // },
+
+    async parseCSV(csvContent) {
+      return new Promise((resolve, reject) => {
+        Papa.parse(csvContent, {
+          header: true, // Treat the first row as headers
+          complete: (results) => resolve(results.data),
+          error: (error) => reject(error),
+        });
       });
-    }
+    },
 
+    async createStudents(data) {
+      for (const row of data) {
+        try {
+          const studentData = {
+            student_id: row.ID,
+            f_name: row.FirstName,
+            l_name: row.LastName,
+            gender: row.Gender,
+            dob: row.DateOfBith, // Corrected typo
+            user: {
+              email: row.Email,
+            },
+            generation: {
+              gen: row.Generation,
+            },
+            major: {
+              name: row.Major,
+            },
+            group: {
+              group_name: row.Group,
+            },
+          };
 
+          await this.$axios.post("students/import", studentData);
+        } catch (error) {
+          console.error("Error creating students:", error);
+          // Handle individual student creation errors here if needed
+        }
+      }
+    },
+
+    async parseCSV(file) {
+      return new Promise((resolve, reject) => {
+        Papa.parse(file, {
+          header: true,
+          complete: (results) => {
+            resolve(results.data);
+          },
+          error: (error) => {
+            reject(error);
+          },
+        });
+      });
+    },
   },
-  setup(){
-
-  }
 };
 </script>
 <style scoped>
-  .nav-link {
-    text-align: center;
-    transition: background-color 0.3s;
-  }
-  .active-link {
-    border-bottom: 2px solid #4299e1;
-    color: #4299e1;
-  }
+.nav-link {
+  text-align: center;
+  transition: background-color 0.3s;
+}
+.active-link {
+  border-bottom: 2px solid #4299e1;
+  color: #4299e1;
+}
 </style>
