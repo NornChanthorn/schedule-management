@@ -158,12 +158,13 @@ class StudentController extends Controller
         'ID'=>'student_id',
         'FirstName' => 'f_name',
         'LastName' => 'l_name',
-        'Email' => 'email',
+        
         'Gender' => 'gender',
         'DateOfBith' => 'dob', // Corrected typo here
         'Generation'=>'gen',
         'Group'=>'group_name',
-        'Major'=>'name'
+        'Major'=>'name',
+        'Email' => 'email',
         // Add more mappings for other columns as needed
     ];
 
@@ -219,7 +220,7 @@ class StudentController extends Controller
     }
 
     // Return response with imported students
-    return response()->json(['message' => 'Students imported successfully', 'students' => $importedStudents, 'users' => $importedUsers,'generations'=>$importedGenerations,'majors'=>$importedMajors,'groups'=>$importedGroups]);
+    return response()->json(['message' => 'Students imported successfully', 'students' => $importedStudents, 'users' => $importedUsers]);
 }
 
 
