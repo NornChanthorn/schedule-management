@@ -42,11 +42,11 @@
       </button>
       <div>
         <input
-        type="file"
-        ref="fileInput"
-        style="display: none"
-        @change="importTeachersFromCSV"
-        accept=".csv"
+          type="file"
+          ref="fileInput"
+          style="display: none"
+          @change="importTeachersFromCSV"
+          accept=".csv"
         />
         <button
           @click="importCSV"
@@ -608,87 +608,54 @@ export default {
     },
 
     async importTeachersFromCSV() {
-  try {
-    // Access the file input element using refs
-    const fileInput = this.$refs.fileInput;
+      try {
+        // Access the file input element using refs
+        const fileInput = this.$refs.fileInput;
 
-    // Check if a file is selected
-    if (!fileInput.files.length) {
-      // Handle case where no file is selected
-      console.error("No file selected");
-      return;
-    }
+        // Check if a file is selected
+        if (!fileInput.files.length) {
+          // Handle case where no file is selected
+          console.error("No file selected");
+          return;
+        }
 
-    // Get the first selected file
-    const file = fileInput.files[0];
+        // Get the first selected file
+        const file = fileInput.files[0];
 
-    // Create a FormData object to send the file
-    const formData = new FormData();
-    formData.append('file', file);
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append("file", file);
 
-    // Make a POST request to the backend endpoint
-    const response = await axios.post('teachers_import', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Ensure proper content type for file uploads
-      },
-    });
-    this.fetchPosts()
-    // Handle successful response
-    console.log("Import response:", response.data);
+        // Make a POST request to the backend endpoint
+        const response = await axios.post("teachers_import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
+          },
+        });
+        this.fetchPosts();
+        // Handle successful response
+        console.log("Import response:", response.data);
 
-    // Show success message
-    this.$toast.add({
-      severity: "success",
-      summary: "Import Successful",
-      detail: "Teachers imported successfully",
-      life: 3000,
-    });
-  } catch (error) {
-    // Handle errors, display error message, etc.
-    console.error("Error importing CSV:", error);
+        // Show success message
+        this.$toast.add({
+          severity: "success",
+          summary: "Import Successful",
+          detail: "Teachers imported successfully",
+          life: 3000,
+        });
+      } catch (error) {
+        // Handle errors, display error message, etc.
+        console.error("Error importing CSV:", error);
 
-    // Show error message
-    this.$toast.add({
-      severity: "error",
-      summary: "Import Failed",
-      detail: "Failed to import teachers",
-      life: 3000,
-    });
-  }
-},
-
-
-    // async importTeachersFromCSV(event) {
-    //   const file = event.target.files[0];
-    //   if (!file) {
-    //     this.$toast.add({
-    //       severity: 'error',
-    //       summary: 'Error',
-    //       detail: 'Please select a CSV file to import.',
-    //       life: 3000,
-    //     });
-    //     return;
-    //   }
-
-    //   try {
-    //     const parsedData = await this.parseCSV(file);
-    //     await this.createTeachers(parsedData);
-    //     this.$toast.add({
-    //       severity: 'success',
-    //       summary: 'Import Successful',
-    //       detail: 'Teachers imported successfully.',
-    //       life: 3000,
-    //     });
-    //   } catch (error) {
-    //     console.error('Error importing CSV:', error);
-    //     this.$toast.add({
-    //       severity: 'error',
-    //       summary: 'Import Failed',
-    //       detail: 'Failed to import teachers.',
-    //       life: 3000,
-    //     });
-    //   }
-    // },
+        // Show error message
+        this.$toast.add({
+          severity: "error",
+          summary: "Import Failed",
+          detail: "Failed to import teachers",
+          life: 3000,
+        });
+      }
+    },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
@@ -714,51 +681,13 @@ export default {
             },
           };
 
-          await this.$axios.post('teachers/import', teacherData); // Use Axios for HTTP request
+          await this.$axios.post("teachers/import", teacherData); // Use Axios for HTTP request
         } catch (error) {
-          console.error('Error creating teacher:', error);
+          console.error("Error creating teacher:", error);
           // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
         }
       }
     },
-
-
-
-
-
-    // async createTeacher(teacherData) {
-    //   try {
-    //     // Make a POST request to create the teacher
-    //     const teacherResponse = await axios.post(
-    //       "teachers/import",
-    //       teacherData
-    //     );
-
-    //     // Optionally, handle successful creation response
-    //     console.log("Teacher created:", teacherResponse.data);
-    //   } catch (error) {
-    //     // Handle errors, display error message, etc.
-    //     console.error("Error creating teacher:", error);
-    //     throw error; // Rethrow the error to propagate it upwards if needed
-    //   }
-    // },
-
-    // async createTeacher(teacherData) {
-    //   try {
-    //     // Make a POST request to create the teacher
-    //     const teacherResponse = await axios.post(
-    //       "teachers/import",
-    //       teacherData
-    //     );
-
-    //     // Optionally, handle successful creation response
-    //     console.log("Teacher created:", teacherResponse.data);
-    //   } catch (error) {
-    //     // Handle errors, display error message, etc.
-    //     console.error("Error creating teacher:", error);
-    //     throw err; // Rethrow the error to propagate it upwards if needed
-    //   }
-    // },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
@@ -773,6 +702,36 @@ export default {
         });
       });
     },
+    // async createStudents(data) {
+    //   for (const row of data) {
+    //     try {
+    //       const studentData = {
+    //         student_id: row.ID,
+    //         f_name: row.FirstName,
+    //         l_name: row.LastName,
+    //         gender: row.Gender,
+    //         dob: row.DateOfBirth, // Corrected typo
+    //         user: {
+    //           email: row.Email,
+    //         },
+    //         generation: {
+    //           gen: row.Generation,
+    //         },
+    //         major: {
+    //           name: row.Major,
+    //         },
+    //         group: {
+    //           group_name: row.Group,
+    //         },
+    //       };
+
+    //       await this.$axios.post("students/import", studentData); // Use Axios for HTTP request
+    //     } catch (error) {
+    //       console.error("Error creating students:", error);
+    //       // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
+    //     }
+    //   }
+    // },
   },
 };
 </script>
@@ -787,3 +746,5 @@ export default {
   color: #4299e1;
 }
 </style>
+
+

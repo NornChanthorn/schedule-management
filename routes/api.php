@@ -77,3 +77,4 @@ Route::post('teachers/import', [TeacherController::class, 'import']);
 Route::post('teachers_import', [TeacherController::class, 'import_teacher']);
 Route::post('students/import', [StudentController::class, 'import']);
 Route::post('students_import', [StudentController::class, 'import_student']);
+// Route::post('students/import', [StudentController::class, 'import_student']);

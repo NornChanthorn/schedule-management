@@ -811,107 +811,12 @@ export default {
       document.body.removeChild(link);
       this.fetchPosts();
     },
-    // importCSV() {
-    //   // Trigger the file input click event
-    //   this.$refs.fileInput.click();
-    // },
-
-    // async importStudentsFromCSV() {
-    //   try {
-    //     // Access the file input element using refs
-    //     const fileInput = this.$refs.fileInput;
-
-    //     // Check if a file is selected
-    //     if (!fileInput.files.length) {
-    //       // Handle case where no file is selected
-    //       console.error("No file selected");
-    //       return;
-    //     }
-
-    //     // Get the first selected file
-    //     const file = fileInput.files[0];
-
-    //     // Create a FormData object to send the file
-    //     const formData = new FormData();
-    //     formData.append("file", file);
-
-    //     // Make a POST request to the backend endpoint
-    //     const response = await axios.post("students_import", formData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
-    //       },
-    //     });
-    //     this.fetchPosts();
-    //     // Handle successful response
-    //     console.log("Import response:", response.data);
-
-    //     // Show success message
-    //     this.$toast.add({
-    //       severity: "success",
-    //       summary: "Import Successful",
-    //       detail: "Students imported successfully",
-    //       life: 3000,
-    //     });
-    //   } catch (error) {
-    //     // Handle errors, display error message, etc.
-    //     console.error("Error importing CSV:", error);
-
-    //     // Show error message
-    //     this.$toast.add({
-    //       severity: "error",
-    //       summary: "Import Failed",
-    //       detail: "Failed to import teachers",
-    //       life: 3000,
-    //     });
-    //   }
-    // },
-
-    // async parseCSV(file) {
-    //   return new Promise((resolve, reject) => {
-    //     Papa.parse(file, {
-    //       complete: (results) => resolve(results.data),
-    //       error: (error) => reject(error),
-    //     });
-    //   });
-    // },
-
-    // async createStudents(data) {
-    //   for (const row of data) {
-    //     try {
-    //       const studentData = {
-    //         student_id: row.ID,
-    //         f_name: row.FirstName,
-    //         l_name: row.LastName,
-    //         gender: row.Gender,
-    //         dob: row.DateOfBirth, // Corrected typo
-    //         user: {
-    //           email: row.Email,
-    //         },
-    //         generation: {
-    //           gen: row.Generation,
-    //         },
-    //         major: {
-    //           name: row.Major,
-    //         },
-    //         group: {
-    //           group_name: row.Group,
-    //         },
-    //       };
-
-    //       await this.$axios.post("students/import", studentData); // Use Axios for HTTP request
-    //     } catch (error) {
-    //       console.error("Error creating students:", error);
-    //       // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
-    //     }
-    //   }
-    // },
     async importCSV() {
       // Trigger the file input click event
       this.$refs.fileInput.click();
     },
     async importStudentsFromCSV() {
       try {
-        // Access the file input element using refs
         const fileInput = this.$refs.fileInput;
 
         // Check if a file is selected
@@ -934,31 +839,121 @@ export default {
             "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
           },
         });
-        // this.fetchPosts();
-        // Handle successful response
-        console.log("Import response:", response.data);
-
-        // Show success message
+        // console.log("Import response:", response.data);
         this.$toast.add({
           severity: "success",
           summary: "Import Successful",
-          detail: "Teachers imported successfully",
+          detail: "Students imported successfully",
           life: 3000,
         });
       } catch (error) {
-        // Handle errors, display error message, etc.
         console.error("Error importing CSV:", error);
-
-        // Show error message
         this.$toast.add({
           severity: "error",
           summary: "Import Failed",
-          detail: "Failed to import teachers",
+          detail: "Failed to import students",
           life: 3000,
         });
       }
     },
+    async parseCSV(csvContent) {
+      return new Promise((resolve, reject) => {
+        Papa.parse(csvContent, {
+          header: true,
+          complete: (results) => resolve(results.data),
+          error: (error) => reject(error),
+        });
+      });
+    },
+    async createStudents(data) {
+      for (const row of data) {
+        try {
+          const studentData = {
+            student_id: row.ID,
+            f_name: row.FirstName,
+            l_name: row.LastName,
+            gender: row.Gender,
+            dob: row.DateOfBirth, // Corrected typo
+            generation: {
+              gen: row.Generation,
+            },
+            group: {
+              group_name: row.Group,
+            },
+            major: {
+              name: row.Major,
+            },
+            user: {
+              email: row.Email,
+            },
+          };
 
+          await this.$axios.post("students/import", studentData);
+        } catch (error) {
+          console.error("Error creating students:", error);
+          // Handle individual student creation errors here if needed
+        }
+      }
+    },
+
+    // async createStudents(data) {
+    //   for (const row of data) {
+    //     if (
+    //       !row.FirstName ||
+    //       !row.LastName ||
+    //       !row.ID ||
+    //       !row.Gender ||
+    //       !row.DateOfBirth ||
+    //       !row.Email ||
+    //       !row.Generation ||
+    //       !row.Major ||
+    //       !row.Group
+    //     ) {
+    //       console.error(
+    //         "Required fields are missing or empty for a student:",
+    //         row
+    //       );
+    //       continue;
+    //     }
+
+    //     try {
+    //       const generationId = await this.fetchGenerationId(row.Generation);
+    //       const majorId = await this.fetchMajorId(row.Major);
+    //       const groupId = await this.fetchGroupId(row.Group);
+
+    //       const studentData = {
+    //         f_name: row.FirstName,
+    //         l_name: row.LastName,
+    //         student_id: row.ID,
+    //         gender: row.Gender,
+    //         dob: row.DateOfBirth,
+    //         email: row.Email,
+    //         generation_id: generationId,
+    //         major_id: majorId,
+    //         group_id: groupId,
+    //       };
+
+    //       await this.createStudent(studentData);
+    //     } catch (error) {
+    //       console.error("Error creating student:", error);
+    //     }
+    //   }
+    // },
+    // async fetchGenerationId(generationName) {
+    //   const response = await axios.get(`generations?gen=${generationName}`);
+    //   return response.data.id;
+    // },
+    // async fetchMajorId(majorName) {
+    //   const response = await axios.get(`majors?name=${majorName}`);
+    //   return response.data.id;
+    // },
+    // async fetchGroupId(groupName) {
+    //   const response = await axios.get(`groups?group_name=${groupName}`);
+    //   return response.data.id;
+    // },
+    // async createStudent(studentData) {
+    //   await axios.post("students", studentData);
+    // },
     // async importStudentsFromCSV() {
     //   try {
     //     // Access the file input element using refs
@@ -974,84 +969,149 @@ export default {
     //     // Get the first selected file
     //     const file = fileInput.files[0];
 
-    //     // Read file content using FileReader
-    //     const reader = new FileReader();
-    //     reader.readAsText(file, "UTF-8");
-    //     reader.onload = async (event) => {
-    //       try {
-    //         // Parse CSV data
-    //         const csvData = await this.parseCSV(event.target.result);
+    //     // Parse CSV file
+    //     const data = await this.parseCSV(file);
 
-    //         // Create students from parsed CSV data
-    //         await this.createStudents(csvData);
+    //     // Create students from parsed CSV data
+    //     await this.createStudents(data);
 
-    //         // Show success message
-    //         this.$toast.add({
-    //           severity: "success",
-    //           summary: "Import Successful",
-    //           detail: "Students imported successfully",
-    //           life: 3000,
-    //         });
-
-    //         // Optionally, fetch and update student data if needed
-    //         // this.fetchStudents();
-    //       } catch (error) {
-    //         console.error("Error importing CSV:", error);
-
-    //         // Show error message
-    //         this.$toast.add({
-    //           severity: "error",
-    //           summary: "Import Failed",
-    //           detail: "Failed to import students",
-    //           life: 3000,
-    //         });
-    //       }
-    //     };
+    //     // Show success message
+    //     this.$toast.add({
+    //       severity: "success",
+    //       summary: "Import Successful",
+    //       detail: "Students imported successfully",
+    //       life: 3000,
+    //     });
     //   } catch (error) {
+    //     // Handle errors, display error message, etc.
     //     console.error("Error importing CSV:", error);
+
+    //     // Show error message
+    //     this.$toast.add({
+    //       severity: "error",
+    //       summary: "Import Failed",
+    //       detail: "Failed to import students",
+    //       life: 3000,
+    //     });
     //   }
     // },
+    // async parseCSV(file) {
+    //   return new Promise((resolve, reject) => {
+    //     Papa.parse(file, {
+    //       header: true,
+    //       complete: (results) => {
+    //         resolve(results.data);
+    //       },
+    //       error: (error) => {
+    //         reject(error);
+    //       },
+    //     });
+    //   });
+    // },
+    // async createStudents(data) {
+    //   const formData = new FormData();
 
-    async parseCSV(csvContent) {
-      return new Promise((resolve, reject) => {
-        Papa.parse(csvContent, {
-          header: true, // Treat the first row as headers
-          complete: (results) => resolve(results.data),
-          error: (error) => reject(error),
-        });
-      });
-    },
+    //   for (const row of data) {
+    //     // Check if required fields are empty
+    //     if (
+    //       !row.FirstName ||
+    //       !row.LastName ||
+    //       !row.ID ||
+    //       !row.Gender ||
+    //       !row.DateOfBith ||
+    //       !row.Email ||
+    //       !row.Generation ||
+    //       !row.Major ||
+    //       !row.Group
+    //     ) {
+    //       console.error(
+    //         "Required fields are missing or empty for a student:",
+    //         row
+    //       );
+    //       continue; // Skip this student and proceed to the next one
+    //     }
+    //     // Fetch IDs for generation, major, and group
+    //     const generationId = await this.fetchGenerationId(row.Generation);
+    //     const majorId = await this.fetchMajorId(row.Major);
+    //     const groupId = await this.fetchGroupId(row.Group);
 
-    async createStudents(data) {
-      for (const row of data) {
-        try {
-          const studentData = {
-            student_id: row.ID,
-            f_name: row.FirstName,
-            l_name: row.LastName,
-            gender: row.Gender,
-            dob: row.DateOfBith, // Corrected typo
-            user: {
-              email: row.Email,
-            },
-            generation: {
-              gen: row.Generation,
-            },
-            major: {
-              name: row.Major,
-            },
-            group: {
-              group_name: row.Group,
-            },
-          };
+    //     const studentData = {
+    //       f_name: row.FirstName,
+    //       l_name: row.LastName,
+    //       student_id: row.ID,
+    //       gender: row.Gender,
+    //       dob: row.DateOfBirth,
+    //       email: row.Email,
+    //     };
+    //     await this.createStudentWithIds(
+    //       studentData,
+    //       generationId,
+    //       majorId,
+    //       groupId
+    //     );
+    //     // Append student data with the fetched IDs to the FormData object
+    //     // formData.append(
+    //     //   "students[]",
+    //     //   JSON.stringify({
+    //     //     f_name: row.FirstName,
+    //     //     l_name: row.LastName,
+    //     //     student_id: row.ID,
+    //     //     gender: row.Gender,
+    //     //     dob: row.DateOfBirth,
+    //     //     email: row.Email,
+    //     //     generation_id: generationId,
+    //     //     group_id: groupId,
+    //     //     major_id: majorId,
+    //     //   })
+    //     // );
+    //   }
 
-          await this.$axios.post("students/import", studentData);
-        } catch (error) {
-          console.error("Error creating students:", error);
-          // Handle individual student creation errors here if needed
-        }
-      }
-    },
+    //   // // Make a POST request with the FormData object
+    //   // await axios.post("students", formData, {
+    //   //   headers: {
+    //   //     "Content-Type": "multipart/form-data",
+    //   //   },
+    //   // });
+    // },
+    // async createStudentWithIds(studentData, generationId, majorId, groupId) {
+    //   const formData = new FormData();
+    //   formData.append("student[f_name]", studentData.f_name);
+    //   formData.append("student[l_name]", studentData.l_name);
+    //   formData.append("student[student_id]", studentData.student_id);
+    //   formData.append("student[gender]", studentData.gender);
+    //   formData.append("student[dob]", studentData.dob);
+    //   formData.append("student[email]", studentData.email);
+    //   formData.append("student[generation_id]", generationId);
+    //   formData.append("student[group_id]", groupId);
+    //   formData.append("student[major_id]", majorId);
+
+    //   try {
+    //     await axios.post("students/import", formData, {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     });
+    //     console.log("Student created successfully");
+    //   } catch (error) {
+    //     console.error("Error creating student:", error.response.data);
+    //     throw error; // Rethrow the error to handle it elsewhere if needed
+    //   }
+    // },
+    // async fetchGenerationId(generationName) {
+    //   // Make a GET request to fetch generation ID based on the name
+    //   const response = await axios.get(`generations?gen=${generationName}`);
+    //   return response.data.id;
+    // },
+    // async fetchMajorId(majorName) {
+    //   // Make a GET request to fetch major ID based on the name
+    //   const response = await axios.get(`majors?name=${majorName}`);
+    //   return response.data.id;
+    // },
+    // async fetchGroupId(groupName) {
+    //   // Make a GET request to fetch group ID based on the name
+    //   const response = await axios.get(`groups?group_name=${groupName}`);
+    //   return response.data.id;
+    // },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
