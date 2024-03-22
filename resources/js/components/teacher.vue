@@ -666,29 +666,6 @@ export default {
       });
     },
 
-    async createTeachers(data) {
-      for (const row of data) {
-        try {
-          const teacherData = {
-            title: row.Title,
-            f_name: row.FirstName,
-            l_name: row.LastName,
-            gender: row.Gender,
-            dob: row.DateOfBith, // Corrected typo
-            phone_num: row.Phone_Number,
-            user: {
-              email: row.Email,
-            },
-          };
-
-          await this.$axios.post("teachers/import", teacherData); // Use Axios for HTTP request
-        } catch (error) {
-          console.error("Error creating teacher:", error);
-          // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
-        }
-      }
-    },
-
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
         Papa.parse(file, {

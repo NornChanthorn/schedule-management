@@ -839,7 +839,7 @@ export default {
             "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
           },
         });
-        // console.log("Import response:", response.data);
+        console.log("Import response:", response.data);
         this.$toast.add({
           severity: "success",
           summary: "Import Successful",
@@ -865,38 +865,6 @@ export default {
         });
       });
     },
-    async createStudents(data) {
-      for (const row of data) {
-        try {
-          const studentData = {
-            student_id: row.ID,
-            f_name: row.FirstName,
-            l_name: row.LastName,
-            gender: row.Gender,
-            dob: row.DateOfBirth, // Corrected typo
-            generation: {
-              gen: row.Generation,
-            },
-            group: {
-              group_name: row.Group,
-            },
-            major: {
-              name: row.Major,
-            },
-            user: {
-              email: row.Email,
-            },
-          };
-
-          await this.$axios.post("students/import", studentData);
-        } catch (error) {
-          console.error("Error creating students:", error);
-          // Handle individual student creation errors here if needed
-        }
-      }
-    },
-
- 
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
