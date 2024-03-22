@@ -192,7 +192,8 @@ class StudentController extends Controller
             }
 
             // Check if the generation exists, otherwise create it
-            $generation = Generation::firstOrCreate(['gen' => $studentData['Generation']]);
+            $generationId = isset($studentData['Generation']) ? $studentData['Generation'] : null;
+            $generation = Generation::firstOrCreate(['gen' => $generationId]);
 
             // Check if the major exists, otherwise create it
             $major = Major::firstOrCreate(['name' => $studentData['Major']]);
