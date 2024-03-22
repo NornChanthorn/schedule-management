@@ -74,7 +74,7 @@ const routes=[
         meta: { requiresAuth: true },
         children:[
             {
-                path: '',
+                path: '/',
                 name: 'Major', // Add a comma here
                 component: Major,
             },

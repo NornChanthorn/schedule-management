@@ -107,11 +107,11 @@ methods: {
         .then(response => {
             const user = response.data;
             const userRole = user.role;
-            if(userRole == 'admin'){
-                this.$router.push({ name: 'Main', path: '/'});
+            if(userRole === 'admin'){
+                this.$router.push({ name: 'Major', path: '/'});
 
             }else{
-                this.$router.push({ name: 'TeacherPage', path:'/'});
+                this.$router.push({ name: 'TeacherPage'});
             }
             // Update your application state with user role (optional)
             // const retrievedUserRole = getUserRole(); // Replace with your logic
@@ -138,9 +138,22 @@ methods: {
           }
         } else {
           this.errors = 'An error occurred while logging in.';
+          this.setError(this.errors)
+
         }
     });
   },
+  setError(message) {
+      this.errors = message;
+      setTimeout(() => {
+        this.clearError();
+      }, 2000); // Set timeout for 10 seconds (10,000 milliseconds)
+    },
+    // Method to clear error message
+    clearError() {
+      this.errors = null;
+    },
+
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;

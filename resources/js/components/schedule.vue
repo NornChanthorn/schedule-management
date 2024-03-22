@@ -1,27 +1,38 @@
 <template>
   <Toast />
 
-  <div class="flex items-center mb-4 ml-4">
+  <div v-if="user.role =='admin'" class="flex items-center mb-4 ml-4 gap-2">
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute1">{{ majorName.name}}, </h1>
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute2"> Generation {{ GenName }},</h1>
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute3"> Term {{ termName }}</h1>
+  </div>
+
+  <div v-else>
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName.name}}, Generation {{ GenName }},
       Term {{
       termName }}</h1>
-  </div>
-  <div >
        <!-- <p>{{  filteredAvailableRooms}}</p> -->
   </div>
 
 
 
-  <div class="flex justify-between">
-    <!-- <button @click="printPDF" >Print PDF</button> -->
-
-    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[80%] inline"/>
-    <button @click="printPDF"  class="bg-teal-600 h-[90%]  cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-4 mt-3 " >
+  <div v-if="user.role=='admin'" class="inline justify-between w-[90%]">
+    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[100%] inline bg-gray-600"/>
+    <div class="flex justify-end">
+            <button @click="printPDF"  class="bg-teal-600 h-[90%]  cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-4 mt-3 " >
         <span class="flex items-center">
           <i class="fa-solid fa-file-export mr-2"></i>
           Export PDF
         </span>
     </button>
+    </div>
+
+  </div>
+  <div v-else class="flex ">
+    <!-- <button @click="printPDF" >Print PDF</button> -->
+
+    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[80%] inline bg-gray-600"/>
+
   </div>
 
   <div class="schedule-container p-4">
@@ -859,8 +870,6 @@ export default {
           console.error('Error fetching course teacher information:', error);
         });
     },
-
-
     fetchTeacherInfo() {
       if (this.user && this.user.id) {
         axios.get(`teacher_user/${this.user.id}`)
@@ -873,6 +882,15 @@ export default {
           });
       }
     },
+    backRoute1(){
+        this.$router.push({path: '/'})
+    },
+    backRoute2(){
+        this.$router.back(-2);
+    },
+    backRoute3(){
+        this.$router.back(-1);
+    }
   },
   setup() {
     const popupTriggers = ref({
