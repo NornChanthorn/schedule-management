@@ -75,6 +75,11 @@ Route::post('students/import', [StudentController::class, 'importStudents']);
 Route::post('send-email-notification', [CourseController::class, 'sendEmailNotification']);
 Route::post('teachers/import', [TeacherController::class, 'import']);
 Route::post('teachers_import', [TeacherController::class, 'import_teacher']);
+<<<<<<< HEAD
 Route::post('students/import', [StudentController::class, 'import']);
 Route::post('students_import', [StudentController::class, 'import_student']);
 // Route::post('students/import', [StudentController::class, 'import_student']);
+=======
+// Route::post('students/import', [StudentController::class, 'import']);
+Route::post('students_import', [StudentController::class, 'import_student']);
+>>>>>>> b5b6933e731650ca52d9d8defb1c9bec9d0eae87
