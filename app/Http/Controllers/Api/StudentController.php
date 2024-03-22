@@ -183,7 +183,7 @@ class StudentController extends Controller
                     }
                 }
 
-                $generation = Generation::updateOrCreate(['gen' => $row[array_search('Generation', $headers)]]);
+                $generation = Generation::updateOrcreate(['gen' => $row[array_search('Generation', $headers)]]);
                 $major = Major::updateOrCreate(['name' => $row[array_search('Major', $headers)]]);
                 $groupData = [
                     'group_name' => $row[array_search('Group', $headers)],
@@ -192,7 +192,10 @@ class StudentController extends Controller
                 ];
                 $group = Group::updateOrCreate(['group_name' => $groupData['group_name']], $groupData);
     
-
+                    // Fetch existing generation, major, and group records
+            // $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
+            // $major = Major::where('name', $row[array_search('Major', $headers)])->first();
+            // $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
                 // Create a new user
                 $user = User::create([
                     'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
