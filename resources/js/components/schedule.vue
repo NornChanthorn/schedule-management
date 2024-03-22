@@ -12,10 +12,18 @@
 
 
 
-  <div>
-    <button @click="printPDF">Print PDF</button>
+  <div class="flex justify-between">
+    <!-- <button @click="printPDF" >Print PDF</button> -->
+
+    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[80%] inline"/>
+    <button @click="printPDF"  class="bg-teal-600 h-[90%]  cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-4 mt-3 " >
+        <span class="flex items-center">
+          <i class="fa-solid fa-file-export mr-2"></i>
+          Export PDF
+        </span>
+    </button>
   </div>
-  <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" ml-4"/>
+
   <div class="schedule-container p-4">
     <div class="schedule">
       <div class="table-container">
@@ -635,7 +643,7 @@ export default {
             console.log('Çlicked All group')
             this.groupSelected = null
             console.log(this.groupSelected)
-            axios.get('groups').then(
+            axios.get(`groups/${this.genID}/${this.majorID}`).then(
                 res=>{
                     this.groups = res.data.data
                 }
