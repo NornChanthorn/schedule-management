@@ -1,7 +1,7 @@
 <template>
     <Toast/>
     <div class="lg:flex lg:justify-between items-center mb-2 ml-2 md:inline">
-        <h1  class="text-custom-color-small font-istok text-4xl font-bold">Course List</h1>
+        <h1  class="text-custom-color-small font-istok text-4xl font-bold">Group List</h1>
         <div class="flex justify-evenly items-center lg:w-[32%] md:w-[80%] md:mt-2 sm:mt-8">
             <div class="relative flex items-center">
                 <input type="text" v-model="filters['global'].value" class="border border-blue-300  px-3 py-2 focus:outline-blue-300 focus:outline-2 w-full" placeholder="Search ">

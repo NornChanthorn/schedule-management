@@ -79,6 +79,7 @@ import { ref } from 'vue';
         .then(response => {
           // Handle the response
           console.log(response.data.message);
+          this.$router.push({path: '/login'})
         })
         .catch(error => {
           // Handle the error

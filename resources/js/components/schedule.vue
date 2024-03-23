@@ -403,6 +403,7 @@ export default {
     this.getGenerationID(this.genID);
     this.getDaysOfWeek(); // Fetch days of the week
     this.getGroups(this.majorID, this.genID); // Fetch groups
+    // this.handleTabChange();
     this.getSchedulesByTerm(this.termID, this.genID, this.majorID); // Fetch schedules
     this.getCourses(this.termID, this.genID, this.majorID);
     this.getRooms();
