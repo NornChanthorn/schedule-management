@@ -2,31 +2,29 @@
   <Toast />
 
   <div v-if="user.role =='admin'" class="flex items-center mb-4 ml-4 gap-2">
-       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute1">{{ majorName.name}}, </h1>
-       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute2"> Generation {{ GenName }},</h1>
-       <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute3"> Term {{ termName }}</h1>
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold hover:underline" @click="backRoute1">{{ majorName.name}}, </h1>
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold hover:underline" @click="backRoute2"> Generation {{ GenName }},</h1>
+       <h1 class="text-custom-color-small font-istok text-4xl font-bold hover:underline" @click="backRoute3"> Term {{ termName }}</h1>
   </div>
 
   <div v-else>
     <h1 class="text-custom-color-small font-istok text-4xl font-bold">{{ majorName.name}}, Generation {{ GenName }},
       Term {{
       termName }}</h1>
-       <!-- <p>{{  filteredAvailableRooms}}</p> -->
   </div>
 
 
 
-  <div v-if="user.role=='admin'" class="inline justify-between w-[90%]">
-    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[100%] inline bg-gray-600"/>
-    <div class="flex justify-end">
-            <button @click="printPDF"  class="bg-teal-600 h-[90%]  cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-4 mt-3 " >
+  <div v-if="user.role=='admin'" class="flex justify-between">
+    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class="w-full"/>
+    <div class="flex justify-end py-2">
+            <button @click="printPDF"  class="absolute bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none p-3" >
         <span class="flex items-center">
           <i class="fa-solid fa-file-export mr-2"></i>
           Export PDF
         </span>
     </button>
     </div>
-
   </div>
   <div v-else class="flex ">
     <!-- <button @click="printPDF" >Print PDF</button> -->
@@ -35,7 +33,7 @@
 
   </div>
 
-  <div class="schedule-container p-4">
+  <div class="schedule-container py-4">
     <div class="schedule">
       <div class="table-container">
         <table>
@@ -236,22 +234,22 @@
         <form @submit.prevent="addNewSchedule">
           <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Filling Schedule</h2>
           <div class="form_flex_name">
-            <div class="mb-4 flex-1">
+            <div class="mb-4 flex-1 mr-2">
               <label for="time_start" class="block text-sm font-medium text-gray-600">Start Time</label>
               <input type="text" id="time_start" v-model="selectedTimeStart" disabled
-                class="mt-1 p-2 border rounded-md w-full">
+                class="mt-1 p-2 border w-full">
             </div>
-            <div class="mb-4 flex-1">
+            <div class="mb-4 flex-1 ml-2">
               <label for="time_end" class="block text-sm font-medium text-gray-600">End Time</label>
               <input type="text" id="time_end" v-model="selectedTimeEnd" disabled
-                class="mt-1 p-2 border rounded-md w-full">
+                class="mt-1 p-2 border w-full">
             </div>
           </div>
           <div>
             <div v-if="user.role === 'admin'" class="mb-4">
               <label for="course_id" class="block text-sm font-medium text-gray-600">Choose Course</label>
               <select v-model="newSchedule.course_id"
-                class="mt-1 p-2 border rounded-md w-full outline-none focus:outline-blue-300"
+                class="mt-1 p-2 border w-full outline-none focus:outline-blue-300"
                 placeholder="Choose course">
                 <option value="" disabled>Choose Course </option>
                 <option v-for="course in courses" :key="course.id" :value="course.id">{{ course.name }}</option>
@@ -260,14 +258,14 @@
             <div v-else class="mb-4">
               <label for="course_id" class="block text-sm font-medium text-gray-600">Course</label>
               <select v-model="newSchedule.course_id"
-                class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
+                class="mt-1 p-2 border w-full  outline-none focus:outline-blue-300">
                 <option v-for="course in courseteachers" :value="course.id" :key="course.id">{{ course.name }}</option>
               </select>
             </div>
           </div>
           <div v-if="user.role === 'admin'" class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose Room</label>
-            <select v-model="newSchedule.room_id" @change="checkAvailability" class="mt-1 p-2 border rounded-md w-full  outline-none focus:outline-blue-300">
+            <select v-model="newSchedule.room_id" @change="checkAvailability" class="mt-1 p-2 border w-full  outline-none focus:outline-blue-300">
                 <option value="" disabled >Choose Room  </option>
               <!-- <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option> -->
                 <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }} ({{ room.type }})</option>
@@ -278,9 +276,9 @@
             </select>
           </div>
           <div class="flex justify-end">
-            <button type="button" class="bg-white text-black p-2 rounded-md mr-6 hover:bg-gray-200 cancel"
+            <button type="button" class="bg-white text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
               @click="TogglePopup('buttonTrigger')">Cancel</button>
-            <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Submit</button>
+            <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700">Submit</button>
           </div>
         </form>
       </div>
@@ -292,33 +290,33 @@
         <form @submit.prevent="updateSchedule">
           <h2 class="text-2xl font-bold mb-4 text-center border-b-2 pb-2">Edit Schedule</h2>
           <div class="form_flex_name">
-            <div class="mb-4 flex-1">
+            <div class="mb-4 flex-1 mr-2">
               <label for="time_start" class="block text-sm font-medium text-gray-600">Start Time</label>
               <input type="text" id="time_start" v-model="editschedule.time_start" disabled
-                class="mt-1 p-2 border rounded-md w-full">
+                class="mt-1 p-2 border w-full">
             </div>
-            <div class="mb-4 flex-1">
+            <div class="mb-4 flex-1 ml-2">
               <label for="time_end" class="block text-sm font-medium text-gray-600">End Time</label>
               <input type="text" id="time_end" v-model="editschedule.time_end" disabled
-                class="mt-1 p-2 border rounded-md w-full">
+                class="mt-1 p-2 border w-full">
             </div>
           </div>
           <div class="mb-4">
             <label for="course_id" class="block text-sm font-medium text-gray-600">Choose course</label>
-            <select v-model="editschedule.course_id" class="mt-1 p-2 border rounded-md w-full">
+            <select v-model="editschedule.course_id" class="mt-1 p-2 border w-full">
               <option v-for="course in courses" :value="course.id" :key="course.id">{{ course.name }}</option>
             </select>
           </div>
           <div class="mb-4">
             <label for="room_id" class="block text-sm font-medium text-gray-600">Choose a room</label>
-            <select v-model="editschedule.room_id" class="mt-1 p-2 border rounded-md w-full">
+            <select v-model="editschedule.room_id" class="mt-1 p-2 border w-full">
               <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
             </select>
           </div>
           <div class="flex justify-end">
-            <button type="button" class="bg-white text-black p-2 rounded-md mr-6 hover:bg-gray-200 cancel"
+            <button type="button" class="bg-white text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
               @click="cancelEdit">Cancel</button>
-            <button type="submit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">Update</button>
+            <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700">Update</button>
           </div>
         </form>
       </div>
@@ -937,7 +935,7 @@ td {
   border: 1px solid black;
   padding: 10px;
   text-align: center;
-  min-width: 100px;
+  min-width: 120px;
 }
 
 th {

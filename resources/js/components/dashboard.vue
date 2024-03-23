@@ -215,7 +215,6 @@ export default{
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, log out'
           });
-
           if (result.isConfirmed) {
             // Perform logout action here
             localStorage.removeItem('authToken');

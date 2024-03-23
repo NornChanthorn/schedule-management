@@ -1,9 +1,9 @@
 <template>
     <Toast/>
-    <div class="flex items-center mb-4 ml-4">
+    <div class="flex items-center mb-2 ml-2">
         <div class="flex gap-1 ">
-            <h1 class="text-custom-color-small font-istok text-4xl font-bold " @click="backRoute1" >{{ MajorName}}, </h1>
-            <h1 class="text-custom-color-small font-istok text-4xl font-bold" @click="backRoute"> Generation {{ gen }}</h1>
+            <h1 class="text-custom-color-small font-istok text-4xl font-bold hover:underline " @click="backRoute1" >{{ MajorName}}, </h1>
+            <h1 class="text-custom-color-small font-istok text-4xl font-bold hover:underline" @click="backRoute"> Generation {{ gen }}</h1>
         </div>
 
         <button class="ml-auto bg-blue-500 text-white px-2 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2" label="Add New" severity="secondary" @click="showDialog">
