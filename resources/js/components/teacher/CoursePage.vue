@@ -1,5 +1,5 @@
 <template>
-    <div class="font-istok">
+    <div v-if="major" class="font-istok">
       <div v-for="major in courseteacher" :key="major.major.id">
         <div @click="toggleMajorDetails(major)" class="text-xl font-bold mb-4 mt-4">
           <i :style="{ transform: major.showDetails ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.3s ease-in-out' }"
@@ -26,13 +26,15 @@
           </router-link>
         </div>
       </div>
+
     </div>
+    <div v-else class=" font-istok font-bold text-lg uppercase">No Schedule add</div>
   </template>
-  
+
   <script>
   import { ref } from 'vue';
   import axios from 'axios';
-  
+
   export default {
     data() {
       return {
@@ -59,7 +61,7 @@
             .then(response => {
               const courses = response.data.data;
               const groupedCourses = {};
-  
+
               courses.forEach(course => {
                 if (!groupedCourses[course.major_id]) {
                   groupedCourses[course.major_id] = {
@@ -70,7 +72,7 @@
                   groupedCourses[course.major_id].courses.push(course);
                 }
               });
-  
+
               this.courseteacher = Object.values(groupedCourses);
             })
             .catch(error => {
@@ -107,10 +109,10 @@
     },
   };
   </script>
-  
+
   <style scoped>
   @import '../../../../public/css/style.css';
-  
+
   .details-container {
     padding: 12px;
     border: 1px solid #ccc;
@@ -118,9 +120,9 @@
     margin-bottom: 10px;
     display: flex;
   }
-  
+
   .info-container {
     display: flex;
     align-items: center;
   }
-  </style>  
+  </style>

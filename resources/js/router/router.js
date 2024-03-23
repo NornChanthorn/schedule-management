@@ -141,6 +141,11 @@ const routes=[
       component: Student,
       name: 'studentlist'
     },
+    {
+        path: '/testReset',
+        component: ResetPassword,
+        name: 'reset'
+    },
 
 ]
 

@@ -23,6 +23,8 @@
                         placeholder="Enter your new password"
                         class="appearance-none border w-full py-2 px-3 text-gray-700 focus:outline-blue-300 focus:shadow-outline"
                         required
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : error}"
                     />
                 </div>
                 <div class="mb-4">
@@ -34,11 +36,17 @@
                         placeholder="Confirm your new password"
                         class="appearance-none border w-full py-2 px-3 text-gray-700 focus:outline-blue-300 focus:shadow-outline"
                         required
+                        :class="{ ' border-red-500  outline outline-red-200 hover:outline-red-200'
+                        : error}"
                     />
                 </div>
-                <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 focus:outline-none focus:shadow-outline">
-                    Reset Password
-                </button>
+                <div v-if="error" class=" text-red-500">{{ error }}</div>
+                <div class=" flex justify-end">
+                    <button type="submit" class="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 focus:outline-none focus:shadow-outline">
+                        Reset Password
+                    </button>
+                </div>
+
             </form>
         </div>
 
@@ -65,27 +73,40 @@ import { ref } from 'vue';
       return {
         password: '',
         passwordConfirmation: '',
+        error: null,
       };
     },
     methods: {
-      resetPassword() {
-        // Send a request to the backend to reset the password
-        axios.post('password/reset', {
-          email: this.email,
-          token: this.token,
-          password: this.password,
-          password_confirmation: this.passwordConfirmation
-        })
-        .then(response => {
-          // Handle the response
-          console.log(response.data.message);
-          this.$router.push({path: '/login'})
-        })
-        .catch(error => {
-          // Handle the error
-          console.error('Error resetting password:', error.response.data.message);
-        });
-      }
+        resetPassword() {
+            // Send a request to the backend to reset the password
+            axios.post('password/reset', {
+            email: this.email,
+            token: this.token,
+            password: this.password,
+            password_confirmation: this.passwordConfirmation
+            })
+            .then(response => {
+            // Handle the response
+            console.log(response.data.message);
+            this.$router.push({path: '/login'})
+            })
+            .catch(error => {
+            // Handle the error
+            this.error = error.response.data.message
+            this.setError(error);
+            console.error('Error resetting password:', error.response.data.message);
+            });
+        },
+        setError(message) {
+                this.error = message;
+                setTimeout(() => {
+                    this.clearError();
+                }, 2000); // Set timeout for 10 seconds (10,000 milliseconds)
+        },
+                // Method to clear error message
+        clearError() {
+            this.error = null;
+        },
     }
   };
   </script>
