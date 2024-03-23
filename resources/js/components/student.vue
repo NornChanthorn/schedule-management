@@ -40,24 +40,51 @@
           Add Student
         </span>
       </button>
-      <div>
-        <input
-          type="file"
-          ref="fileInput"
-          style="display: none"
-          @change="importStudentsFromCSV"
-          accept=".csv"
-        />
-        <button
-          @click="importCSV"
-          class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
-        >
-          <span class="flex items-center">
-            <i class="fa-solid fa-upload mr-2"></i>
-            Import
-          </span>
-        </button>
-      </div>
+      <button
+        @click="openDialog"
+        class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2 mr-2"
+      >
+        <span class="flex items-center">
+          <i class="fa-solid fa-upload mr-2"></i>
+          Import
+        </span>
+      </button>
+      <Dialog
+        v-model:visible="visible"
+        modal
+        :style="{ width: '35vw' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      >
+        <div class="w-full flex justify-center items-center"></div>
+        <template #header>
+          <div class="text-center border-b border-gray-300 w-full pb-4">
+            <h2 class="text-lg font-bold">Import Students</h2>
+          </div>
+        </template>
+        <div class="p-4">
+          <div class="flex justify-center items-center space-x-6">
+            <button
+              @click="exportHeaderCSV"
+              class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2"
+            >
+              <span class="flex items-center">Export Empty Template</span>
+            </button>
+            <input
+              type="file"
+              ref="fileInput"
+              style="display: none"
+              @change="importStudentsFromCSV"
+              accept=".csv"
+            />
+            <button
+              @click="importCSV"
+              class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2"
+            >
+              <span class="flex items-center"> Import Students Data </span>
+            </button>
+          </div>
+        </div>
+      </Dialog>
       <button
         @click="exportCSV"
         class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
@@ -544,6 +571,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 export default {
   data() {
     return {
+      visible: false,
       showModal: false,
       newPost: {
         f_name: "",
@@ -598,6 +626,9 @@ export default {
     this.getMajorName();
   },
   methods: {
+    openDialog() {
+      this.visible = true;
+    },
     fetchPosts() {
       axios
         .get("students")
@@ -788,11 +819,32 @@ export default {
           console.error("Error deleting post:", error);
         });
     },
+    exportHeaderCSV() {
+      const csvHeaders = [
+        "ID",
+        "FirstName",
+        "LastName",
+        "Email",
+        "Gender",
+        "DateOfBirth",
+        "Generation",
+        "Major",
+        "Group",
+      ];
+      const csv = Papa.unparse([csvHeaders]);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "empty_template_student.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      this.visible = false;
+    },
     exportCSV() {
       const studentData = this.tableData.map((student) => ({
         ID: student.student_id,
-        FirstName: student.f_name,
-        LastName: student.l_name,
+        Name: student.fullName,
         Gender: student.gender,
         DateOfBirth: student.dob,
         Group: student.group.group_name,
@@ -839,6 +891,7 @@ export default {
             "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
           },
         });
+        this.fetchPosts();
         console.log("Import response:", response.data);
         this.$toast.add({
           severity: "success",
@@ -846,6 +899,7 @@ export default {
           detail: "Students imported successfully",
           life: 3000,
         });
+        this.visible = false;
       } catch (error) {
         console.error("Error importing CSV:", error);
         this.$toast.add({
