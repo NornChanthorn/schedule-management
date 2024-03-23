@@ -11,16 +11,16 @@
           <span class="text-2xl transition-all duration-300 mt-2 text-custom-color-small font-bold font-istok">Schedule Management System</span>
         </div>
           <div class="mb-6">
-            <label for="email" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': emailFocused }">Email</label>
+            <label for="email" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-5 text-s text-blue-500': emailFocused, 'transition-all duration-100': emailFocused }">Email</label>
             <div class="relative mt-1">
-              <input type="email" v-model="email" @focus="handleFocus" @blur="handleBlur" required class="p-2 w-full border rounded focus:outline-none" :placeholder="emailFocused ? '' : 'Email'"/>
+              <input type="email" v-model="email" @focus="handleFocus" @blur="handleBlur" required class="p-2 w-full border focus:outline-none" :placeholder="emailFocused ? '' : 'Email'"/>
               <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             </div>
         </div>
-        <div class="mb-5 relative">
-          <label for="password" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-4 text-s text-blue-500': pwFocused }">Password</label>
+        <div class="mb-3 relative">
+          <label for="password" class="absolute block text-sm font-medium text-gray-700" :class="{ 'transform -translate-y-5 text-s text-blue-500': pwFocused, 'transition-all duration-100': PwFocused }">Password</label>
           <div class="relative mt-1">
-            <input :type="showPassword ? 'text' : 'password'" v-model="password" required @focus="handle_PW_Focus" @blur="handleBlur" class="p-2 w-full border rounded focus:outline-none" :placeholder="pwFocused ? '' : 'Password'"/>
+            <input :type="showPassword ? 'text' : 'password'" v-model="password" required @focus="handle_PW_Focus" @blur="handleBlur" class="p-2 w-full border focus:outline-none" :placeholder="pwFocused ? '' : 'Password'"/>
             <div class="absolute bottom-0 left-0 right-0 h-px normal-color"></div>
             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" @click="togglePasswordVisibility">
               <img
@@ -31,11 +31,11 @@
             </button>
         </div>
        </div>
-       <div v-if="errors" class="text-red-500 text-sm mt-1 text-center">{{ errors }}</div>
+       <div v-if="errors" class="text-red-500 text-sm mb-2 text-center">{{ errors }}</div>
         <div class="flex justify-end">
           <button type="submit" class="px-4 py-2 text-white w-full font-istok" style="background-color: #4B687A;">Login</button>
         </div>
-        <a href="/forgotpassword" class="block text-center mt-2 text-blue-500 text-xs font-istok">Forgot Password?</a>
+        <a href="/forgotpassword" class="block text-center mt-2 text-blue-500 text-xs font-istok hover:underline hover:text-bule-700">Forgot Password?</a>
       </form>
     </div>
   </div>
