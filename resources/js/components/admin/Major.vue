@@ -18,7 +18,7 @@
                 </router-link>
                 <div class="flex justify-between p-2">
                     <h3 class="text-lg hover:text-blue-500 transition-all duration-300">{{ major.name}}</h3>
-                    <i class="pi pi-ellipsis-v p-2 hover:bg-gray-200 transition-all duration-300 rounded-full" @click="showOptions(major.id)" ></i>
+                    <i class="pi pi-ellipsis-v p-2 hover:bg-gray-200 transition-all duration-300 rounded-full" @click="showOptions(major)" ></i>
                 </div>
             </div>
         </div>
@@ -45,10 +45,10 @@
         <!-- Edit dialog -->
         <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <div class="w-full flex justify-center items-center">
-                <form action="" @submit.prevent="editMajor(id)">
+                <form action="" @submit.prevent="editMajor(major.id)">
                     <div class="lg:justify-between items-center mb-4">
-                        <label for="name" class="text-lg mr-2 mb-2">Major's name</label>
-                        <input type="text" v-model="name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" :placeholder="major.name">
+                        <label for="name" class="text-lg mr-2 mb-2">Major's name </label>
+                        <input type="text" v-model="major.name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" >
                     </div>
                     <div class="flex justify-between mt-6">
                         <button v-on:click="closeEditDialog" class="w-32 bg-red-500 mr-2 text-white border-2 hover:bg-red-700" >Cancel</button>
@@ -62,13 +62,13 @@
                 </div>
             </template>
         </Dialog>
- 
+
     <OverlayPanel ref="op" class="">
         <div class=" w-30 flex flex-col items-start ">
             <button @click="showEditDialog(itemID)" class="w-full p-2 text-blue-500 flex items-center justify-start hover:bg-gray-200 focus:outline-none" >
                 <i class="fas fa-edit mr-2"></i> Edit
             </button>
-            <button @click="confirmDelete(itemID)" class="w-full p-2 text-red-500 flex items-center justify-start hover:bg-gray-200 focus:outline-none">
+            <button @click="confirmDelete(itemID.id)" class="w-full p-2 text-red-500 flex items-center justify-start hover:bg-gray-200 focus:outline-none">
                 <i class="fas fa-trash-alt mr-2"></i> Delete
             </button>
         </div>
@@ -135,7 +135,7 @@ export default{
             })
         },
         editMajor(id){
-            axios.put(`majors/${id}`, {name: this.name}).then(
+            axios.put(`majors/${id}`, this.major).then(
                 res=>{
                     this.getMajors();
                     this.visibleEdit= false
@@ -143,7 +143,7 @@ export default{
                 }
 
             ).catch(er=>{
-                // this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
+                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
             })
         },
         getByID(id){
@@ -158,13 +158,13 @@ export default{
         showDialog(){
             this.visible=true;
         },
-        showEditDialog(id){
+        showEditDialog(itemId){
             this.visibleEdit= true
-            this.id = id
-            this.getByID(this.id);
+            this.major= itemId
         },
         closeEditDialog(){
             this.visibleEdit= false
+            this.major = null
         },
         closeDialog(){
             this.visible = false;
@@ -195,8 +195,8 @@ export default{
     const itemID = ref(null);
 
 
-    const showOptions = (id) => {
-        itemID.value= id
+    const showOptions = (major) => {
+        itemID.value= major
         op.value.toggle(event);
 
     };

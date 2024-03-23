@@ -18,7 +18,7 @@
         </router-link>
         <div class="flex justify-between p-2">
             <h3 class="text-lg hover:text-blue-500 transition-all duration-300">Generation {{ gen.gen}}</h3>
-            <i class="pi pi-ellipsis-v p-2 hover:bg-gray-200 transition-all duration-300 rounded-full" @click="showOptions(gen.id)" ></i>
+            <i class="pi pi-ellipsis-v p-2 hover:bg-gray-200 transition-all duration-300 rounded-full" @click="showOptions(gen)" ></i>
         </div>
       </div>
     </div>
@@ -45,10 +45,10 @@
     <!-- edit -->
     <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <div class="w-full flex justify-center items-center">
-                <form action="" @submit.prevent="editGeneration(id)">
+                <form action="" @submit.prevent="editGeneration(generation.id)">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Generation</label>
-                        <input type="text" v-model="gen" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"  :placeholder="generation.gen">
+                        <input type="text" v-model="generation.gen" class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"  >
                     </div>
                     <div class="flex justify-between mt-6">
                         <button v-on:click="closeEdit" class="w-32 bg-red-500 mr-2 text-white border-2 hover:bg-red-700" >Cancel</button>
@@ -126,14 +126,14 @@ export default{
 
         },
         editGeneration(id){
-            axios.put(`generations/${id}`, {gen: this.gen}).then(
+            axios.put(`generations/${id}`, this.generation).then(
                 res=>{
                     this.getGeneration();
                     this.visibleEdit= false
                     this.$toast.add({ severity: 'success', summary: 'Edit Successfully', detail: 'Generation Edit Successfully', life: 3000 });
                 }
             ).catch(er=>{
-                // this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
+                this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: er, life: 3000 });
             })
 
         },
@@ -145,7 +145,7 @@ export default{
                     this.$toast.add({ severity: 'success', summary: 'Generation has been delete', life: 3000 });
                 }
             ).catch(er=>{
-                // this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
+               this.$toast.add({ severity: 'error', summary: 'Failed to Delete ', detail: er, life: 3000 });
             })
         },
         getByID(id){
@@ -162,26 +162,26 @@ export default{
         closeDialog(){
             this.visible = false
         },
-        showEditDialog(id){
+        showEditDialog(itemID){
             this.visibleEdit = true
-            this.id = id
-            this.getByID(this.id);
+            this.generation = itemID
         },
         closeEdit(){
             this.visibleEdit= false
+            this.generation = null
         },
-        confirmDelete(id){
+        confirmDelete(itemID){
             Swal.fire({
-            title: 'Are you sure?',
+            title: `Are you sure to delete ?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.deleteGen(id);
+                this.deleteGen(itemID.id);
                 this.visibleDelete = false;
             }
             else {
@@ -200,8 +200,8 @@ export default{
     const itemID = ref(null);
 
 
-    const showOptions = (id) => {
-        itemID.value= id
+    const showOptions = (gen) => {
+        itemID.value= gen
         op.value.toggle(event);
 
     };
