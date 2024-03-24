@@ -159,9 +159,9 @@ class StudentController extends Controller
         // Define a mapping between CSV headers and database column names
         $columnMapping = [
             'ID'=>'student_id',
-            'FirstName' => 'f_name',
-            'LastName' => 'l_name',
-            'Email' => 'email',
+            'FirstName'=>'f_name',
+            'LastName'=>'l_name',
+            'Email' => 'user_id',
             'Gender' => 'gender',
             'DateOfBirth' => 'dob', // Corrected typo here
             'Generation' => 'generation_id', // Assuming 'Generation' contains the ID of the generation

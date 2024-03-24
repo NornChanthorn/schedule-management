@@ -85,6 +85,7 @@
           </div>
         </div>
       </Dialog>
+
       <button
         @click="exportCSV"
         class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2 mr-2"
@@ -606,7 +607,14 @@ export default {
       tableData: [],
       totalRecords: 0,
       selectedMajor: null,
-      majorTabs: [{ label: "All Student", icon: "pi pi-book", major: null , majorId: null}],
+      majorTabs: [
+        {
+          label: "All Student",
+          icon: "pi pi-book",
+          major: null,
+          majorId: null,
+        },
+      ],
       filters: {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
@@ -666,7 +674,7 @@ export default {
             label: major.name,
             icon: "pi pi-book",
             major,
-            majorId: major.id
+            majorId: major.id,
           }))
         );
       } catch (error) {
@@ -685,7 +693,7 @@ export default {
     },
     async handleTabChange(newTab) {
       this.selectedTabId = this.majorTabs[newTab.index];
-      const id = this.selectedTabId.majorId
+      const id = this.selectedTabId.majorId;
       this.tableData = [];
       try {
         const response = await axios.get(
