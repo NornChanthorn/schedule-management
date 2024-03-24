@@ -606,7 +606,7 @@ export default {
       tableData: [],
       totalRecords: 0,
       selectedMajor: null,
-      majorTabs: [{ label: "All Student", icon: "pi pi-book", major: null }],
+      majorTabs: [{ label: "All Student", icon: "pi pi-book", major: null , majorId: null}],
       filters: {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
@@ -666,6 +666,7 @@ export default {
             label: major.name,
             icon: "pi pi-book",
             major,
+            majorId: major.id
           }))
         );
       } catch (error) {
@@ -683,11 +684,12 @@ export default {
       });
     },
     async handleTabChange(newTab) {
-      this.selectedTabId = newTab.index;
+      this.selectedTabId = this.majorTabs[newTab.index];
+      const id = this.selectedTabId.majorId
       this.tableData = [];
       try {
         const response = await axios.get(
-          this.selectedTabId != 0 ? `student/${this.selectedTabId}` : `students`
+          this.selectedTabId != 0 ? `student/${id}` : `students`
         ); // Adjust for your API endpoint
         // this.tableData = response.data;
         const coursesWithTermNames = response.data.map((student) => {

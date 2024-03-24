@@ -28,9 +28,7 @@
   </div>
   <div v-else class="flex ">
     <!-- <button @click="printPDF" >Print PDF</button> -->
-
-    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=" w-[80%] inline bg-gray-600"/>
-
+    <TabMenu :model="groupTabs" @tabChange="handleTabChange" class=""/>
   </div>
 
   <div class="schedule-container py-4">
@@ -678,7 +676,6 @@ export default {
 
       }
     },
-
 
     showEditPopup(schedule) {
       this.editschedule.id = schedule.id;

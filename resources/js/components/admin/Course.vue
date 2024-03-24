@@ -328,11 +328,12 @@ export default{
             }
         },
         async handleTabChange(newTab) {
-            this.selectedTabId = newTab.index;
-            console.log(newTab);
+            this.selectedTabId = this.majorTabs[newTab.index];
+            const id = this.selectedTabId.majorId
+
             this.tableData = [];
             try {
-                const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${this.selectedTabId}` : `courses`); // Adjust for your API endpoint
+                const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${id}` : `courses`); // Adjust for your API endpoint
                 // this.tableData = response.data.data;
                 this.tableData = response.data.data.map((course) => {
                 const termName = course.term?.name;
