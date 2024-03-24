@@ -181,11 +181,11 @@ class StudentController extends Controller
                     if (isset($columnMapping[$header])) {
                         $studentData[$columnMapping[$header]] = $row[$index];
                     }
-    
+                }
                     // Fetch existing generation, major, and group records
-            $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
-            $major = Major::where('name', $row[array_search('Major', $headers)])->first();
-            $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
+                $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
+                $major = Major::where('name', $row[array_search('Major', $headers)])->first();
+                $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
                 // Create a new user
                 $user = User::create([
                     'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
@@ -215,6 +215,5 @@ class StudentController extends Controller
     
         // Return response with imported teachers
         return response()->json(['message' => 'Students imported successfully', 'students' => $importedStudents, 'users' => $importUsers,'generations'=>$importedGenerations,'majors'=>$importedMajors,'groups'=>$importedGroups]);
-    }
 }
 }

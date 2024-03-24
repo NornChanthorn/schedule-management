@@ -732,36 +732,6 @@ export default {
     //     });
     //   });
     // },
-    // async createStudents(data) {
-    //   for (const row of data) {
-    //     try {
-    //       const studentData = {
-    //         student_id: row.ID,
-    //         f_name: row.FirstName,
-    //         l_name: row.LastName,
-    //         gender: row.Gender,
-    //         dob: row.DateOfBirth, // Corrected typo
-    //         user: {
-    //           email: row.Email,
-    //         },
-    //         generation: {
-    //           gen: row.Generation,
-    //         },
-    //         major: {
-    //           name: row.Major,
-    //         },
-    //         group: {
-    //           group_name: row.Group,
-    //         },
-    //       };
-
-    //       await this.$axios.post("students/import", studentData); // Use Axios for HTTP request
-    //     } catch (error) {
-    //       console.error("Error creating students:", error);
-    //       // You can handle individual teacher creation errors here if needed (e.g., display specific error messages)
-    //     }
-    //   }
-    // },
   },
 };
 </script>
