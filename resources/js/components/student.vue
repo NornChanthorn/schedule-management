@@ -636,7 +636,7 @@ export default {
           const students = response.data.map((student) => {
             const genName = student.generation.gen;
             const group_name = student.group.group_name;
-            const fullName = student.f_name + " " + student.l_name;
+            const fullName = student.l_name + " " + student.f_name;
             const Major = student.major.name;
             return {
               ...student,
@@ -694,7 +694,7 @@ export default {
           const genName = student.generation?.gen;
           const group_name = student.group?.group_name;
           const Major = student.major.name;
-          const fullName = student.f_name + " " + student.l_name;
+          const fullName = student.l_name + " " + student.f_name;
           return {
             ...student,
             group_name,
