@@ -612,7 +612,6 @@ export default {
           label: "All Student",
           icon: "pi pi-book",
           major: null,
-          majorId: null,
         },
       ],
       filters: {
@@ -674,7 +673,6 @@ export default {
             label: major.name,
             icon: "pi pi-book",
             major,
-            majorId: major.id,
           }))
         );
       } catch (error) {
@@ -692,8 +690,8 @@ export default {
       });
     },
     async handleTabChange(newTab) {
-      this.selectedTabId = this.majorTabs[newTab.index];
-      const id = this.selectedTabId.majorId;
+      this.selectedTabId = newTab.index;
+      const id = this.selectedTabId;
       this.tableData = [];
       try {
         const response = await axios.get(
