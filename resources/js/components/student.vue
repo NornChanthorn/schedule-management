@@ -910,26 +910,12 @@ export default {
         });
       }
     },
-    async parseCSV(csvContent) {
-      return new Promise((resolve, reject) => {
-        Papa.parse(csvContent, {
-          header: true,
-          complete: (results) => resolve(results.data),
-          error: (error) => reject(error),
-        });
-      });
-    },
 
     async parseCSV(file) {
       return new Promise((resolve, reject) => {
         Papa.parse(file, {
-          header: true,
-          complete: (results) => {
-            resolve(results.data);
-          },
-          error: (error) => {
-            reject(error);
-          },
+          complete: (results) => resolve(results.data),
+          error: (error) => reject(error),
         });
       });
     },

@@ -247,7 +247,5 @@ class TeacherController extends Controller
     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers, 'users' => $importUsers]);
 }
 
-    
-
 
 }
