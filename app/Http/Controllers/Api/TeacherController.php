@@ -190,6 +190,11 @@ class TeacherController extends Controller
     if (!$file) {
         return response()->json(['error' => 'File not uploaded.'], 400);
     }
+    $dateFormats = [
+        'Y-m-d',   // yyyy-mm-dd
+        'd/m/Y',   // dd/mm/yyyy
+        // Add more formats as needed
+    ];
 
     // Read CSV file and process data
     $data = array_map('str_getcsv', file($file));
@@ -224,21 +229,31 @@ class TeacherController extends Controller
                 }
             }
             if (isset($teacherData['DateOfBirth'])) {
-                try {
-                    // Attempt to parse date with 'dd/mm/yyyy' format
-                    $dateOfBirth = Carbon::createFromFormat('d/m/Y', $teacherData['DateOfBirth']);
-                } catch (\Exception $e) {
+                $dateOfBirth = null;
+                foreach ($dateFormats as $format) {
                     try {
-                        // Attempt to parse date with 'yyyy-mm-dd' format
-                        $dateOfBirth = Carbon::parse($teacherData['DateOfBirth']);
+                        // Attempt to parse the date using the current format
+                        $dateOfBirth = DateTime::createFromFormat($format, $teacherData['DateOfBirth']);
+                        if ($dateOfBirth !== false) {
+                            // Date parsed successfully, break the loop
+                            break;
+                        }
                     } catch (\Exception $e) {
                         // Handle parsing errors (optional)
                         // You can log the error or display a message to the user
                         Log::error("Error parsing date for " . $row[array_search('FirstName', $headers)] . ": " . $e->getMessage());
-                        continue; // Skip this row and proceed to the next one
                     }
                 }
-                $teacherData['DateOfBirth'] = $dateOfBirth; // Update with parsed date
+
+                if ($dateOfBirth !== null) {
+                    // Format the date as 'yyyy-mm-dd' for database insertion
+                    $teacherData['DateOfBirth'] = $dateOfBirth->format('Y-m-d');
+                } else {
+                    // If none of the formats succeeded, handle the error or skip this row
+                    // For example, you can log an error message or display a notification to the user
+                    Log::error("Unable to parse date for " . $row[array_search('FirstName', $headers)]);
+                    continue; // Skip this row and proceed to the next one
+                }
             }
 
             // Create a new user

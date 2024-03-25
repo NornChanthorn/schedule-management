@@ -692,6 +692,7 @@ export default {
             "Content-Type": "multipart/form-data", // Ensure proper content type for file uploads
           },
         });
+        this.visible = false
         this.fetchPosts();
 
         // Handle successful response
