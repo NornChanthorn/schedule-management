@@ -312,7 +312,7 @@
             </select>
           </div>
           <div class="flex justify-end">
-            <button type="button" class="bg-white text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
+            <button type="button" class="bg-red-600 text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
               @click="cancelEdit">Cancel</button>
             <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700">Update</button>
           </div>
@@ -446,7 +446,7 @@ export default {
           <table style="border-collapse: collapse; width: 100%;">
             <thead>
               <tr>
-                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" class="time-header">Time</th>
+                <th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white; width: 180px ;" class="time-header">Time</th>
                 ${this.selectedTabId === null
                 ? this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="${this.groups.length}" :key="day.id" class="day-header">${day.day}</th>`).join('')
                 : this.days.map(day => `<th style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; font-weight: bold; background-color: #4B687A; color: white;" colspan="1" class="day-header" :key="day.id">${day.day}</th>`).join('')
@@ -480,7 +480,7 @@ export default {
               ${this.timeSlots_start.map((timeSlot, index) => `
                 <tr>
                   ${this.selectedTabId === null
-                  ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 100px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
+                  ? `<td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 120px; width: 120px;">${timeSlot.start} - ${timeSlot.end}</td>
                   ${this.days.map(day => `
                     ${this.groups.map(group => `
                       <td style="border: 1px solid black; padding: 10px; text-align: center; min-width: 250px; height: 80px;" class="group-cell relative">
@@ -492,11 +492,11 @@ export default {
                           ).map(schedule => `
                           <div class="schedule-info" style="display: flex; flex-direction: column">
                             <div class="flex">
-                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room.type}</p>
+                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room?.type}</p>
                             </div>
                             <p class="text-sm">${schedule.course.name}</p>
                             <p class="text-sm">${schedule.course.teacher.title}. ${schedule.course.teacher.f_name} ${schedule.course.teacher.l_name}</p>
-                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room.name}</p>
+                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room?.name}</p>
                           </div>
                         `).join('')}
                       </td>
@@ -517,7 +517,7 @@ export default {
                             </div>
                             <p class="text-sm">${schedule.course.name}</p>
                             <p class="text-sm">${schedule.course.teacher.title}. ${schedule.course.teacher.f_name} ${schedule.course.teacher.l_name}</p>
-                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room.name}</p>
+                            <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right; margin-top: 8px;" class="room">${schedule.room?.name}</p>
                           </div>
                         `).join('')}
                       </td>
