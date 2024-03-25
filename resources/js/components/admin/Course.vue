@@ -26,7 +26,7 @@
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
-            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'center' }"></Column>
+            <Column field="sequenceNumber" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'center' }"></Column>
             <Column field="name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="teacherName" header="TEACHER" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="termName" header="TERM" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
@@ -264,7 +264,7 @@ export default{
         async getCourse() {
             try {
                 const response = await axios.get('courses');
-                const coursesWithTermNames = response.data.data.map((course) => {
+                const coursesWithTermNames = response.data.data.map((course, index) => {
                 const termName = course.term?.name;
                 const teacherFName = course.teacher?.f_name;
                 const teacherLName = course.teacher?.l_name;
@@ -274,7 +274,9 @@ export default{
                     ...course,
                     termName,
                     teacherName,
-                    genName
+                    genName,
+                    sequenceNumber: index + 1,
+                    index,
                 };
                 });
                 this.tableData = coursesWithTermNames;
@@ -310,6 +312,7 @@ export default{
             axios.get('terms').then(
                 res=>{
                     this.terms = res.data
+
                 }
             )
         },
@@ -330,12 +333,14 @@ export default{
         async handleTabChange(newTab) {
             this.selectedTabId = this.majorTabs[newTab.index];
             const id = this.selectedTabId.majorId
-
+            if(!id){
+                this.getCourse()
+            }
             this.tableData = [];
             try {
                 const response = await axios.get(this.selectedTabId != 0 ? `courseMajor/${id}` : `courses`); // Adjust for your API endpoint
                 // this.tableData = response.data.data;
-                this.tableData = response.data.data.map((course) => {
+                const coursesWithTermNames = response.data.data.map((course, index) => {
                 const termName = course.term?.name;
                 const teacherFName = course.teacher?.f_name;
                 const teacherLName = course.teacher?.l_name;
@@ -345,10 +350,14 @@ export default{
                     ...course,
                     termName,
                     teacherName,
-                    genName
+                    genName,
+                    sequenceNumber: index + 1,
+                    index,
                 };
                 });
-                // this.tableData = coursesWithTermNames;
+                console.log();
+                this.tableData = coursesWithTermNames;
+                console.log(this.tableData)
 
                 this.totalRecords = response.headers['x-total-count']; // Assume API provides total count
             } catch (error) {
@@ -398,7 +407,8 @@ export default{
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 this.deleteCourse(prod.id);

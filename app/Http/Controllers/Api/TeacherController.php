@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Schedule;
 use App\Models\Teacher;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
@@ -222,6 +223,16 @@ class TeacherController extends Controller
                     $teacherData[$columnMapping[$header]] = $row[$index];
                 }
             }
+            if (isset($teacherData['DateOfBirth'])) {
+                try {
+                  $dateOfBirth = Carbon::parse($teacherData['DateOfBirth']);
+                  $teacherData['DateOfBirth'] = $dateOfBirth; // Update with parsed date
+                } catch (Exception $e) {
+                  // Handle parsing errors (optional)
+                  // You can log the error or display a message to the user
+                  Log::error("Error parsing date for " . $row[array_search('FirstName', $headers)] . ": " . $e->getMessage());
+                }
+              }
 
             // Create a new user
             $user = User::create([
@@ -247,7 +258,7 @@ class TeacherController extends Controller
     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers, 'users' => $importUsers]);
 }
 
-    
+
 
 
 }

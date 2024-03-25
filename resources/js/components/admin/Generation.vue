@@ -178,7 +178,8 @@ export default{
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 this.deleteGen(itemID.id);

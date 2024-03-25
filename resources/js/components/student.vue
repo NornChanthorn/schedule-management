@@ -355,11 +355,11 @@
               </select>
             </div>
           </div>
-          <div class="flex justify-end items-center mt-4 gap-x-2">
+          <div class="flex justify-between items-center mt-4 gap-x-2">
             <button
               @click="showModal = false"
               type="button"
-              class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+              class="w-32 py-2 bg-red-500 text-white border-2 hover:bg-red-600"
             >
               Cancel
             </button>
@@ -540,11 +540,11 @@
             </div>
           </div>
 
-          <div class="flex items-center justify-end mt-4 gap-x-2">
+          <div class="flex items-center justify-between mt-4 gap-x-2">
             <button
               @click="editModal = false"
               type="button"
-              class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+              class="w-32 py-2 bg-red-500 text-white border-2 hover:bg-red-600"
             >
               Cancel
             </button>
@@ -633,7 +633,7 @@ export default {
       axios
         .get("students")
         .then((response) => {
-          const students = response.data.map((student) => {
+          const students = response.data.map((student, index) => {
             const genName = student.generation.gen;
             const group_name = student.group.group_name;
             const fullName = student.l_name + " " + student.f_name;
@@ -643,7 +643,9 @@ export default {
               genName,
               group_name,
               Major,
-              fullName, // Add termName property to each course object
+              fullName,
+              sequenceNumber: index + 1,
+              index,
             };
           });
           this.tableData = students;
@@ -686,7 +688,11 @@ export default {
     async handleTabChange(newTab) {
       this.selectedTabId = this.majorTabs[newTab.index];
       const id = this.selectedTabId.majorId
+      console.log(id)
       this.tableData = [];
+      if(!id){
+        this.fetchPosts()
+      }
       try {
         const response = await axios.get(
           this.selectedTabId != 0 ? `student/${id}` : `students`
@@ -795,6 +801,7 @@ export default {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           this.deletePost(prod.id);
@@ -823,15 +830,15 @@ export default {
     },
     exportHeaderCSV() {
       const csvHeaders = [
-        "ID",
-        "FirstName",
-        "LastName",
-        "Email",
-        "Gender",
-        "DateOfBirth",
-        "Generation",
-        "Major",
-        "Group",
+        'ID',
+        'FirstName',
+        'LastName',
+        'Email',
+        'Gender',
+        'DateOfBirth',
+        'Generation',
+        'Major',
+        'Group',
       ];
       const csv = Papa.unparse([csvHeaders]);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });

@@ -230,6 +230,7 @@ export default {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
             });
 
             if (result.isConfirmed) {

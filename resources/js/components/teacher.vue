@@ -208,11 +208,11 @@
               placeholder="Teacher's titile (Ex: professor, Dr.)"
             />
           </div>
-          <div class="flex items-center justify-end mt-4 gap-x-2">
+          <div class="flex items-center justify-between mt-4 gap-x-2">
             <button
               @click="showModal = false"
               type="button"
-              class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+              class="w-32 py-2 bg-red-500 text-white border-2 hover:bg-red-600"
             >
               Cancel
             </button>
@@ -340,11 +340,11 @@
                 placeholder="Enter title"
               />
             </div>
-            <div class="flex items-center justify-end mt-4 gap-x-2">
+            <div class="flex items-center justify-between mt-4 gap-x-2">
               <button
                 @click="editModal = false"
                 type="button"
-                class="w-32 py-2 bg-gray-500 text-white border-2 hover:bg-gray-600"
+                class="w-32 py-2 bg-red-500 text-white border-2 hover:bg-red-600"
               >
                 Cancel
               </button>
@@ -381,13 +381,8 @@
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
     <Column
-      field="f_name"
+      field="fullName"
       header="FIRST NAME"
-      :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
-    ></Column>
-    <Column
-      field="l_name"
-      header="LAST NAME"
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
     <Column
@@ -401,8 +396,8 @@
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
     <Column
-      field="dob"
-      header="DATE OF BIRTH"
+      field="email"
+      header="EMAIL"
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
     <Column
@@ -503,7 +498,18 @@ export default {
       axios
         .get("teachers")
         .then((response) => {
-          this.posts = response.data;
+        //   this.posts = response.data;
+          const teacher = response.data.map((teacher) => {
+             const email = teacher.user.email
+             const fullName = teacher.f_name + ' ' + teacher.l_name
+             return{
+                ...teacher,
+                email,
+                fullName
+             }
+          })
+          this.posts = teacher
+          console.log(email);
         })
         .catch((error) => {
           console.error("Error fetching posts:", error);
@@ -581,6 +587,7 @@ export default {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
+        reverseButtons: true,
       });
 
       if (result.isConfirmed) {

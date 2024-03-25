@@ -26,7 +26,7 @@
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 50 , 100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Group" responsiveLayout="scroll">
-            <Column field="id" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
+            <Column field="sequenceNumber" header="ID" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}"></Column>
             <Column field="group_name" header="NAME" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column field="genName" header="GENERATION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }"></Column>
             <Column  style="width:15%;  min-width:8rem; " header="ACTION" :headerStyle="{ 'text-align': 'center' , 'font-size': '13px'}" :bodyStyle="{ 'text-align': 'start' }" >
@@ -157,7 +157,7 @@ export default{
             majors: [],
             generations: [],
             majorTabs: [
-                { label: 'All Group', icon: 'pi pi-book', major: null },
+                { label: 'All Group', icon: 'pi pi-book', major: null, majorId: null },
             ],
             selectedMajor: null,
             selectedTabId: 0,
@@ -188,13 +188,15 @@ export default{
         async getGroup() {
             try {
                 const response = await axios.get('groups');
-                const groupWithGen = response.data.data.map((group) => {
+                const groupWithGen = response.data.data.map((group, index) => {
                 const majorName= group.major?.name;
                 const genName = group.generation?.gen;
                 return {
                     ...group,
                     majorName,
-                    genName
+                    genName,
+                    sequenceNumber: index + 1,
+                    index,
                 };
                 });
                 this.tableData = groupWithGen;
@@ -220,6 +222,7 @@ export default{
                 label: major.name,
                 icon: 'pi pi-book',
                 major,
+                majorId: major.id
                 })));
                 console.log(this.majorTabs)
             } catch (error) {
@@ -227,17 +230,23 @@ export default{
             }
         },
         async handleTabChange(newTab) {
-            this.selectedTabId = newTab.index;
+            this.selectedTabId = this.majorTabs[newTab.index];
+            const id = this.selectedTabId.majorId
+            if(id ===null){
+                this.getGroup()
+            }
             this.tableData = [];
             try {
-                const response = await axios.get(this.selectedTabId != 0 ? `groupsByMajor/${this.selectedTabId}` : `groups`);
-                const groupWithGen = response.data.data.map((group) => {
+                const response = await axios.get(this.selectedTabId != 0 ? `groupsByMajor/${id}` : `groups`);
+                const groupWithGen = response.data.data.map((group, index) => {
                 const majorName = group.major?.name;
                 const genName = group.generation?.gen;
                 return {
                     ...group,
                     majorName,
-                    genName
+                    genName,
+                    sequenceNumber: index + 1,
+                    index,
 
                 };
                 });
@@ -296,7 +305,8 @@ export default{
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 this.deleteGroup(prod.id);
