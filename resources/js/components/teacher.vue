@@ -67,7 +67,7 @@
               @click="exportHeaderCSV"
               class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2"
             >
-              <span class="flex items-center">Export Empty Template</span>
+              <span class="flex items-center">Export Template</span>
             </button>
             <input
               type="file"
@@ -80,7 +80,7 @@
               @click="importCSV"
               class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2"
             >
-              <span class="flex items-center"> Import Teachers Data </span>
+              <span class="flex items-center"> Import Teachers </span>
             </button>
           </div>
         </div>
@@ -376,7 +376,7 @@
     responsiveLayout="scroll"
   >
     <Column
-      field="id"
+      field="sequenceNumber"
       header="ID"
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
@@ -499,13 +499,15 @@ export default {
         .get("teachers")
         .then((response) => {
         //   this.posts = response.data;
-          const teacher = response.data.map((teacher) => {
+          const teacher = response.data.map((teacher, index) => {
              const email = teacher.user.email
              const fullName = teacher.f_name + ' ' + teacher.l_name
              return{
                 ...teacher,
                 email,
-                fullName
+                fullName,
+                sequenceNumber: index +1,
+                index
              }
           })
           this.posts = teacher

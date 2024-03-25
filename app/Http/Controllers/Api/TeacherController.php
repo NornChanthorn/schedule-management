@@ -225,13 +225,20 @@ class TeacherController extends Controller
             }
             if (isset($teacherData['DateOfBirth'])) {
                 try {
-                  $dateOfBirth = Carbon::parse($teacherData['DateOfBirth']);
-                  $teacherData['DateOfBirth'] = $dateOfBirth; // Update with parsed date
-                } catch (Exception $e) {
-                  // Handle parsing errors (optional)
-                  // You can log the error or display a message to the user
-                  Log::error("Error parsing date for " . $row[array_search('FirstName', $headers)] . ": " . $e->getMessage());
+                    // Attempt to parse date with 'dd/mm/yyyy' format
+                    $dateOfBirth = Carbon::createFromFormat('d/m/Y', $teacherData['DateOfBirth']);
+                } catch (\Exception $e) {
+                    try {
+                        // Attempt to parse date with 'yyyy-mm-dd' format
+                        $dateOfBirth = Carbon::parse($teacherData['DateOfBirth']);
+                    } catch (\Exception $e) {
+                        // Handle parsing errors (optional)
+                        // You can log the error or display a message to the user
+                        Log::error("Error parsing date for " . $row[array_search('FirstName', $headers)] . ": " . $e->getMessage());
+                        continue; // Skip this row and proceed to the next one
+                    }
                 }
+                $teacherData['DateOfBirth'] = $dateOfBirth; // Update with parsed date
             }
 
             // Create a new user
