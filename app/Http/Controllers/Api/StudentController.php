@@ -195,16 +195,16 @@ class StudentController extends Controller
                 ]);
 
                     // Fetch existing generation, major, and group records
-                    $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
-                    $major = Major::where('name', $row[array_search('Major', $headers)])->first();
-                    $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
-                    // Create a new user
-                    $user = User::create([
-                        'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
-                        'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
-                        'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
-                        'role' => 'student',
-                    ]);
+                    // $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
+                    // $major = Major::where('name', $row[array_search('Major', $headers)])->first();
+                    // $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
+                    // // Create a new user
+                    // $user = User::create([
+                    //     'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
+                    //     'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
+                    //     'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
+                    //     'role' => 'student',
+                    // ]);
 
 
                 // Create a new teacher and associate with the user

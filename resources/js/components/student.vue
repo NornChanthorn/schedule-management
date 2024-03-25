@@ -44,13 +44,13 @@
                     <div class="flex justify-center items-center space-x-6">
                         <button @click="exportHeaderCSV"
                             class="bg-teal-600 cursor-pointer text-white hover:bg-teal-700 focus:outline-none px-4 py-2">
-                            <span class="flex items-center">Export Empty Template</span>
+                            <span class="flex items-center">Export Template</span>
                         </button>
                         <input type="file" ref="fileInput" style="display: none" @change="importStudentsFromCSV"
                             accept=".csv" />
                         <button @click="importCSV"
                             class="cursor-pointer bg-blue-500 text-white hover:bg-blue-700 focus:outline-none px-4 py-2">
-                            <span class="flex items-center"> Import Students Data </span>
+                            <span class="flex items-center"> Import Data </span>
                         </button>
                     </div>
                 </div>
@@ -101,7 +101,6 @@
         </Column>
     </DataTable>
     <p v-if="tableData == null">Loading...</p>
-
     <!-- Modal for creating a new post -->
     <div v-if="showModal" class="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50">
         <div class="flex items-center justify-center min-h-screen">
@@ -444,7 +443,7 @@ export default {
             const id = this.selectedTabId.majorId
             console.log(id)
             this.tableData = [];
-            if (!id) {
+            if (id ==null) {
                 this.fetchPosts()
             }
             try {

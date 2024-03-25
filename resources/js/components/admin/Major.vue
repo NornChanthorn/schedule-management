@@ -49,8 +49,10 @@
                 <form action="" @submit.prevent="editMajor(major.id)">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Major's name</label>
-                        <input type="text" v-model="major.name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" >
+                        <input type="text" v-model="major.name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
+                 >
                     </div>
+                    <p v-if="error == true"> Hererrr</p>
                     <div class="flex justify-between mt-6">
                         <button v-on:click="closeEditDialog" class="w-32 bg-red-500 mr-2 text-white border-2 hover:bg-red-700" >Cancel</button>
                         <button type="submit" class="w-32 py-2  border-2 bg-blue-500 text-white hover:bg-blue-700" >Save</button>
@@ -86,12 +88,13 @@ export default{
     data(){
         return{
             majors: [],
-            major: [],
+            major:[],
             visible: false,
             name: '',
             id: null,
             visibleDelete: false,
             visibleEdit: false,
+            error: false
         }
     },
     mounted(){
@@ -145,6 +148,7 @@ export default{
                 }
 
             ).catch(er=>{
+                this.error = true
                 this.$toast.add({ severity: 'error', summary: 'Failed to Edit ', detail: 'Error some part', life: 3000 });
             })
         },
@@ -165,8 +169,10 @@ export default{
             this.major= itemId
         },
         closeEditDialog(){
+            // this.major = null
             this.visibleEdit= false
             this.major = null
+
         },
         closeDialog(){
             this.visible = false;
