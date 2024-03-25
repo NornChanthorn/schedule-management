@@ -159,9 +159,9 @@ class StudentController extends Controller
         // Define a mapping between CSV headers and database column names
         $columnMapping = [
             'ID'=>'student_id',
-            'FirstName' => 'f_name',
-            'LastName' => 'l_name',
-            'Email' => 'email',
+            'FirstName'=>'f_name',
+            'LastName'=>'l_name',
+            'Email' => 'user_id',
             'Gender' => 'gender',
             'DateOfBirth' => 'dob', // Corrected typo here
             'Generation' => 'generation_id', // Assuming 'Generation' contains the ID of the generation
@@ -181,6 +181,18 @@ class StudentController extends Controller
                     if (isset($columnMapping[$header])) {
                         $studentData[$columnMapping[$header]] = $row[$index];
                     }
+                }
+                    // Fetch existing generation, major, and group records
+                $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
+                $major = Major::where('name', $row[array_search('Major', $headers)])->first();
+                $group = Group::where('group_name', $row[array_search('Group', $headers)])->first();
+                // Create a new user
+                $user = User::create([
+                    'name' => $row[array_search('FirstName', $headers)] . ' ' . $row[array_search('LastName', $headers)],
+                    'email' => $row[array_search('Email', $headers)], // Assuming Email column is present
+                    'password' => bcrypt($row[array_search('FirstName', $headers)] . $row[array_search('LastName', $headers)]), // You can generate a random password if needed
+                    'role' => 'student',
+                ]);
 
                     // Fetch existing generation, major, and group records
                     $generation = Generation::where('gen', $row[array_search('Generation', $headers)])->first();
@@ -215,6 +227,5 @@ class StudentController extends Controller
 
         // Return response with imported teachers
         return response()->json(['message' => 'Students imported successfully', 'students' => $importedStudents, 'users' => $importUsers,'generations'=>$importedGenerations,'majors'=>$importedMajors,'groups'=>$importedGroups]);
-    }
 }
 }

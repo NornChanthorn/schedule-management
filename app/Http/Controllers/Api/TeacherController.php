@@ -232,7 +232,7 @@ class TeacherController extends Controller
                   // You can log the error or display a message to the user
                   Log::error("Error parsing date for " . $row[array_search('FirstName', $headers)] . ": " . $e->getMessage());
                 }
-              }
+            }
 
             // Create a new user
             $user = User::create([
@@ -257,7 +257,6 @@ class TeacherController extends Controller
     // Return response with imported teachers
     return response()->json(['message' => 'Teachers imported successfully', 'teachers' => $importedTeachers, 'users' => $importUsers]);
 }
-
 
 
 
