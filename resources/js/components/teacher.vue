@@ -372,7 +372,7 @@
     :rows="10"
     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
     :rowsPerPageOptions="[5, 10, 25, 50, 100]"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Teachers"
     responsiveLayout="scroll"
   >
     <Column
@@ -717,6 +717,7 @@ export default {
           detail: "Failed to import teachers",
           life: 3000,
         });
+        this.visible = false
       }
     },
 

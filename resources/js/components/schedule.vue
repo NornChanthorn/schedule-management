@@ -513,7 +513,7 @@ export default {
                           ).map(schedule => `
                           <div class="schedule-info" style="display: flex; flex-direction: column">
                             <div class="flex">
-                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room.type}</p>
+                              <p style="margin: 0; font-size: 14px; margin-left: auto; text-align: right;" class="theory">${schedule.room?.type}</p>
                             </div>
                             <p class="text-sm">${schedule.course.name}</p>
                             <p class="text-sm">${schedule.course.teacher.title}. ${schedule.course.teacher.f_name} ${schedule.course.teacher.l_name}</p>

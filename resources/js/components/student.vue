@@ -70,7 +70,7 @@
         columnResizeMode="expand" :paginator="true" :rows="10" class="text-center"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25, 50, 100]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Courses" responsiveLayout="scroll">
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Students" responsiveLayout="scroll">
         <Column field="student_id" header="ID" :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"></Column>
         <Column field="fullName" header="NAME" :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"></Column>
         <Column field="gender" header="GENDER" :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"></Column>

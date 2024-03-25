@@ -45,9 +45,10 @@
         <!-- Edit dialog -->
         <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <div class="w-full flex justify-center items-center">
+                <p class=" hidden">id: {{ major.id }} </p>
                 <form action="" @submit.prevent="editMajor(major.id)">
                     <div class="lg:justify-between items-center mb-4">
-                        <label for="name" class="text-lg mr-2 mb-2">Major's name </label>
+                        <label for="name" class="text-lg mr-2 mb-2">Major's name</label>
                         <input type="text" v-model="major.name"  class="mt-1 p-2 w-full border rounded outline  outline-slate-200 appearance-none  py-2 px-3  leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" >
                     </div>
                     <div class="flex justify-between mt-6">
@@ -135,6 +136,7 @@ export default{
             })
         },
         editMajor(id){
+            // const id = this.major.id
             axios.put(`majors/${id}`, this.major).then(
                 res=>{
                     this.getMajors();

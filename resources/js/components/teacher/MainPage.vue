@@ -132,7 +132,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, log out'
+                confirmButtonText: 'Yes, log out',
+                reverseButtons: true,
               });
 
               if (result.isConfirmed) {

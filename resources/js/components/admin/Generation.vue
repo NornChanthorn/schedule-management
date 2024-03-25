@@ -45,6 +45,7 @@
     <!-- edit -->
     <Dialog v-model:visible="visibleEdit" modal  :style="{ width: '40vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <div class="w-full flex justify-center items-center">
+                <p class=" hidden">{{ generation.id }}</p>
                 <form action="" @submit.prevent="editGeneration(generation.id)">
                     <div class="lg:justify-between items-center mb-4">
                         <label for="name" class="text-lg mr-2 mb-2">Generation</label>
