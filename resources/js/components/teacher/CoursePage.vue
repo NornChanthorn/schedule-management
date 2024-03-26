@@ -1,5 +1,5 @@
 <template>
-    <div v-if="major" class="font-istok">
+
       <div v-for="major in courseteacher" :key="major.major.id">
         <div @click="toggleMajorDetails(major)" class="text-xl font-bold mb-4 mt-4">
           <i :style="{ transform: major.showDetails ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.3s ease-in-out' }"
@@ -27,8 +27,8 @@
         </div>
       </div>
 
-    </div>
-    <div v-else class=" font-istok font-bold text-lg uppercase">No Schedule add</div>
+
+  
   </template>
 
   <script>

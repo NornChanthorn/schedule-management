@@ -250,9 +250,7 @@
                     </div>
                     <div class="mb-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" v-model="editedPost.email" name="email"
-                            class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200"
-                            placeholder="Enter Email" />
+                        <input type="email" v-model="editedPost.email" name="email" class="mt-1 p-2 w-full border rounded outline outline-slate-200 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:outline-blue-200" placeholder="Enter Email" />
                     </div>
                     <div class="flex mb-2">
                         <div class="w-1/2 mr-2">
@@ -612,7 +610,7 @@ export default {
                 Group: student.group.group_name,
                 Major: student.major.name,
                 Generation: student.generation.gen,
-                Email: student.user.email,
+                Email: student.user?.email,
             }));
             this.tableData = studentData;
             const csv = Papa.unparse(this.tableData);

@@ -171,7 +171,7 @@ export default{
         closeEditDialog(){
             // this.major = null
             this.visibleEdit= false
-            this.major = null
+            // this.major = null
 
         },
         closeDialog(){

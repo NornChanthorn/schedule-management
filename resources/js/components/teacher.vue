@@ -382,7 +382,7 @@
     ></Column>
     <Column
       field="fullName"
-      header="FIRST NAME"
+      header="NAME"
       :headerStyle="{ 'text-align': 'center', 'font-size': '13px' }"
     ></Column>
     <Column

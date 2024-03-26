@@ -273,10 +273,10 @@
 
             </select>
           </div>
-          <div class="flex justify-end">
-            <button type="button" class="bg-white text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
+          <div class="flex justify-between">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 mr-6 hover:bg-red-600 cancel border-2"
               @click="TogglePopup('buttonTrigger')">Cancel</button>
-            <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700">Submit</button>
+            <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700 border-2">Submit</button>
           </div>
         </form>
       </div>
@@ -311,8 +311,8 @@
               <option v-for="room in rooms" :value="room.id" :key="room.id">{{ room.name }}</option>
             </select>
           </div>
-          <div class="flex justify-end">
-            <button type="button" class="bg-red-600 text-black px-4 py-2 mr-6 hover:bg-gray-200 cancel"
+          <div class="flex justify-between ">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 mr-6 hover:bg-red-600 cancel"
               @click="cancelEdit">Cancel</button>
             <button type="submit" class="text-white px-4 py-2 bg-blue-500 hover:bg-blue-700">Update</button>
           </div>
